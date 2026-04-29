@@ -1,10 +1,12 @@
 // MiN8T Tools - shared analytics helper
 // Each tool calls trackToolUsed() once per successful action and trackCtaClicked()
 // when the user follows a conversion link.
-// GA4 measurement ID is injected by Pages env var GA_MEASUREMENT_ID at build time
-// (or hardcoded once we have it).
+//
+// GA4 measurement ID for the MainMin8t web stream (id=14586533552, min8t.com).
+// Per-page override still possible via window.__GA_MEASUREMENT_ID__ before this
+// module loads.
 
-const GA_ID = window.__GA_MEASUREMENT_ID__ || ''; // set by inline script in each page
+const GA_ID = window.__GA_MEASUREMENT_ID__ || 'G-NZ3TYHTYSW';
 
 function ensureGtag() {
   if (window.gtag || !GA_ID) return;
