@@ -1,4 +1,4 @@
-name: Deploy to Cloudflare Pages + Worker
+name: Deploy to Cloudflare Pages + Workers
 
 on:
   push:
@@ -12,10 +12,10 @@ on:
 # Required secrets in repo settings → Secrets and variables → Actions:
 #   CLOUDFLARE_API_TOKEN — Workers (Scripts + Routes) token
 #   CLOUDFLARE_ACCOUNT_ID — 626e6ac44d135aa0f72c82e6ed5761af
-# Pre-existing infra (already provisioned manually 2026-04-29):
-#   - Pages project: min8t-tools (production_branch: main)
-#   - Worker:        min8t-tools-router
-#   - Routes:        min8t.com/tools/*  and  min8t.com/tools
+# Pre-existing infra (provisioned manually 2026-04-29):
+#   - Pages project:           min8t-tools  (prod branch: main)
+#   - Worker workers/router:   min8t-tools-router  on  min8t.com/tools/*  + /tools
+#   - Worker workers/api:      min8t-tools-api     on  min8t.com/api/tools/*
 
 jobs:
   deploy-pages:
@@ -28,24 +28,60 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          # Deploy the repo root (everything except `workers/` which is the Worker).
-          # Anything we don't want shipped to Pages should be added to a Pages-specific
-          # ignore list (we'll add `.cloudflareignore` if/when needed).
+          # Deploy the repo root. Pages auto-skips workers/ (it's not referenced
+          # by any HTML); the .cloudflareignore file (if added later) can be
+          # used to exclude additional paths.
           command: pages deploy . --project-name=min8t-tools --branch=main --commit-dirty=true
 
-  deploy-worker:
-    name: Deploy path-routing Worker
+  detect-worker-changes:
+    name: Which workers changed?
     runs-on: ubuntu-latest
-    # Only re-deploy the Worker when the Worker source actually changed —
-    # it's stable scaffolding, not per-commit.
-    if: contains(github.event.head_commit.modified, 'workers/')
-       || contains(github.event.head_commit.added,    'workers/')
+    outputs:
+      router: ${{ steps.diff.outputs.router }}
+      api:    ${{ steps.diff.outputs.api }}
     steps:
       - uses: actions/checkout@v4
-      - name: Deploy Worker
+        with:
+          fetch-depth: 2
+      - id: diff
+        run: |
+          # On workflow_dispatch (no commit diff), deploy both. Otherwise diff
+          # the commit and only deploy the workers that actually changed.
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "router=true" >> $GITHUB_OUTPUT
+            echo "api=true"    >> $GITHUB_OUTPUT
+          else
+            CHANGED=$(git diff --name-only HEAD~1 HEAD || true)
+            echo "$CHANGED" | grep -q '^workers/router/' && echo "router=true" >> $GITHUB_OUTPUT || echo "router=false" >> $GITHUB_OUTPUT
+            echo "$CHANGED" | grep -q '^workers/api/'    && echo "api=true"    >> $GITHUB_OUTPUT || echo "api=false"    >> $GITHUB_OUTPUT
+          fi
+
+  deploy-worker-router:
+    name: Deploy router Worker (min8t-tools-router)
+    runs-on: ubuntu-latest
+    needs: detect-worker-changes
+    if: needs.detect-worker-changes.outputs.router == 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          workingDirectory: workers
+          workingDirectory: workers/router
+          command: deploy
+
+  deploy-worker-api:
+    name: Deploy API Worker (min8t-tools-api)
+    runs-on: ubuntu-latest
+    needs: detect-worker-changes
+    if: needs.detect-worker-changes.outputs.api == 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: workers/api
           command: deploy
