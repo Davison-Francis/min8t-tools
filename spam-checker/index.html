@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Email Spam Score Checker - Free, Unlimited | MiN8T</title>
+<meta name="description" content="Score any HTML email against 21 SpamAssassin-style deliverability rules. Free, instant, no signup. See exactly which triggers are hurting inbox placement.">
+<link rel="canonical" href="https://min8t.com/tools/spam-checker/">
+<meta property="og:title" content="Email Spam Score Checker - Free | MiN8T">
+<meta property="og:description" content="Paste your HTML email, get a 0-10 deliverability score with rule-by-rule breakdown.">
+<meta property="og:url" content="https://min8t.com/tools/spam-checker/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#28ef91">
+
+<link rel="icon" href="https://min8t.com/favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="https://min8t.com/favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="https://min8t.com/apple-touch-icon.png">
+
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/roboto/Roboto-Regular.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/roboto/Roboto-Medium.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/roboto/Roboto-Bold.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/pp-neue-montreal/ppneuemontreal-book.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/pp-neue-montreal/ppneuemontreal-bold.woff2" crossorigin>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Email Spam Score Checker",
+  "url": "https://min8t.com/tools/spam-checker/",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "All",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Score HTML email against 21 deliverability rules. SpamAssassin-style scoring, free and unlimited."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Free Tools", "item": "https://min8t.com/tools/" },
+    { "@type": "ListItem", "position": 2, "name": "Spam Score Checker", "item": "https://min8t.com/tools/spam-checker/" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How does this score compare to mail-tester.com or SpamAssassin?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We run 21 body-content rules adapted from SpamAssassin's URI/SUBJECT/HTML rule families. The aggregate is converted to a 0-10 user-facing score where 10 is best (mail-tester convention). For a real send-time check including headers, IP reputation, and authentication (SPF/DKIM/DMARC), use mail-tester (sends a test message to a unique address) or run SpamAssassin against your finished MIME message. This tool focuses on the part of deliverability you can fix at design time: the body."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does the score actually mean?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Each triggered rule contributes SpamAssassin-style points. The standard 'spam' threshold in SpamAssassin is 5.0 cumulative points - we mirror that. A user-facing score of 5 or below means your body crossed the spam threshold from rules alone. 8-10 means clean body. 6-7 is borderline."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which rules does the tool check?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "21 rules across four categories. Content: spam-trigger phrases, urgency language, generic greetings, forward-to-friends, 100% guarantees, money-back claims. Format: excessive caps, multi-exclamation, money-symbol runs, heavy emoji. Structure: image-only emails, white-on-white hidden text, tiny/zero-size fonts, missing unsubscribe link, missing physical address, oversized HTML. Links: URL shorteners, IP-based URLs, link/text mismatch (phishing pattern), excessive total links, heavy use of tracking redirectors."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why a no-unsubscribe rule? My transactional email doesn't need one.",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "True - transactional emails (receipts, password resets, account notifications) are exempt under CAN-SPAM. The rule fires anyway because the tool can't tell from the body alone whether the email is transactional or marketing. If your test input is a receipt and the no-unsubscribe rule fires, ignore it. The rule is meaningful for marketing/promotional sends, where missing it is a real deliverability hit."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does my HTML get sent anywhere?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It's POSTed to a Cloudflare Worker, scored, and the result returned. The Worker doesn't log, store, or correlate the input. The rules engine runs entirely in the Worker (no third-party calls), so the only entity that sees your HTML is Cloudflare's edge runtime. We chose this over a fully client-side implementation because the rules engine is ~30 KB - acceptable as a one-time download but better as a Worker call to keep the page fast."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I trust this tool's score 100 %?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No tool can. Real spam filters use machine-learning models trained on millions of emails, plus IP reputation, sender history, recipient engagement, and dozens of other signals you can't audit at design time. This tool catches the well-understood content-side issues. Treat it as a hygiene check, not a delivery prediction."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does my email get a low score even though it's clearly not spam?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Common false positives: (1) marketing copy that legitimately uses urgency ('Last chance to register'), (2) a sale email with prices and money symbols, (3) a transactional email that doesn't need an unsubscribe link, (4) a newsletter pasted without the layout's unsubscribe footer. Look at WHICH rules fired - if they're all rules you've consciously decided are appropriate for your send, the low score is a false alarm."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is this open-source / can I see the rules?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The rule definitions are in the open-source min8t-tools repo at workers/api/spam-rules.js (MIT licence). Each rule has a name, category, weight, and test function. Read them, propose changes, or fork. The list will grow over time."
+      }
+    }
+  ]
+}
+</script>
+
+<link rel="preload" href="https://min8t.com/landing/css/main.css?v=combined" as="style">
+<link rel="stylesheet" href="https://min8t.com/landing/css/main.css?v=combined">
+<link rel="stylesheet" href="../_shared/styles.css?v=2">
+<link rel="stylesheet" href="../_shared/tools.css?v=1">
+
+<style>
+  .sc-input-wrap { margin-top: var(--space-lg); }
+  .sc-input-wrap textarea {
+    width: 100%; min-height: 240px;
+    font-family: var(--font-mono); font-size: 0.85rem;
+    padding: var(--space-md);
+    resize: vertical;
+  }
+  .sc-controls { margin-top: var(--space-sm); display: flex; gap: var(--space-sm); flex-wrap: wrap; }
+  .sc-controls .stats { margin-left: auto; font-size: 0.85rem; color: var(--text-muted); font-family: var(--font-mono); align-self: center; }
+
+  .empty-state {
+    margin-top: var(--space-lg);
+    padding: var(--space-2xl);
+    text-align: center;
+    background: var(--bg-alt);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius-md);
+    color: var(--text-muted);
+  }
+
+  .score-block {
+    margin-top: var(--space-lg);
+    padding: var(--space-lg);
+    background: linear-gradient(135deg, rgba(40, 239, 145, 0.05), rgba(0, 196, 167, 0.06)), var(--bg);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--brand-accent);
+    border-radius: var(--radius-md);
+    display: flex; gap: var(--space-lg);
+    align-items: center; flex-wrap: wrap;
+  }
+  .score-circle {
+    width: 100px; height: 100px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; background: var(--bg);
+    border: 6px solid var(--bg-muted);
+    flex-shrink: 0;
+  }
+  .score-circle.score-good { border-color: var(--success); }
+  .score-circle.score-warn { border-color: var(--warning); }
+  .score-circle.score-bad  { border-color: var(--danger); }
+  .score-circle .num { font-family: var(--font-mono); font-size: 2.2rem; font-weight: 700; }
+  .score-circle .num small { font-size: 1rem; color: var(--text-muted); font-weight: 400; }
+  .score-meta { flex: 1; min-width: 200px; }
+  .score-meta .label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: var(--space-xs); }
+  .score-meta .advice { font-size: 1.05rem; font-weight: 500; color: var(--text-primary); margin-bottom: 6px; }
+  .score-meta .sa-detail { font-size: 0.85rem; color: var(--text-muted); font-family: var(--font-mono); }
+
+  .category-totals {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-xs);
+    margin-top: var(--space-md);
+  }
+  @media (max-width: 700px) { .category-totals { grid-template-columns: repeat(2, 1fr); } }
+  .category-totals .cat {
+    padding: var(--space-sm); background: var(--bg);
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    text-align: center;
+  }
+  .category-totals .cat .label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
+  .category-totals .cat .v { font-family: var(--font-mono); font-size: 1.2rem; font-weight: 600; margin-top: 2px; }
+  .category-totals .cat .v.zero { color: var(--success); }
+  .category-totals .cat .v.warn { color: var(--warning); }
+  .category-totals .cat .v.bad  { color: var(--danger); }
+
+  .triggered-list { margin-top: var(--space-lg); display: flex; flex-direction: column; gap: var(--space-xs); }
+  .triggered-rule {
+    display: grid; grid-template-columns: auto 1fr auto;
+    gap: var(--space-sm) var(--space-md); align-items: start;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--bg); border: 1px solid var(--border);
+    border-left: 3px solid var(--warning);
+    border-radius: var(--radius-md);
+  }
+  .triggered-rule.severe { border-left-color: var(--danger); }
+  .triggered-rule .badge {
+    padding: 2px 8px; border-radius: 999px;
+    font-size: 0.7rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.05em;
+    background: var(--bg-muted); color: var(--text-secondary);
+    align-self: start;
+  }
+  .triggered-rule .rule-name { font-weight: 500; color: var(--text-primary); }
+  .triggered-rule .rule-desc { font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px; }
+  .triggered-rule .points {
+    font-family: var(--font-mono); font-weight: 600; color: var(--danger);
+    font-size: 0.95rem; align-self: start;
+  }
+
+  .clean-state {
+    margin-top: var(--space-lg);
+    padding: var(--space-xl);
+    background: rgba(40, 239, 145, 0.05);
+    border: 1px solid rgba(40, 239, 145, 0.2);
+    border-radius: var(--radius-md);
+    text-align: center;
+    color: var(--text-secondary);
+  }
+
+  .toast {
+    position: fixed; bottom: var(--space-xl); left: 50%; transform: translateX(-50%);
+    background: var(--text-primary); color: white; padding: var(--space-sm) var(--space-lg);
+    border-radius: var(--radius-md); box-shadow: var(--shadow-md);
+    opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 1000;
+  }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-logo" href="https://min8t.com/" aria-label="MiN8T home">
+      <img src="../_shared/brand/min8t-logo.svg" alt="MiN8T" width="120" height="32">
+    </a>
+    <nav class="site-nav">
+      <a href="../">Free Tools</a>
+      <a href="https://app.min8t.com/?ref=tools-spam-checker" class="cta-editor">Open Editor →</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <h1>Email Spam Score Checker</h1>
+  <p>Paste any HTML email body and get a 0-10 deliverability score with a rule-by-rule breakdown across 21 SpamAssassin-style checks. Free, unlimited, no signup. The rules engine runs in a Cloudflare Worker - your HTML is scored, the result returns, nothing is logged or stored.</p>
+
+  <div class="sc-input-wrap">
+    <label for="html-input" style="text-transform:uppercase; font-size:0.75rem; letter-spacing:0.05em; color:var(--text-muted); margin-bottom:4px;">Email HTML</label>
+    <textarea id="html-input" placeholder="Paste your HTML email source here…" spellcheck="false" autocomplete="off"></textarea>
+  </div>
+
+  <div class="sc-controls">
+    <button type="button" class="btn btn-secondary" id="sample-btn">Use sample (spammy)</button>
+    <button type="button" class="btn btn-secondary" id="clear-btn">Clear</button>
+    <span class="stats" id="stats">0 chars</span>
+  </div>
+
+  <div class="empty-state" id="empty-state">Paste an HTML email above to score it.</div>
+
+  <div id="results" hidden>
+    <div class="score-block">
+      <div class="score-circle" id="score-circle">
+        <div class="num" id="score-num">—<small>/10</small></div>
+      </div>
+      <div class="score-meta">
+        <div class="label">Deliverability score</div>
+        <div class="advice" id="score-advice"></div>
+        <div class="sa-detail" id="score-detail"></div>
+      </div>
+    </div>
+
+    <div class="category-totals" id="category-totals"></div>
+
+    <div id="triggered-section" hidden>
+      <h2>Rules triggered</h2>
+      <div class="triggered-list" id="triggered-list"></div>
+    </div>
+
+    <div class="clean-state" id="clean-state" hidden>
+      <strong>No rules fired.</strong>
+      <p style="margin-top:8px;">No body-content issues detected. For real send-time deliverability, also verify SPF/DKIM/DMARC, sender reputation, and recipient engagement metrics.</p>
+    </div>
+  </div>
+
+  <h2>How to use</h2>
+  <ol>
+    <li>Copy your finished HTML email source (from your ESP's "view source" or your design tool's export).</li>
+    <li>Paste into the box above. The score updates live as you type (debounced 400 ms).</li>
+    <li>Read the breakdown - rules with the highest points are the biggest issues to fix first.</li>
+    <li>Iterate the copy or markup, paste again, see the score climb.</li>
+  </ol>
+
+  <h2>What the score is, and isn't</h2>
+  <p><strong>Is:</strong> a fast hygiene check on the part of deliverability you control at design time - your body content, HTML structure, and link patterns. Catches well-understood spam-filter triggers before send.</p>
+  <p><strong>Isn't:</strong> a guaranteed prediction of inbox placement. Real spam filters use machine-learning models trained on huge corpora, plus IP reputation, sender history, recipient engagement, and authentication (SPF/DKIM/DMARC). Those signals all matter at send time. A 10/10 here doesn't guarantee inbox; a 6/10 doesn't guarantee spam folder. Treat the score as one input among several.</p>
+
+  <h2>FAQ</h2>
+  <div class="faq">
+    <details>
+      <summary>How does this score compare to mail-tester.com or SpamAssassin?</summary>
+      <p>We run 21 body-content rules adapted from SpamAssassin's URI/SUBJECT/HTML rule families. The aggregate is converted to a 0-10 user-facing score where 10 is best (mail-tester convention). For a real send-time check including headers, IP reputation, and authentication (SPF/DKIM/DMARC), use <a href="https://mail-tester.com" rel="noopener">mail-tester</a> (sends a test message to a unique address) or run SpamAssassin against your finished MIME message. This tool focuses on the part of deliverability you can fix at design time: the body.</p>
+    </details>
+    <details>
+      <summary>What does the score actually mean?</summary>
+      <p>Each triggered rule contributes SpamAssassin-style points. The standard "spam" threshold in SpamAssassin is 5.0 cumulative points - we mirror that. A user-facing score of 5 or below means your body crossed the spam threshold from rules alone. 8-10 means clean body. 6-7 is borderline.</p>
+    </details>
+    <details>
+      <summary>Which rules does the tool check?</summary>
+      <p>21 rules across four categories. <strong>Content:</strong> spam-trigger phrases, urgency language, generic greetings, forward-to-friends, 100% guarantees, money-back claims. <strong>Format:</strong> excessive caps, multi-exclamation, money-symbol runs, heavy emoji. <strong>Structure:</strong> image-only emails, white-on-white hidden text, tiny/zero-size fonts, missing unsubscribe link, missing physical address, oversized HTML. <strong>Links:</strong> URL shorteners, IP-based URLs, link/text mismatch (phishing pattern), excessive total links, heavy use of tracking redirectors.</p>
+    </details>
+    <details>
+      <summary>Why a no-unsubscribe rule? My transactional email doesn't need one.</summary>
+      <p>True - transactional emails (receipts, password resets, account notifications) are exempt under CAN-SPAM. The rule fires anyway because the tool can't tell from the body alone whether the email is transactional or marketing. If your test input is a receipt and the no-unsubscribe rule fires, ignore it. The rule is meaningful for marketing/promotional sends, where missing it is a real deliverability hit.</p>
+    </details>
+    <details>
+      <summary>Does my HTML get sent anywhere?</summary>
+      <p>It's POSTed to a Cloudflare Worker, scored, and the result returned. The Worker doesn't log, store, or correlate the input. The rules engine runs entirely in the Worker (no third-party calls), so the only entity that sees your HTML is Cloudflare's edge runtime. We chose this over a fully client-side implementation because the rules engine is ~30 KB - acceptable as a one-time download but better as a Worker call to keep the page fast.</p>
+    </details>
+    <details>
+      <summary>Can I trust this tool's score 100%?</summary>
+      <p>No tool can. Real spam filters use machine-learning models trained on millions of emails, plus IP reputation, sender history, recipient engagement, and dozens of other signals you can't audit at design time. This tool catches the well-understood content-side issues. Treat it as a hygiene check, not a delivery prediction.</p>
+    </details>
+    <details>
+      <summary>Why does my email get a low score even though it's clearly not spam?</summary>
+      <p>Common false positives: (1) marketing copy that legitimately uses urgency ("Last chance to register"), (2) a sale email with prices and money symbols, (3) a transactional email that doesn't need an unsubscribe link, (4) a newsletter pasted without the layout's unsubscribe footer. Look at WHICH rules fired - if they're all rules you've consciously decided are appropriate for your send, the low score is a false alarm.</p>
+    </details>
+    <details>
+      <summary>Is this open-source / can I see the rules?</summary>
+      <p>The rule definitions are in the open-source <a href="https://github.com/Davison-Francis/min8t-tools/blob/main/workers/api/spam-rules.js" rel="noopener">min8t-tools repo</a> at <code>workers/api/spam-rules.js</code> (MIT licence). Each rule has a name, category, weight, and test function. Read them, propose changes, or fork. The list will grow over time.</p>
+    </details>
+  </div>
+
+  <div class="conversion-cta">
+    <h2>Build the email this score is for</h2>
+    <p>MiN8T's editor exports clean HTML with unsubscribe links, footer addresses, and Outlook-safe markup baked in - the right shape for body-content scoring out of the box.</p>
+    <a class="btn" id="cta-editor" href="https://app.min8t.com/?ref=tools-spam-checker">Open MiN8T Editor →</a>
+  </div>
+
+  <h2>More free tools for email marketers</h2>
+  <div class="related-tools">
+    <a class="tool-card" href="../utm-builder/"><h3>UTM Campaign URL Builder</h3><p>Build tracked links for your email campaigns with one click.</p></a>
+    <a class="tool-card" href="../image-compressor/"><h3>Email Image Compressor</h3><p>Compress and resize images so your emails stay under inbox size limits.</p></a>
+    <a class="tool-card" href="../email-signature-generator/"><h3>Email Signature Generator</h3><p>Outlook-safe HTML signatures with one-click copy.</p></a>
+    <a class="tool-card" href="../subject-line-analyzer/"><h3>Subject Line Analyzer</h3><p>Score your subject line on length, spam triggers, sentiment, and more.</p></a>
+    <a class="tool-card" href="../background-remover/"><h3>Background Remover</h3><p>Remove image backgrounds 100% in your browser.</p></a>
+    <a class="tool-card" href="../font-checker/"><h3>Email-Safe Font Checker</h3><p>Will your font render in Outlook? Per-client matrix + fallback stacks.</p></a>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <p>Made by <a href="https://min8t.com/">MiN8T</a>, the email design platform that respects your time.</p>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script type="module" src="./app.js"></script>
+</body>
+</html>

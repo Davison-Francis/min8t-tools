@@ -18,6 +18,7 @@
  */
 import { SPAM_TRIGGERS } from './spam-words.js';
 import { SENTIMENT_WORDS } from './sentiment-words.js';
+import { scoreEmail } from './spam-rules.js';
 
 const ALLOWED_ORIGINS = new Set([
   'https://min8t.com',
@@ -51,10 +52,34 @@ export default {
     if (url.pathname === '/api/tools/subject-analyze') {
       return handleSubjectAnalyze(request, origin);
     }
+    if (url.pathname === '/api/tools/spam-check') {
+      return handleSpamCheck(request, origin);
+    }
 
     return new Response('Not found', { status: 404, headers: corsHeaders(origin) });
   },
 };
+
+async function handleSpamCheck(request, origin) {
+  if (request.method !== 'POST') {
+    return errResp('Method not allowed', 405, origin);
+  }
+  let body;
+  try { body = await request.json(); } catch { return errResp('Invalid JSON', 400, origin); }
+  const html = (body?.html ?? '').toString();
+  if (!html.trim()) return errResp('Missing html', 400, origin);
+  if (html.length > 500_000) return errResp('HTML too large (max 500 KB)', 413, origin);
+
+  const result = scoreEmail(html);
+  return new Response(JSON.stringify(result), {
+    status: 200,
+    headers: {
+      'content-type': 'application/json',
+      'cache-control': 'no-store',
+      ...corsHeaders(origin),
+    },
+  });
+}
 
 async function handleSubjectAnalyze(request, origin) {
   if (request.method !== 'POST') {
