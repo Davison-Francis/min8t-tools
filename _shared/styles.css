@@ -190,21 +190,20 @@ input, textarea, select {
   font-family: inherit;
   font-size: 1rem;
   padding: var(--space-sm) var(--space-md);
-  /* Border + bg both lifted from the v1 token rewrite: the previous values
-     (--border = 0.12 alpha, bg = 0.6 alpha of brand dark) blended into the
-     glass <main> panel and made fields read as borderless. The combination
-     below gives a clearly visible recess on the dark glass without
-     overpowering the brand-green focus ring. */
-  border: 1px solid rgba(255, 255, 255, 0.28);
+  /* Default field borders MUST be visible on the dark glass <main> over
+     the bright wave. Previous values (alpha 0.12, then 0.28) read as
+     borderless. Using a near-opaque dark fill + 0.5-alpha white border
+     so each field is a clearly distinct recess in the glass. */
+  border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: var(--radius-md);
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(15, 18, 16, 0.85);
   color: var(--text-primary);
   width: 100%;
   transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
 }
 
 input:hover, textarea:hover, select:hover {
-  border-color: rgba(255, 255, 255, 0.45);
+  border-color: rgba(255, 255, 255, 0.7);
 }
 
 input::placeholder, textarea::placeholder {
