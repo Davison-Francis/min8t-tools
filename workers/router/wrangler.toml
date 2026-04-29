@@ -1,5 +1,5 @@
 name = "min8t-tools-router"
-main = "min8t-tools-router.js"
+main = "index.js"
 compatibility_date = "2026-04-29"
 account_id = "626e6ac44d135aa0f72c82e6ed5761af"
 

@@ -1,0 +1,10 @@
+name = "min8t-tools-api"
+main = "index.js"
+compatibility_date = "2026-04-29"
+account_id = "626e6ac44d135aa0f72c82e6ed5761af"
+
+# API endpoints for the free tools that need server-side compute. Currently:
+#   POST /api/tools/subject-analyze  — score an email subject line
+[[routes]]
+pattern = "min8t.com/api/tools/*"
+zone_name = "min8t.com"

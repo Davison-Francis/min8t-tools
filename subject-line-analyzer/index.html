@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Email Subject Line Analyzer — Free Score in Real Time | MiN8T</title>
+<meta name="description" content="Score your email subject line on length, spam triggers, sentiment, and 5 more signals. Free, no signup, instant. Built for marketers and copywriters.">
+<link rel="canonical" href="https://min8t.com/tools/subject-line-analyzer/">
+<meta property="og:title" content="Email Subject Line Analyzer — Free | MiN8T">
+<meta property="og:description" content="Live 0-100 score for any email subject line. Length, spam triggers, sentiment, emoji, caps ratio, power words.">
+<meta property="og:url" content="https://min8t.com/tools/subject-line-analyzer/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0066ff">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Email Subject Line Analyzer",
+  "url": "https://min8t.com/tools/subject-line-analyzer/",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "All",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Score email subject lines 0-100 across 8 deliverability signals. Free, instant, unlimited."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Free Tools", "item": "https://min8t.com/tools/" },
+    { "@type": "ListItem", "position": 2, "name": "Subject Line Analyzer", "item": "https://min8t.com/tools/subject-line-analyzer/" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What makes a good email subject line?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Concise (30-50 characters, 5-9 words), specific to one outcome, and free of spam-trigger words. Add a personalization token like [FirstName], use one emoji at most, keep CAPS under 20%. Power words like 'discover', 'introducing', 'unlock' lift open rates without triggering spam filters."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How long should an email subject line be?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "30-50 characters is the sweet spot. Mobile clients (where 60%+ of email opens happen) truncate around 30-40 chars; desktop Gmail shows ~70 chars. Keep the most important word in the first 30 chars so it survives mobile truncation. Anything over 70 characters will truncate everywhere."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which words trigger spam filters?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Money words (free, $$$, cash, save), urgency words (act now, last chance, urgent), guarantee words (100%, no risk, money back), and hype (amazing, incredible, miracle). Spam filters use weighted scoring across thousands of signals — one trigger word usually doesn't tank delivery, but combinations do. The analyzer here uses a curated list of ~150 highest-impact triggers distilled from SpamAssassin and mailmeteor."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should I use emoji in email subject lines?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "One emoji is fine and can lift open rates 5-15% in B2C. Two is borderline. Three or more reads as spam to both filters and users. Pick a single emoji that matches the message, place it at the start or end (not the middle), and skip purely decorative ones. Outlook strips emoji from preview panes; don't rely on them as the only differentiator."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does the score predict open rates?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Loosely. The score is a sum of well-known deliverability and copywriting signals — high scores correlate with better delivery and click-through, but actual open rates depend on your sender reputation, list quality, send time, and the audience's existing relationship with you. Treat the score as a hygiene check, not a prediction."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are personalization tokens?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Placeholders that your ESP swaps for subscriber data at send time — [FirstName], {{name}}, %FNAME%, *|FNAME|* (Mailchimp), and similar. Subject lines with the recipient's first name see 10-20% higher open rates on average. The analyzer detects all common token formats and gives a bonus when one is present."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does the analyzer work for non-English subject lines?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Partially. Length, word count, emoji count, CAPS ratio, and personalization-token detection work in any language. Spam triggers and sentiment scoring are English-only — the wordlists are English. Non-English subjects will get inflated scores in those two categories. We'll expand language support as we grow."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is the score saved or shared?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Each analysis hits a Cloudflare Worker that scores your subject line and returns the result — nothing is logged, stored, or correlated. You can use the tool unlimited times without an account."
+      }
+    }
+  ]
+}
+</script>
+
+<link rel="stylesheet" href="../_shared/styles.css">
+<style>
+  .sla-input-row { margin-top: var(--space-lg); }
+  .sla-input-row textarea {
+    width: 100%; min-height: 70px;
+    font-family: var(--font-sans); font-size: 1.1rem;
+    padding: var(--space-md);
+    resize: vertical;
+  }
+  .char-count { font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; text-align: right; }
+  .char-count.warn { color: var(--warning); }
+  .char-count.bad  { color: var(--danger); }
+
+  .score-block {
+    margin-top: var(--space-lg);
+    padding: var(--space-lg);
+    background:
+      linear-gradient(135deg, rgba(0, 102, 255, 0.04), rgba(0, 196, 167, 0.06)),
+      var(--bg);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--brand-accent);
+    border-radius: var(--radius-md);
+    display: flex;
+    gap: var(--space-lg);
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .score-circle {
+    width: 100px; height: 100px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 6px solid var(--bg-muted);
+    flex-shrink: 0;
+  }
+  .score-circle.score-good { border-color: var(--success); }
+  .score-circle.score-warn { border-color: var(--warning); }
+  .score-circle.score-bad  { border-color: var(--danger); }
+  .score-circle .num { font-family: var(--font-mono); font-size: 2.2rem; font-weight: 700; }
+  .score-meta { flex: 1; min-width: 200px; }
+  .score-meta .label {
+    font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--text-muted); margin-bottom: var(--space-xs);
+  }
+  .score-meta .advice { font-size: 1.05rem; font-weight: 500; color: var(--text-primary); }
+
+  .breakdown { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-sm); margin-top: var(--space-lg); }
+  @media (max-width: 600px) { .breakdown { grid-template-columns: 1fr; } }
+  .signal {
+    display: flex; gap: var(--space-sm); align-items: center;
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg);
+  }
+  .signal .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .signal.good .dot { background: var(--success); }
+  .signal.warn .dot { background: var(--warning); }
+  .signal.bad  .dot { background: var(--danger); }
+  .signal .signal-name { font-weight: 500; min-width: 110px; }
+  .signal .signal-note { font-size: 0.85rem; color: var(--text-secondary); flex: 1; }
+
+  .triggers-block { margin-top: var(--space-md); }
+  .triggers-block h3 {
+    font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--text-muted); margin: 0 0 var(--space-xs);
+  }
+  .trigger-pill {
+    display: inline-block;
+    padding: 3px 10px;
+    margin: 2px;
+    background: rgba(229, 57, 53, 0.1);
+    color: var(--danger);
+    font-size: 0.85rem;
+    font-family: var(--font-mono);
+    border-radius: 999px;
+  }
+
+  .empty-state {
+    margin-top: var(--space-lg);
+    padding: var(--space-2xl);
+    text-align: center;
+    background: var(--bg-alt);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius-md);
+    color: var(--text-muted);
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-logo" href="https://min8t.com/" aria-label="MiN8T home">
+      <img src="../_shared/brand/min8t-logo.svg" alt="MiN8T" width="120" height="32">
+    </a>
+    <nav class="site-nav">
+      <a href="../">Free Tools</a>
+      <a href="https://app.min8t.com/?ref=tools-subject-line-analyzer" class="cta-editor">Open Editor →</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <h1>Email Subject Line Analyzer</h1>
+  <p>Score any subject line 0-100 across 8 signals: length, word count, spam triggers, sentiment, emoji, CAPS ratio, personalization, and power words. Free, instant, unlimited use. Type below to score live.</p>
+
+  <div class="sla-input-row">
+    <label for="subject">Your subject line</label>
+    <textarea id="subject" name="subject" maxlength="200" placeholder="e.g. Introducing our new dashboard, [FirstName]" autocomplete="off"></textarea>
+    <div class="char-count" id="char-count">0 / 200 chars</div>
+  </div>
+
+  <!-- empty state until user types -->
+  <div class="empty-state" id="empty-state">Type a subject line above to see the score.</div>
+
+  <!-- results (hidden until first scoring) -->
+  <div id="results" hidden>
+    <div class="score-block">
+      <div class="score-circle" id="score-circle">
+        <span class="num" id="score-num">—</span>
+      </div>
+      <div class="score-meta">
+        <div class="label">Overall score</div>
+        <div class="advice" id="score-advice"></div>
+      </div>
+    </div>
+
+    <div class="breakdown" id="breakdown"></div>
+
+    <div class="triggers-block" id="triggers-block" hidden>
+      <h3>Spam-trigger words detected</h3>
+      <div id="triggers-list"></div>
+    </div>
+  </div>
+
+  <h2>How to use the analyzer</h2>
+  <ol>
+    <li>Type or paste your subject line in the input above. The score updates live as you type (300ms debounce).</li>
+    <li>Read the breakdown — green dots are good, amber are borderline, red need fixing.</li>
+    <li>Apply the advice — usually 1-2 changes lift the score 10-20 points.</li>
+    <li>Re-type and ship.</li>
+  </ol>
+
+  <h2>What each signal measures</h2>
+  <p><strong>Length</strong> — character count. Sweet spot 30-50 chars. Mobile clients truncate around 30-40, desktop Gmail shows ~70.</p>
+  <p><strong>Word count</strong> — concise reads as confident; verbose reads as unsure. 5-9 words is the open-rate sweet spot across multiple research datasets.</p>
+  <p><strong>Spam triggers</strong> — match against ~150 high-impact words distilled from SpamAssassin's URI/SUBJECT rules and the mailmeteor/spam-words list. One match is borderline; two or more is high risk.</p>
+  <p><strong>Sentiment</strong> — AFINN-style scoring across positive/negative words. Marketing emails skew positive; subjects with mildly positive language outperform neutral ones, and outperform overtly hyped ones.</p>
+  <p><strong>Emoji</strong> — one is fine, two borderline, three or more triggers spam heuristics in Gmail and Outlook.</p>
+  <p><strong>CAPS ratio</strong> — anything over 50% reads as shouting. Below 20% is natural.</p>
+  <p><strong>Personalization</strong> — bonus when a token like <code>[FirstName]</code>, <code>{{name}}</code>, <code>%FNAME%</code>, or <code>*|FNAME|*</code> is detected. Personalized subjects open 10-20% better on average.</p>
+  <p><strong>Power words</strong> — bonus for verbs and adjectives that lift CTR without triggering spam filters: <em>discover</em>, <em>introducing</em>, <em>unlock</em>, <em>finally</em>, <em>announcing</em>.</p>
+
+  <h2>FAQ</h2>
+  <div class="faq">
+    <details>
+      <summary>What makes a good email subject line?</summary>
+      <p>Concise (30-50 characters, 5-9 words), specific to one outcome, and free of spam-trigger words. Add a personalization token like <code>[FirstName]</code>, use one emoji at most, keep CAPS under 20%. Power words like "discover", "introducing", "unlock" lift open rates without triggering spam filters.</p>
+    </details>
+    <details>
+      <summary>How long should an email subject line be?</summary>
+      <p>30-50 characters is the sweet spot. Mobile clients (where 60%+ of email opens happen) truncate around 30-40 chars; desktop Gmail shows ~70 chars. Keep the most important word in the first 30 chars so it survives mobile truncation. Anything over 70 characters will truncate everywhere.</p>
+    </details>
+    <details>
+      <summary>Which words trigger spam filters?</summary>
+      <p>Money words (free, $$$, cash, save), urgency words (act now, last chance, urgent), guarantee words (100%, no risk, money back), and hype (amazing, incredible, miracle). Spam filters use weighted scoring across thousands of signals — one trigger word usually doesn't tank delivery, but combinations do. The analyzer here uses a curated list of ~150 highest-impact triggers distilled from SpamAssassin and mailmeteor.</p>
+    </details>
+    <details>
+      <summary>Should I use emoji in email subject lines?</summary>
+      <p>One emoji is fine and can lift open rates 5-15% in B2C. Two is borderline. Three or more reads as spam to both filters and users. Pick a single emoji that matches the message, place it at the start or end (not the middle), and skip purely decorative ones. Outlook strips emoji from preview panes; don't rely on them as the only differentiator.</p>
+    </details>
+    <details>
+      <summary>Does the score predict open rates?</summary>
+      <p>Loosely. The score is a sum of well-known deliverability and copywriting signals — high scores correlate with better delivery and click-through, but actual open rates depend on your sender reputation, list quality, send time, and the audience's existing relationship with you. Treat the score as a hygiene check, not a prediction.</p>
+    </details>
+    <details>
+      <summary>What are personalization tokens?</summary>
+      <p>Placeholders that your ESP swaps for subscriber data at send time — <code>[FirstName]</code>, <code>{{name}}</code>, <code>%FNAME%</code>, <code>*|FNAME|*</code> (Mailchimp), and similar. Subject lines with the recipient's first name see 10-20% higher open rates on average. The analyzer detects all common token formats and gives a bonus when one is present.</p>
+    </details>
+    <details>
+      <summary>Does the analyzer work for non-English subject lines?</summary>
+      <p>Partially. Length, word count, emoji count, CAPS ratio, and personalization-token detection work in any language. Spam triggers and sentiment scoring are English-only — the wordlists are English. Non-English subjects will get inflated scores in those two categories.</p>
+    </details>
+    <details>
+      <summary>Is the score saved or shared?</summary>
+      <p>No. Each analysis hits a Cloudflare Worker that scores your subject line and returns the result — nothing is logged, stored, or correlated. You can use the tool unlimited times without an account.</p>
+    </details>
+  </div>
+
+  <div class="conversion-cta">
+    <h2>Build the email this subject line goes into</h2>
+    <p>MiN8T's editor is the natural next step — paste your subject in, design the body, ship to any ESP. No tab-juggling.</p>
+    <a class="btn" id="cta-editor" href="https://app.min8t.com/?ref=tools-subject-line-analyzer">Open MiN8T Editor →</a>
+  </div>
+
+  <h2>More free tools for email marketers</h2>
+  <div class="related-tools">
+    <a class="tool-card" href="../utm-builder/"><h3>UTM Campaign URL Builder</h3><p>Build tracked links for your email campaigns with one click.</p></a>
+    <a class="tool-card" href="../image-compressor/"><h3>Email Image Compressor</h3><p>Compress and resize images so your emails stay under inbox size limits.</p></a>
+    <a class="tool-card" href="../email-signature-generator/"><h3>Email Signature Generator</h3><p>Outlook-safe HTML signatures with one-click copy.</p></a>
+    <a class="tool-card" href="../background-remover/"><h3>Background Remover</h3><p>Remove image backgrounds 100% in your browser.</p></a>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <p>Made by <a href="https://min8t.com/">MiN8T</a>, the email design platform that respects your time.</p>
+</footer>
+
+<script type="module" src="./app.js"></script>
+</body>
+</html>
