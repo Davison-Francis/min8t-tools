@@ -131,10 +131,21 @@
   .bg-grid {
     margin-top: var(--space-lg);
     display: grid;
-    grid-template-columns: 320px 1fr;
+    /* minmax(0, 1fr) instead of bare 1fr so the right column can shrink
+       below its intrinsic content width. Without this, the iframe + <pre>
+       inside .preview-card size the grid track to their content (~3000px)
+       and the whole right column overflows <main>. */
+    grid-template-columns: 320px minmax(0, 1fr);
     gap: var(--space-lg);
+    min-width: 0;
   }
-  @media (max-width: 900px) { .bg-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 900px) { .bg-grid { grid-template-columns: minmax(0, 1fr); } }
+  /* Lock the right-column children to the grid track, so wide iframes /
+     <pre> code blocks scroll horizontally inside their card instead of
+     blowing out the layout. */
+  .bg-grid > .bg-output { min-width: 0; }
+  .bg-grid > .bg-output > * { min-width: 0; }
+  .preview-card pre { overflow: auto; }
 
   .bg-controls {
     display: flex; flex-direction: column; gap: var(--space-sm);
