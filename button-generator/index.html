@@ -213,12 +213,14 @@
     text-align: center;
     transition: border-color 0.15s;
   }
-  .preset:hover { border-color: var(--brand-green); }
+  .preset:hover { border-color: var(--brand-primary); }
 
   .toast {
     position: fixed; bottom: var(--space-xl); left: 50%; transform: translateX(-50%);
-    background: var(--text-primary); color: white; padding: var(--space-sm) var(--space-lg);
-    border-radius: var(--radius-md); box-shadow: var(--shadow-md);
+    background: var(--brand-primary); color: #2b312c;
+    padding: var(--space-sm) var(--space-lg);
+    border-radius: 9999px; box-shadow: var(--shadow-lg);
+    font-weight: 700;
     opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 1000;
   }
   .toast.show { opacity: 1; }
