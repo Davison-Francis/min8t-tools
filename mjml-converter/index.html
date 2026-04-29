@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MJML to HTML Converter - Free Online MJML Compiler | MiN8T</title>
+<meta name="description" content="Paste MJML markup, get email-safe HTML back. Browser-based MJML compiler with live iframe preview. Free, no signup, no install.">
+<link rel="canonical" href="https://min8t.com/tools/mjml-converter/">
+<meta property="og:title" content="MJML to HTML Converter - Free | MiN8T">
+<meta property="og:description" content="Compile MJML to email-safe HTML in your browser. Free, no signup.">
+<meta property="og:url" content="https://min8t.com/tools/mjml-converter/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#28ef91">
+
+<link rel="icon" href="https://min8t.com/favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="https://min8t.com/favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="https://min8t.com/apple-touch-icon.png">
+
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/roboto/Roboto-Regular.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/roboto/Roboto-Medium.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/roboto/Roboto-Bold.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/pp-neue-montreal/ppneuemontreal-book.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/pp-neue-montreal/ppneuemontreal-bold.woff2" crossorigin>
+
+<link rel="preconnect" href="https://esm.sh">
+<link rel="modulepreload" href="https://esm.sh/mjml-browser@4.15.3">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "MJML to HTML Converter",
+  "url": "https://min8t.com/tools/mjml-converter/",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "All",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Compile MJML markup to email-safe HTML in the browser. Live preview, validation errors, copy and download. No signup."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Free Tools", "item": "https://min8t.com/tools/" },
+    { "@type": "ListItem", "position": 2, "name": "MJML Converter", "item": "https://min8t.com/tools/mjml-converter/" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is MJML?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "MJML (Mailjet Markup Language) is a markup language designed for email. You write semantic tags like <mj-section>, <mj-column>, and <mj-button>, and the MJML compiler expands them into the nested-table HTML that email clients require to render correctly across Gmail, Outlook, Apple Mail, and the rest. It's open-source (MIT) and maintained by Mailjet."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why use MJML instead of writing HTML directly?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Email HTML is hostile. Outlook desktop uses the Microsoft Word rendering engine, which ignores flexbox, grid, modern CSS positioning, and most properties you use on the web. The workaround is nested <table> layouts with VML conditional comments and inline styles. MJML hides that complexity behind a clean, semantic markup. You write a 30-line MJML template; the compiler emits 300 lines of email-safe HTML you'd never want to write by hand."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is the compiler running in my browser?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. We load mjml-browser (the official MJML team's browser bundle, MIT) from esm.sh and compile entirely client-side. Your MJML never leaves your browser. Open DevTools Network tab during compilation - you'll see one initial fetch for the MJML library and zero outbound requests for your markup."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does the compiled HTML look like?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Outlook-safe table-based layout with inline styles, MSO conditional comments for Outlook-specific quirks, mobile-responsive @media queries in a <style> block, and font-fallback stacks built in. The output is what Mailjet and most ESPs internally generate from MJML - nothing custom or proprietary. You can paste it directly into any ESP's HTML view, save it as a .html file, or take it through our CSS Inliner / Inbox Preview tools to verify rendering."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the validation levels?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "MJML's parser supports three levels: 'soft' warns about unknown tags or invalid attributes but still compiles; 'strict' refuses to compile if errors are present; 'skip' compiles without checking. We default to 'soft' so you can catch issues without blocking the output. Switch to 'strict' once you're confident in your template."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where do I learn MJML syntax?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The official documentation at mjml.io/documentation lists every tag and attribute. The Try It Live demo on mjml.io is good for experimenting. The 'Use sample MJML' button here loads a 3-section newsletter that demonstrates the most common patterns: hero block, feature columns, footer with social links."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does MJML support all email features?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "MJML covers the bread-and-butter cases: layouts, columns, buttons, images, text, dividers, social icons, navigation, hero blocks. It doesn't include AMP for Email or interactive elements - those need raw HTML. For 95 percent of marketing emails, MJML is enough; for AMP carousels or interactive forms, you'd write those sections in raw HTML and inject them via mj-raw."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I import the compiled HTML into MiN8T?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes - download or copy the compiled HTML, then in MiN8T's editor use 'Import HTML' to bring it in as an editable template. You get the design from MJML's compile step, then visual editing on top."
+      }
+    }
+  ]
+}
+</script>
+
+<link rel="preload" href="https://min8t.com/landing/css/main.css?v=combined" as="style">
+<link rel="stylesheet" href="https://min8t.com/landing/css/main.css?v=combined">
+<link rel="stylesheet" href="../_shared/styles.css?v=4">
+<link rel="stylesheet" href="../_shared/tools.css?v=1">
+
+<style>
+  .mj-grid {
+    margin-top: var(--space-lg);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--space-md);
+  }
+  @media (max-width: 1100px) { .mj-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 700px)  { .mj-grid { grid-template-columns: 1fr; } }
+
+  .mj-pane {
+    display: flex; flex-direction: column;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    min-height: 480px;
+  }
+  .mj-pane-header {
+    padding: var(--space-sm) var(--space-md);
+    background: var(--bg-alt);
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.85rem;
+  }
+  .mj-pane-header strong { font-weight: 600; }
+  .mj-pane-header .small { font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono); }
+
+  .mj-pane textarea {
+    flex: 1;
+    border: 0;
+    padding: var(--space-md);
+    font-family: var(--font-mono); font-size: 0.8rem; line-height: 1.5;
+    resize: none;
+    background: var(--bg);
+    color: var(--text-primary);
+    outline: none;
+  }
+
+  .mj-pane iframe {
+    flex: 1;
+    border: 0;
+    width: 100%;
+    background: white;
+  }
+
+  .mj-controls { margin-top: var(--space-sm); display: flex; gap: var(--space-sm); flex-wrap: wrap; align-items: center; }
+  .mj-controls .right {
+    margin-left: auto;
+    font-size: 0.85rem; color: var(--text-muted);
+    display: flex; align-items: center; gap: var(--space-md);
+  }
+  .mj-controls .auto-toggle {
+    display: flex; align-items: center; gap: 6px; cursor: pointer;
+  }
+  .mj-controls .auto-toggle input { accent-color: var(--brand-green); }
+  .mj-controls select {
+    padding: 4px 8px;
+    font-size: 0.85rem;
+    background: var(--bg);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+  }
+
+  .errors {
+    margin-top: var(--space-md);
+    padding: var(--space-md);
+    background: rgba(245, 165, 36, 0.06);
+    border: 1px solid rgba(245, 165, 36, 0.2);
+    border-radius: var(--radius-md);
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    display: none;
+  }
+  .errors.show { display: block; }
+  .errors strong { color: var(--text-primary); }
+  .errors .err { display: block; padding: 4px 0; }
+  .errors .err:not(:last-child) { border-bottom: 1px dashed rgba(245, 165, 36, 0.2); }
+
+  .toast {
+    position: fixed; bottom: var(--space-xl); left: 50%; transform: translateX(-50%);
+    background: var(--text-primary); color: white; padding: var(--space-sm) var(--space-lg);
+    border-radius: var(--radius-md); box-shadow: var(--shadow-md);
+    opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 1000;
+  }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<img id="hero-bg"
+     src="https://min8t.com/landing/assets/min8t/landing-bg-1920.webp"
+     srcset="https://min8t.com/landing/assets/min8t/landing-bg-1280.webp?v=q75 1280w, https://min8t.com/landing/assets/min8t/landing-bg-1920.webp 1920w, https://min8t.com/landing/assets/min8t/landing-bg.webp 2560w"
+     sizes="100vw"
+     alt=""
+     aria-hidden="true"
+     decoding="async"
+     fetchpriority="high"
+     width="1920" height="1072">
+
+<header class="site-header bg-black" style="position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 1.5rem;">
+  <div class="site-header-inner container mx-auto" style="max-width:1280px;display:flex;align-items:center;justify-content:space-between;">
+    <a href="https://min8t.com/" aria-label="MiN8T home" class="site-logo" style="display:inline-flex;align-items:center;gap:0.5rem;text-decoration:none;color:#fff;">
+      <img src="https://min8t.com/landing/assets/min8t/min8t-logo-circled-white.svg" alt="MiN8T" width="32" height="32" loading="eager" style="height:32px;width:auto;">
+      <span style="color:#fff;font-weight:700;font-size:1.25rem;font-family:'PP Neue Montreal','Roboto',sans-serif;">MiN8T</span>
+      <span style="color:rgba(255,255,255,0.5);font-size:0.625rem;letter-spacing:0.1em;text-transform:uppercase;">Powered by ABLA</span>
+    </a>
+    <nav class="site-nav bg-menu-main" style="border-radius:9999px;padding:0.5rem 1rem;display:flex;gap:1.25rem;align-items:center;background:rgba(43,49,44,0.78);backdrop-filter:saturate(180%) blur(12px);-webkit-backdrop-filter:saturate(180%) blur(12px);border:1px solid rgba(255,255,255,0.08);">
+      <a href="https://min8t.com/tools/" style="color:#fff;text-decoration:none;font-size:0.95rem;font-weight:500;">All Tools</a>
+      <a href="https://min8t.com/" style="color:#fff;text-decoration:none;font-size:0.95rem;font-weight:500;">Home</a>
+      <a data-btn-arrow href="https://app.min8t.com/signup?ref=tools-mjml-converter" class="btn inline-flex items-center" title="Try MiN8T free" style="display:inline-flex;align-items:center;height:40px;text-decoration:none;gap:0;">
+        <span class="button_circle bg-green" style="background:#28ef91;border-radius:9999px;height:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;transition:all 0.3s;">
+          <img src="https://min8t.com/landing/assets/img/arrow-right.svg" alt="" loading="lazy" width="16" height="16" style="height:60%;width:40%;object-fit:contain;">
+        </span>
+        <span class="anim-btn bg-green" style="background:#28ef91;color:#2b312c;border-radius:9999px;padding:0.5rem 1rem;display:flex;align-items:center;font-weight:700;font-size:1rem;">Try MiN8T free</span>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <h1>MJML to HTML Converter</h1>
+  <p>Paste MJML markup; get email-safe HTML out. Compiles in your browser using the official <code>mjml-browser</code> library (MIT). Live iframe preview shows what the compiled HTML actually looks like. Free, no signup, no install.</p>
+
+  <div class="mj-grid">
+    <div class="mj-pane">
+      <div class="mj-pane-header">
+        <strong>MJML input</strong>
+        <span class="small" id="input-stats">0 chars</span>
+      </div>
+      <textarea id="mjml-input" placeholder="Paste MJML markup here, or click 'Use sample MJML' below…" spellcheck="false" autocomplete="off"></textarea>
+    </div>
+    <div class="mj-pane">
+      <div class="mj-pane-header">
+        <strong>Compiled HTML</strong>
+        <span class="small" id="output-stats">0 chars</span>
+      </div>
+      <textarea id="html-output" placeholder="Compiled HTML will appear here…" spellcheck="false" autocomplete="off" readonly></textarea>
+    </div>
+    <div class="mj-pane">
+      <div class="mj-pane-header">
+        <strong>Live preview</strong>
+        <span class="small" id="preview-status">empty</span>
+      </div>
+      <iframe id="preview-iframe" title="Compiled email preview" sandbox="allow-same-origin"></iframe>
+    </div>
+  </div>
+
+  <div class="mj-controls">
+    <button type="button" class="btn" id="compile-btn">Compile</button>
+    <button type="button" class="btn btn-secondary" id="sample-btn">Use sample MJML</button>
+    <button type="button" class="btn btn-secondary" id="copy-btn">Copy HTML</button>
+    <button type="button" class="btn btn-secondary" id="download-html-btn">Download .html</button>
+    <button type="button" class="btn btn-secondary" id="download-mjml-btn">Download .mjml</button>
+    <button type="button" class="btn btn-secondary" id="clear-btn">Clear</button>
+    <span class="right">
+      <label>Validation
+        <select id="validation-select">
+          <option value="soft" selected>soft</option>
+          <option value="strict">strict</option>
+          <option value="skip">skip</option>
+        </select>
+      </label>
+      <label class="auto-toggle"><input type="checkbox" id="auto-toggle" checked> Auto-compile</label>
+    </span>
+  </div>
+
+  <div class="errors" id="errors-panel">
+    <strong>Validation:</strong>
+    <div id="errors-list"></div>
+  </div>
+
+  <h2>How to use</h2>
+  <ol>
+    <li>Paste MJML markup in the left panel - or click <strong>Use sample MJML</strong> to load a 3-section newsletter template.</li>
+    <li>The middle panel shows the compiled HTML (table-based, Outlook-safe).</li>
+    <li>The right panel shows a live iframe rendering of that HTML.</li>
+    <li>Copy or download the HTML, then test it through our <a href="../inbox-preview/">Inbox Preview tool</a> or paste into your ESP.</li>
+  </ol>
+
+  <h2>What MJML is good for</h2>
+  <ul>
+    <li><strong>Layouts that survive Outlook desktop.</strong> MJML emits the nested-table + VML pattern automatically. You don't write tables.</li>
+    <li><strong>Mobile responsiveness without manual @media queries.</strong> <code>&lt;mj-column&gt;</code> automatically stacks below a configurable breakpoint.</li>
+    <li><strong>Buttons, images, dividers, social icons</strong> with sensible defaults baked in (Outlook VML for rounded buttons, retina-aware image sizing, system font-stack fallbacks).</li>
+    <li><strong>Faster to write than raw email HTML.</strong> A 30-line MJML template compiles to 300 lines of email-safe HTML you'd never want to maintain by hand.</li>
+  </ul>
+
+  <h2>FAQ</h2>
+  <div class="faq">
+    <details>
+      <summary>What is MJML?</summary>
+      <p>MJML (Mailjet Markup Language) is a markup language for email. You write semantic tags like <code>&lt;mj-section&gt;</code>, <code>&lt;mj-column&gt;</code>, <code>&lt;mj-button&gt;</code>, and the MJML compiler expands them into nested-table HTML that email clients render correctly. Open-source (MIT), maintained by Mailjet.</p>
+    </details>
+    <details>
+      <summary>Why use MJML instead of writing HTML directly?</summary>
+      <p>Email HTML is hostile. Outlook desktop uses the Microsoft Word rendering engine - no flexbox, no grid, most modern CSS ignored. The workaround is nested <code>&lt;table&gt;</code> layouts with VML conditional comments and inline styles. MJML hides that complexity behind clean, semantic markup.</p>
+    </details>
+    <details>
+      <summary>Is the compiler running in my browser?</summary>
+      <p>Yes. We load <code>mjml-browser</code> (MIT) from esm.sh and compile entirely client-side. Your MJML never leaves your browser. DevTools Network tab during compile shows one initial fetch for the library and zero outbound requests for your markup.</p>
+    </details>
+    <details>
+      <summary>What does the compiled HTML look like?</summary>
+      <p>Outlook-safe table-based layout with inline styles, MSO conditional comments for Outlook quirks, mobile-responsive <code>@media</code> queries, font-fallback stacks. It's the same output Mailjet and most ESPs generate. Paste it directly into any ESP's HTML view.</p>
+    </details>
+    <details>
+      <summary>What are the validation levels?</summary>
+      <p><code>soft</code> (default) warns about unknown tags or invalid attributes but still compiles. <code>strict</code> refuses to compile on errors. <code>skip</code> compiles without checking. Use <code>soft</code> to debug, <code>strict</code> for production.</p>
+    </details>
+    <details>
+      <summary>Where do I learn MJML syntax?</summary>
+      <p>Official documentation at <code>mjml.io/documentation</code>. The Try It Live demo on the MJML site is good for experimenting. The sample template loaded by the button here demonstrates the most common patterns: hero block, feature columns, footer with social links.</p>
+    </details>
+    <details>
+      <summary>Does MJML support all email features?</summary>
+      <p>Most. Bread-and-butter cases (layouts, columns, buttons, images, text, dividers, social icons, navigation) are covered. AMP for Email and interactive elements need raw HTML, which you can inject via <code>&lt;mj-raw&gt;</code>.</p>
+    </details>
+    <details>
+      <summary>Can I import the compiled HTML into MiN8T?</summary>
+      <p>Yes. Download or copy the compiled HTML, then in MiN8T's editor use Import HTML to bring it in as an editable template. You get MJML's compile correctness, then visual editing on top.</p>
+    </details>
+  </div>
+
+  <div class="conversion-cta">
+    <h2>Edit MJML output visually</h2>
+    <p>MiN8T imports MJML-compiled HTML and gives you a drag-and-drop editor on top. Compile here, polish there.</p>
+    <a class="btn" id="cta-editor" href="https://app.min8t.com/?ref=tools-mjml-converter">Open MiN8T Editor →</a>
+  </div>
+
+  <h2>More free tools for email marketers</h2>
+  <div class="related-tools">
+    <a class="tool-card" href="../css-inliner/"><h3>CSS Inliner</h3><p>Convert &lt;style&gt; blocks into inline style attributes.</p></a>
+    <a class="tool-card" href="../inbox-preview/"><h3>Inbox Preview</h3><p>Side-by-side preview of your HTML email in Gmail, Apple Mail, and Outlook.</p></a>
+    <a class="tool-card" href="../spam-checker/"><h3>Spam Score Checker</h3><p>21-rule SpamAssassin-style score for any HTML email body.</p></a>
+    <a class="tool-card" href="../font-checker/"><h3>Email-Safe Font Checker</h3><p>Will your font render in Outlook? Per-client matrix + fallback stacks.</p></a>
+    <a class="tool-card" href="../subject-line-analyzer/"><h3>Subject Line Analyzer</h3><p>Score your subject line on length, spam triggers, sentiment, and more.</p></a>
+    <a class="tool-card" href="../image-compressor/"><h3>Email Image Compressor</h3><p>Compress and resize images so your emails stay under inbox size limits.</p></a>
+    <a class="tool-card" href="../email-signature-generator/"><h3>Email Signature Generator</h3><p>Outlook-safe HTML signatures with one-click copy.</p></a>
+  </div>
+</main>
+
+<footer class="footer pt-20 main-content bg-black" id="contact">
+  <div class="container mx-auto px-4 xl:px-0">
+    <div class="footer-contact-bloc">
+      <div class="bg-light-gray p-2 lg:p-8 flex flex-wrap rounded-xl">
+        <div class="w-full xl:w-4/12">
+          <h2 class="text-2xl lg:text-[40px] py-5 px-4 lg:py-10 xl:p-0">Ready to start?</h2>
+        </div>
+        <div class="w-full xl:w-8/12">
+          <div class="flex flex-wrap">
+            <div class="w-full xl:w-6/12 bg-white xl:aspect-video rounded-xl flex flex-col">
+              <h3 class="text-lg lg:text-xl roboto-medium w-full lg:w-8/12 xl:w-9/12 2xl:w-10/12 p-4 pb-28 xl:py-4">Stay up to date - the latest on email design and deliverability.</h3>
+              <div class="xl:flex-grow"></div>
+              <div class="form newsletter px-4 pb-4">
+                <form id="tools-newsletter-form" action="https://min8t.com/api/newsletter" method="post">
+                  <div style="display:flex;gap:8px;">
+                    <input type="email" name="email" autocomplete="email" placeholder="your@email.com" required
+                      style="flex:1;padding:12px 16px;border:1px solid #ddd;border-radius:9999px;font-size:14px;font-family:inherit;outline:none;color:#1a1a1a;background:#fff;" />
+                    <button type="submit"
+                      style="background:#2b312c;color:#fff;border:none;padding:12px 24px;border-radius:9999px;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;white-space:nowrap;">Subscribe</button>
+                  </div>
+                  <div class="newsletter-msg" style="font-size:13px;margin-top:8px;min-height:20px;"></div>
+                </form>
+              </div>
+            </div>
+            <div class="w-full xl:w-6/12 p-4 xl:py-4 bg-green xl:aspect-video rounded-xl relative flex flex-col justify-between">
+              <h3 class="text-lg lg:text-xl roboto-medium w-full lg:w-8/12 p-0 mb-4">Let's get you building. Start your free account today.</h3>
+              <div style="display:flex;gap:8px;padding-bottom:16px;">
+                <input id="tools-signup-email-input" name="email" type="email" autocomplete="email" placeholder="your@email.com"
+                  style="flex:1;padding:12px 16px;border:none;border-radius:9999px;font-size:14px;font-family:inherit;outline:none;background:#1a1a1a;color:#fff;" />
+                <button type="button" onclick="var e=document.getElementById('tools-signup-email-input').value;window.top.location.href='https://min8t.com/signup'+(e?'?email='+encodeURIComponent(e):'');"
+                  style="background:#2b312c;color:#fff;border:none;padding:12px 24px;border-radius:9999px;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;white-space:nowrap;">Get started</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-navigation py-20">
+    <div class="flex flex-wrap container mx-auto px-4 xl:px-0">
+      <div class="w-full lg:w-4/12 mb-10 lg:mb-0 pr-8">
+        <a href="https://min8t.com/" class="fade inline-block mb-4">
+          <img src="https://min8t.com/landing/assets/min8t/min8t-logo-circled-white.svg" alt="MiN8T" width="40" height="40" style="height:40px;width:auto;" loading="lazy">
+        </a>
+        <p style="color:rgba(255,255,255,0.7);font-size:14px;line-height:1.6;margin-bottom:20px;">The email marketing operations platform.<br>Replace Stripo, ZeroBounce, BeeFree, Litmus, and 4 more tools.<br>Inbox guaranteed across 108+ ESPs.</p>
+      </div>
+      <div class="w-6/12 lg:w-2/12 mb-8 lg:mb-0">
+        <h4 style="color:rgba(255,255,255,0.7);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:20px;">Product</h4>
+        <ul style="list-style:none;padding:0;margin:0;">
+          <li class="mb-4"><a href="https://min8t.com/api" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">API</a></li>
+          <li class="mb-4"><a href="https://min8t.com/pricing" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">Pricing</a></li>
+          <li class="mb-4"><a href="https://min8t.com/tools/" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">Free Tools</a></li>
+        </ul>
+      </div>
+      <div class="w-6/12 lg:w-2/12 mb-8 lg:mb-0">
+        <h4 style="color:rgba(255,255,255,0.7);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:20px;">Resources</h4>
+        <ul style="list-style:none;padding:0;margin:0;">
+          <li class="mb-4"><a href="https://min8t.com/articles" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">Blog</a></li>
+          <li class="mb-4"><a href="https://min8t.com/insights" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">Insights &amp; Guides</a></li>
+          <li class="mb-4"><a href="https://min8t.com/app/docs" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">Documentation</a></li>
+        </ul>
+      </div>
+      <div class="w-6/12 lg:w-2/12 mb-8 lg:mb-0">
+        <h4 style="color:rgba(255,255,255,0.7);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:20px;">Legal</h4>
+        <ul style="list-style:none;padding:0;margin:0;">
+          <li class="mb-4"><a href="https://min8t.com/app/legal/privacy" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">Privacy Policy</a></li>
+          <li class="mb-4"><a href="https://min8t.com/app/legal/terms" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="container mx-auto px-4 xl:px-0" style="border-top:1px solid rgba(255,255,255,0.08);padding:24px 0;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;">
+    <div style="color:rgba(255,255,255,0.7);font-size:13px;">
+      &copy; 2026 MiN8T. All rights reserved. Powered by <strong style="color:rgba(255,255,255,0.7);">ABLA</strong>.
+    </div>
+    <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;">
+      <span style="color:rgba(255,255,255,0.7);font-size:11px;">108+ ESP Integrations</span>
+      <span style="color:rgba(255,255,255,0.7);font-size:11px;">SOC 2 Compliant</span>
+      <span style="color:rgba(255,255,255,0.7);font-size:11px;">GDPR Ready</span>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script type="module" src="./app.js"></script>
+</body>
+</html>
