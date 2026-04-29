@@ -123,10 +123,15 @@
 
 <link rel="preload" href="https://min8t.com/landing/css/main.css?v=combined" as="style">
 <link rel="stylesheet" href="https://min8t.com/landing/css/main.css?v=combined">
-<link rel="stylesheet" href="../_shared/styles.css?v=4">
+<link rel="stylesheet" href="../_shared/styles.css?v=5">
 <link rel="stylesheet" href="../_shared/tools.css?v=1">
 
 <style>
+  /* Push <main> below the fixed glass nav. Same convention as the other
+     11 tools - the shared header is position:fixed at top:0. */
+  body { padding-top: 80px; }
+  @media (max-width: 600px) { body { padding-top: 72px; } }
+
   .mj-grid {
     margin-top: var(--space-lg);
     display: grid;
@@ -181,7 +186,7 @@
   .mj-controls .auto-toggle {
     display: flex; align-items: center; gap: 6px; cursor: pointer;
   }
-  .mj-controls .auto-toggle input { accent-color: var(--brand-green); }
+  .mj-controls .auto-toggle input { accent-color: var(--brand-primary); }
   .mj-controls select {
     padding: 4px 8px;
     font-size: 0.85rem;
@@ -209,8 +214,10 @@
 
   .toast {
     position: fixed; bottom: var(--space-xl); left: 50%; transform: translateX(-50%);
-    background: var(--text-primary); color: white; padding: var(--space-sm) var(--space-lg);
-    border-radius: var(--radius-md); box-shadow: var(--shadow-md);
+    background: var(--brand-primary); color: #2b312c;
+    padding: var(--space-sm) var(--space-lg);
+    border-radius: 9999px; box-shadow: var(--shadow-lg);
+    font-weight: 700;
     opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 1000;
   }
   .toast.show { opacity: 1; }
