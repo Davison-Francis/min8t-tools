@@ -57,8 +57,11 @@
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.35);
   --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.4);
 
-  /* Layout */
-  --container-max: 960px;
+  /* Layout - widened from 960 to 1000 (20px per side) so body copy and
+     control rows fit more comfortably without crowding the glass-card
+     edge. Tools that need more (e.g. inbox-preview's email viewport)
+     override --container-max in their own <style> block. */
+  --container-max: 1000px;
 }
 
 * { box-sizing: border-box; }
