@@ -39,7 +39,7 @@ function corsHeaders(origin) {
 }
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const origin = request.headers.get('Origin') || '';
     const url = new URL(request.url);
 
@@ -56,7 +56,7 @@ export default {
       return handleSpamCheck(request, origin);
     }
     if (url.pathname === '/api/tools/lead-capture') {
-      return handleLeadCapture(request, origin, env);
+      return handleLeadCapture(request, origin, env, ctx);
     }
 
     return new Response('Not found', { status: 404, headers: corsHeaders(origin) });
@@ -77,6 +77,113 @@ const ALLOWED_TOOL_SLUGS = new Set([
 ]);
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const MAX_PAYLOAD_BYTES = 200_000; // 200 KB per Resend payload practical limit
+
+// Per-tool email metadata. Keys map to tool slugs.
+const TOOL_EMAIL_META = {
+  'utm-builder':              { name: 'UTM Builder',                   resultLabel: 'Your tracked URL' },
+  'image-compressor':         { name: 'Email Image Compressor',        resultLabel: null /* binary */ },
+  'email-signature-generator':{ name: 'Email Signature Generator',     resultLabel: 'Your HTML signature' },
+  'subject-line-analyzer':    { name: 'Subject Line Analyzer',         resultLabel: 'Your subject-line analysis' },
+  'background-remover':       { name: 'Background Remover',            resultLabel: null /* binary */ },
+  'plain-text-converter':     { name: 'HTML to Plain Text',            resultLabel: 'Your plain-text alternative' },
+  'font-checker':             { name: 'Email-Safe Font Checker',       resultLabel: 'Your font compatibility report' },
+  'palette-extractor':        { name: 'Brand Color Palette',           resultLabel: 'Your brand palette' },
+  'gif-compressor':           { name: 'GIF Compressor',                resultLabel: null /* binary */ },
+  'spam-checker':             { name: 'Spam Score Checker',            resultLabel: 'Your spam-score breakdown' },
+  'inbox-preview':            { name: 'Inbox Preview',                 resultLabel: null /* interactive */ },
+  'css-inliner':              { name: 'CSS Inliner',                   resultLabel: 'Your inlined HTML' },
+  'mjml-converter':           { name: 'MJML to HTML',                  resultLabel: 'Your compiled HTML' },
+  'header-analyzer':          { name: 'Email Header Analyzer',         resultLabel: 'Your header analysis' },
+  'button-generator':         { name: 'Bulletproof Button Generator',  resultLabel: 'Your button HTML' },
+  'ab-test-calculator':       { name: 'A/B Test Sample Size',          resultLabel: 'Your sample size calculation' },
+};
+
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function buildEmailHtml({ toolSlug, payload }) {
+  const meta = TOOL_EMAIL_META[toolSlug] || { name: 'MiN8T Tools', resultLabel: null };
+  const toolUrl = `https://min8t.com/tools/${toolSlug}/`;
+  const editorUrl = `https://app.min8t.com/?ref=tools-${toolSlug}-email`;
+  const hasPayload = !!payload && meta.resultLabel;
+
+  const resultBlock = hasPayload
+    ? `
+        <div style="margin: 24px 0; padding: 16px; background: #1a1a1a; border-radius: 8px; overflow-x: auto;">
+          <div style="font-size: 12px; color: #28ef91; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px;">${escapeHtml(meta.resultLabel)}</div>
+          <pre style="margin: 0; padding: 0; font-family: 'SF Mono', Menlo, Monaco, monospace; font-size: 12px; line-height: 1.5; color: #f4f4f4; white-space: pre-wrap; word-break: break-all;">${escapeHtml(payload)}</pre>
+        </div>`
+    : '';
+
+  return `<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>Your ${escapeHtml(meta.name)} result</title></head>
+<body style="margin:0; padding:0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; background:#f4f4f7;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f4f4f7;">
+    <tr><td align="center" style="padding: 32px 16px;">
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px; width:100%; background:#ffffff; border-radius: 12px;">
+        <tr><td style="padding: 32px;">
+          <div style="display:inline-flex; align-items:center; gap:8px; margin-bottom: 24px;">
+            <span style="display:inline-block; width:32px; height:32px; background:#28ef91; border-radius:50%; text-align:center; line-height:32px; font-weight:700; color:#0d0d0d;">M</span>
+            <span style="font-weight:700; font-size:16px; color:#0d0d0d;">MiN8T</span>
+            <span style="font-size:11px; color:#888; letter-spacing:1px; text-transform:uppercase;">Free Tools</span>
+          </div>
+          <h1 style="margin:0 0 16px; font-size:22px; line-height:1.3; color:#0d0d0d;">${hasPayload ? 'Here\'s your result.' : 'Thanks for joining.'}</h1>
+          <p style="margin:0 0 16px; font-size:15px; line-height:1.6; color:#444;">
+            You signed up after using <a href="${toolUrl}" style="color:#28ef91; text-decoration:none; font-weight:600;">${escapeHtml(meta.name)}</a>. We'll email you when we ship new tools - usually every 2-3 weeks. No marketing fluff.
+          </p>
+          ${resultBlock}
+          <div style="margin: 32px 0 16px;">
+            <a href="${editorUrl}" style="display:inline-block; padding: 12px 28px; background:#28ef91; color:#0d0d0d; text-decoration:none; border-radius: 999px; font-weight:700; font-size:14px;">Try MiN8T free</a>
+          </div>
+          <p style="margin:24px 0 0; font-size:13px; color:#888; line-height:1.5;">
+            <strong style="color:#444;">What MiN8T is:</strong> the email design platform that pairs with these tools. Drag-and-drop editor, 108+ ESP integrations, built-in deliverability monitoring. Free tier, no credit card.
+          </p>
+        </td></tr>
+        <tr><td style="padding: 16px 32px 24px; border-top: 1px solid #eee; font-size: 11px; color:#888; text-align:center;">
+          You received this because you signed up at ${toolUrl}. To stop receiving these, reply with "unsubscribe".<br>
+          MiN8T - Email design that lands.
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body></html>`;
+}
+
+async function sendResultEmail({ env, toEmail, toolSlug, payload }) {
+  if (!env.RESEND_API_KEY) {
+    return { ok: false, error: 'RESEND_API_KEY not configured' };
+  }
+  const meta = TOOL_EMAIL_META[toolSlug] || { name: 'MiN8T Tools' };
+  const subject = payload && meta.resultLabel
+    ? `${meta.resultLabel} | MiN8T`
+    : `Welcome to MiN8T Tools`;
+
+  const r = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${env.RESEND_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: 'MiN8T Tools <tools@min8t.com>',
+      to: [toEmail],
+      subject,
+      html: buildEmailHtml({ toolSlug, payload }),
+    }),
+  });
+  if (!r.ok) {
+    const text = await r.text().catch(() => '');
+    return { ok: false, error: `Resend ${r.status}: ${text.slice(0, 200)}` };
+  }
+  return { ok: true };
+}
 
 async function sha256Hex(str) {
   const buf = new TextEncoder().encode(str);
@@ -86,7 +193,7 @@ async function sha256Hex(str) {
     .join('');
 }
 
-async function handleLeadCapture(request, origin, env) {
+async function handleLeadCapture(request, origin, env, ctx) {
   if (request.method !== 'POST') {
     return errResp('Method not allowed', 405, origin);
   }
@@ -99,6 +206,8 @@ async function handleLeadCapture(request, origin, env) {
   const email = String(body?.email ?? '').trim().toLowerCase();
   const tool = String(body?.tool ?? '').trim();
   const consent = body?.consent === true;
+  const payloadRaw = body?.payload;
+  const payload = typeof payloadRaw === 'string' ? payloadRaw : null;
 
   if (!EMAIL_RE.test(email) || email.length > 254) {
     return errResp('Invalid email', 400, origin);
@@ -108,6 +217,9 @@ async function handleLeadCapture(request, origin, env) {
   }
   if (!consent) {
     return errResp('Consent required', 400, origin);
+  }
+  if (payload && payload.length > MAX_PAYLOAD_BYTES) {
+    return errResp('Payload too large', 413, origin);
   }
 
   // Rate-limit by IP via KV TTL — at most 5 captures per minute per IP
@@ -151,8 +263,26 @@ async function handleLeadCapture(request, origin, env) {
     env.LEADS.put(ipBucket, String(rlCount + 1), { expirationTtl: 120 }),
   ]);
 
+  // Send result email via Resend in the background — doesnt block response.
+  // If RESEND_API_KEY is not set or send fails, the lead is still captured;
+  // we just log via the KV (best-effort).
+  if (ctx && ctx.waitUntil) {
+    ctx.waitUntil((async () => {
+      const result = await sendResultEmail({ env, toEmail: email, toolSlug: tool, payload });
+      if (!result.ok) {
+        await env.LEADS.put(`emailerr:${ts}:${tool}:${emailHash}`, JSON.stringify({
+          ts, tool, error: result.error,
+        }), { expirationTtl: 86400 * 7 }); // keep error logs 7 days
+      }
+    })());
+  }
+
+  const successMsg = payload && TOOL_EMAIL_META[tool]?.resultLabel
+    ? "Sent. Check your inbox in a moment."
+    : "You're on the list. Check your inbox shortly.";
+
   return new Response(
-    JSON.stringify({ ok: true, message: "You're on the list. We'll email when we ship new tools." }),
+    JSON.stringify({ ok: true, message: successMsg }),
     {
       status: 200,
       headers: {

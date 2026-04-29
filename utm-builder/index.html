@@ -416,6 +416,7 @@
     renderLeadCapture({
       target: document.getElementById('lead-capture-mount'),
       tool: 'utm-builder',
+      getPayload: () => document.getElementById('output-url')?.value || document.getElementById('result-url')?.value || '',
     });
   </script>
   <!-- RELATED TOOLS -->

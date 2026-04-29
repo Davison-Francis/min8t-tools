@@ -383,6 +383,7 @@
     renderLeadCapture({
       target: document.getElementById('lead-capture-mount'),
       tool: 'css-inliner',
+      getPayload: () => document.getElementById('html-output')?.value || '',
     });
   </script>
   <h2>More free tools for email marketers</h2>

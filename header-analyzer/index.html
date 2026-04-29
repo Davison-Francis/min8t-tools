@@ -444,6 +444,11 @@
     renderLeadCapture({
       target: document.getElementById('lead-capture-mount'),
       tool: 'header-analyzer',
+      getPayload: () => {
+      const summary = document.getElementById('summary-grid')?.innerText || '';
+      const flags = document.getElementById('flags-list')?.innerText || '';
+      return summary ? `${summary}\n\nFlags:\n${flags}` : '';
+    },
     });
   </script>
   <h2>More free tools for email marketers</h2>

@@ -480,6 +480,7 @@
     renderLeadCapture({
       target: document.getElementById('lead-capture-mount'),
       tool: 'email-signature-generator',
+      getPayload: () => document.getElementById('html-output')?.value || document.getElementById('signature-html')?.textContent || '',
     });
   </script>
   <h2>More free tools for email marketers</h2>

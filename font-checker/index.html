@@ -379,6 +379,11 @@
     renderLeadCapture({
       target: document.getElementById('lead-capture-mount'),
       tool: 'font-checker',
+      getPayload: () => {
+      const font = document.getElementById('font-input')?.value || '';
+      const matrix = document.getElementById('result-table')?.innerText || document.querySelector('.support-matrix')?.innerText || '';
+      return font ? `Font: ${font}\n\n${matrix}` : '';
+    },
     });
   </script>
   <h2>More free tools for email marketers</h2>

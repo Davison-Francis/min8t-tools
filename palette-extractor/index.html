@@ -449,6 +449,10 @@
     renderLeadCapture({
       target: document.getElementById('lead-capture-mount'),
       tool: 'palette-extractor',
+      getPayload: () => {
+      const css = document.getElementById('css-output')?.value || document.getElementById('output-css')?.value || '';
+      return css;
+    },
     });
   </script>
   <h2>More free tools for email marketers</h2>

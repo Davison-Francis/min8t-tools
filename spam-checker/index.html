@@ -414,6 +414,11 @@
     renderLeadCapture({
       target: document.getElementById('lead-capture-mount'),
       tool: 'spam-checker',
+      getPayload: () => {
+      const score = document.querySelector('.score-circle, #score, [data-score]')?.textContent?.trim() || '';
+      const triggers = Array.from(document.querySelectorAll('.rule.fired, .triggered-rule, [data-rule-fired]')).map(el => el.textContent?.trim()).filter(Boolean).join('\n');
+      return score ? `Score: ${score}\n\nTriggered rules:\n${triggers}` : '';
+    },
     });
   </script>
   <h2>More free tools for email marketers</h2>

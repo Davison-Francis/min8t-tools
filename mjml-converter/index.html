@@ -418,6 +418,7 @@
     renderLeadCapture({
       target: document.getElementById('lead-capture-mount'),
       tool: 'mjml-converter',
+      getPayload: () => document.getElementById('html-output')?.value || '',
     });
   </script>
   <h2>More free tools for email marketers</h2>

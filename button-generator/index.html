@@ -438,6 +438,7 @@
     renderLeadCapture({
       target: document.getElementById('lead-capture-mount'),
       tool: 'button-generator',
+      getPayload: () => document.getElementById('output-html')?.textContent || '',
     });
   </script>
   <h2>More free tools for email marketers</h2>

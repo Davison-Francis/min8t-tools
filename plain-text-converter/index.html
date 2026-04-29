@@ -320,6 +320,7 @@
     renderLeadCapture({
       target: document.getElementById('lead-capture-mount'),
       tool: 'plain-text-converter',
+      getPayload: () => document.getElementById('plain-output')?.value || document.querySelector('#output, #plain-text-output')?.value || '',
     });
   </script>
   <h2>More free tools for email marketers</h2>

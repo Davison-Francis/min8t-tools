@@ -65,26 +65,41 @@ function injectStyles() {
 /**
  * Render the lead-capture form into `target`.
  * @param {Object} opts
- * @param {HTMLElement} opts.target  - element to render into (form replaces its content)
- * @param {string} opts.tool         - tool slug for tagging in KV
- * @param {string} [opts.title]      - heading text
- * @param {string} [opts.blurb]      - subtitle/blurb under heading
- * @param {string} [opts.cta]        - button label
+ * @param {HTMLElement} opts.target           - element to render into (form replaces its content)
+ * @param {string} opts.tool                  - tool slug for tagging in KV
+ * @param {string} [opts.title]               - heading text
+ * @param {string} [opts.blurb]               - subtitle/blurb under heading
+ * @param {string} [opts.cta]                 - button label
+ * @param {() => string|null} [opts.getPayload] - returns the current tool result (HTML or text)
+ *                                              to email back to the user. Return null/empty if
+ *                                              there's nothing to send (form falls back to "thanks"
+ *                                              email instead). Truncated to 200KB by the Worker.
  */
 export function renderLeadCapture(opts) {
   const target = opts.target;
   const tool = opts.tool;
+  const getPayload = typeof opts.getPayload === 'function' ? opts.getPayload : null;
   if (!target || !tool) return;
 
   injectStyles();
 
+  // Adapt copy when a payload is available — the offer is "email this result", not just "join list".
+  const hasPayloadCapability = !!getPayload;
+  const defaultTitle = hasPayloadCapability
+    ? 'Email this result to yourself'
+    : 'Get notified about new tools';
+  const defaultBlurb = hasPayloadCapability
+    ? "We'll send the result to your inbox now and email you when we ship new tools (every few weeks)."
+    : "We're shipping new free tools every few weeks. We'll email when each one lands. No spam.";
+  const defaultCta = hasPayloadCapability ? 'Email me the result' : 'Notify me';
+
   target.innerHTML = `
     <div class="lc-wrap">
-      <div class="lc-title">${opts.title || 'Get notified about new tools'}</div>
-      <div class="lc-blurb">${opts.blurb || "We're shipping new free tools every few weeks. We'll email when each one lands. No spam."}</div>
+      <div class="lc-title">${opts.title || defaultTitle}</div>
+      <div class="lc-blurb">${opts.blurb || defaultBlurb}</div>
       <form class="lc-form" novalidate>
         <input type="email" name="email" placeholder="your@email.com" required autocomplete="email" spellcheck="false">
-        <button type="submit">${opts.cta || 'Notify me'}</button>
+        <button type="submit">${opts.cta || defaultCta}</button>
       </form>
       <div class="lc-consent">
         <input type="checkbox" id="lc-consent-${tool}" required>
@@ -120,11 +135,19 @@ export function renderLeadCapture(opts) {
     submitBtn.disabled = true;
     submitBtn.textContent = 'Submitting…';
 
+    let payload = null;
+    if (getPayload) {
+      try {
+        const v = getPayload();
+        if (typeof v === 'string' && v.trim()) payload = v.slice(0, 200_000);
+      } catch (_) { /* getter is best-effort */ }
+    }
+
     try {
       const resp = await fetch(ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, tool, consent: true }),
+        body: JSON.stringify({ email, tool, consent: true, payload }),
       });
       const data = await resp.json().catch(() => ({}));
 

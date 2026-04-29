@@ -392,6 +392,11 @@
     renderLeadCapture({
       target: document.getElementById('lead-capture-mount'),
       tool: 'subject-line-analyzer',
+      getPayload: () => {
+      const subject = document.getElementById('subject-input')?.value || '';
+      const score = document.querySelector('.score-circle, #score, [data-score]')?.textContent?.trim() || '';
+      return subject ? `Subject: ${subject}\nScore: ${score}` : '';
+    },
     });
   </script>
   <h2>More free tools for email marketers</h2>
