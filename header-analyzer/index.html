@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Email Header Analyzer - Free Header Tracer + SPF/DKIM/DMARC Lookup | MiN8T</title>
+<meta name="description" content="Paste raw email headers, see the hop trail, originating IP, SPF/DKIM/DMARC verdicts, and suspicious-pattern flags. Free, in-browser, no signup.">
+<link rel="canonical" href="https://min8t.com/tools/header-analyzer/">
+<meta property="og:title" content="Email Header Analyzer - Free | MiN8T">
+<meta property="og:description" content="Trace hop trail, auth results, originating IP. Free, browser-only.">
+<meta property="og:url" content="https://min8t.com/tools/header-analyzer/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#28ef91">
+
+<link rel="icon" href="https://min8t.com/favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="https://min8t.com/favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="https://min8t.com/apple-touch-icon.png">
+
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/roboto/Roboto-Regular.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/roboto/Roboto-Medium.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/roboto/Roboto-Bold.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/pp-neue-montreal/ppneuemontreal-book.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/pp-neue-montreal/ppneuemontreal-bold.woff2" crossorigin>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Email Header Analyzer",
+  "url": "https://min8t.com/tools/header-analyzer/",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "All",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Parse raw email headers, trace the hop path, surface SPF/DKIM/DMARC verdicts, and flag suspicious patterns. In-browser, no signup."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Free Tools", "item": "https://min8t.com/tools/" },
+    { "@type": "ListItem", "position": 2, "name": "Header Analyzer", "item": "https://min8t.com/tools/header-analyzer/" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I find raw email headers?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Gmail: open the message, click the three-dot menu, choose 'Show original' - the new tab is the raw RFC-5322 message; copy the headers above the body. Outlook: open the message, File menu, Properties - the 'Internet headers' textarea has them. Apple Mail: View menu, Message, All Headers (or Cmd+Shift+H). Yahoo: open the message, More menu, View Raw Message."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does the hop trail tell me?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Each Received: header is added by a mail server as the message passes through. The bottom-most Received: line is the origin (the sender's outbound MTA); the top-most is your incoming server. The hop trail is the path the message took, in order. We compute the time delay between consecutive hops - any single hop with a delay over 60 seconds is unusual and worth investigating."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How are SPF, DKIM, and DMARC reported?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The receiving server adds an Authentication-Results: header summarizing each check. We parse spf=, dkim=, and dmarc= entries and render them as pass/fail/neutral/temperror badges. ARC-Authentication-Results: is also parsed - that's the chain when the message was forwarded through an intermediate server like a mailing list."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the originating IP?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The IP address of the very first server that handled the message - the sender's outbound MTA. We extract it from the bottom-most Received: header, which is the first server in the chain. If it doesn't match the From: domain's published SPF record, the message likely failed SPF (which the Authentication-Results header should confirm)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What suspicious patterns get flagged?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The analyzer flags: hop delays over 60 seconds (could indicate queue or relay issues), messages with an unusually high hop count (over 10), missing or weak Authentication-Results, From-domain mismatch with Return-Path domain (a classic spoofing tell), DKIM signatures from a different domain than From:, and missing Message-ID. None of these are conclusive on their own - they're starting points for deeper investigation."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does my email get sent anywhere?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. The parser runs entirely in your browser. Open DevTools Network tab during analysis - you'll see zero outbound requests. The headers never leave your machine."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I look up the originating IP's reputation?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We don't run blocklist queries (would require a server and rate-limited DNS calls). The analyzer surfaces the IP and links to MXToolbox and Spamhaus where you can run the reputation lookup with one click. Both services are free for occasional manual checks."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if my email is being delivered to spam?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Start with this analyzer to see whether SPF/DKIM/DMARC are passing. If any are failing, fix your DNS records first. If all three pass and you're still going to spam, the issue is more likely content or sender reputation - try our Spam Score Checker for content signals, and DeliverIQ for continuous monitoring of DMARC reports across all your domains."
+      }
+    }
+  ]
+}
+</script>
+
+<link rel="preload" href="https://min8t.com/landing/css/main.css?v=combined" as="style">
+<link rel="stylesheet" href="https://min8t.com/landing/css/main.css?v=combined">
+<link rel="stylesheet" href="../_shared/styles.css?v=4">
+<link rel="stylesheet" href="../_shared/tools.css?v=1">
+
+<style>
+  .ha-input { margin-top: var(--space-lg); }
+  .ha-input textarea {
+    width: 100%; min-height: 220px;
+    font-family: var(--font-mono); font-size: 0.8rem; line-height: 1.5;
+    padding: var(--space-md); resize: vertical;
+  }
+  .ha-controls { margin-top: var(--space-sm); display: flex; gap: var(--space-sm); flex-wrap: wrap; align-items: center; }
+  .ha-controls .stats { margin-left: auto; font-size: 0.85rem; color: var(--text-muted); font-family: var(--font-mono); align-self: center; }
+
+  .results { margin-top: var(--space-lg); display: none; flex-direction: column; gap: var(--space-lg); }
+  .results.show { display: flex; }
+
+  .result-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .result-card > .head {
+    padding: var(--space-sm) var(--space-md);
+    background: var(--bg-alt);
+    border-bottom: 1px solid var(--border);
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .result-card > .body { padding: var(--space-md); }
+
+  .summary-grid {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: var(--space-sm) var(--space-md);
+    font-size: 0.9rem;
+  }
+  @media (max-width: 600px) { .summary-grid { grid-template-columns: 1fr; gap: 4px var(--space-md); } }
+  .summary-grid .k { color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; font-size: 0.75rem; padding-top: 4px; }
+  .summary-grid .v { font-family: var(--font-mono); word-break: break-word; }
+
+  .badges { display: flex; gap: var(--space-sm); flex-wrap: wrap; margin: var(--space-sm) 0; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 10px; border-radius: 999px;
+    font-size: 0.78rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.04em;
+    font-family: var(--font-mono);
+  }
+  .badge.pass { background: rgba(46, 194, 126, 0.15); color: var(--success); }
+  .badge.fail { background: rgba(220, 53, 69, 0.15); color: var(--danger); }
+  .badge.neutral, .badge.softfail, .badge.permerror, .badge.temperror, .badge.policy {
+    background: rgba(245, 165, 36, 0.15); color: var(--warning);
+  }
+  .badge.unknown, .badge.none { background: rgba(120, 120, 120, 0.18); color: var(--text-muted); }
+
+  .hop {
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: var(--space-sm) var(--space-md);
+    margin-bottom: var(--space-sm);
+    font-size: 0.85rem;
+  }
+  .hop:last-child { margin-bottom: 0; }
+  .hop .hop-head {
+    display: flex; gap: var(--space-md); flex-wrap: wrap; align-items: baseline;
+    margin-bottom: 6px;
+  }
+  .hop .hop-head .num {
+    background: var(--brand-green); color: var(--text-primary);
+    font-weight: 700; font-size: 0.78rem;
+    padding: 2px 8px; border-radius: 999px;
+  }
+  .hop .hop-head .delay { margin-left: auto; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.78rem; }
+  .hop .hop-head .delay.warn { color: var(--warning); font-weight: 700; }
+  .hop .hop-line { font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-secondary); padding: 2px 0; }
+  .hop .hop-line .l { color: var(--text-muted); }
+
+  .raw-table {
+    width: 100%; border-collapse: collapse; font-size: 0.85rem;
+  }
+  .raw-table th, .raw-table td {
+    text-align: left; padding: 6px var(--space-sm);
+    border-bottom: 1px solid var(--border);
+    font-family: var(--font-mono); vertical-align: top;
+  }
+  .raw-table th {
+    background: var(--bg-alt); color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.04em;
+    font-size: 0.7rem; font-weight: 600;
+  }
+  .raw-search {
+    width: 100%; padding: 8px 12px;
+    margin-bottom: var(--space-sm);
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    background: var(--bg); color: var(--text-primary);
+  }
+
+  .flags { display: flex; flex-direction: column; gap: 4px; }
+  .flag {
+    display: flex; gap: var(--space-sm); align-items: flex-start;
+    padding: var(--space-sm); border-radius: var(--radius-sm);
+    background: rgba(245, 165, 36, 0.06);
+    border-left: 3px solid var(--warning);
+    font-size: 0.85rem;
+  }
+  .flag.ok {
+    background: rgba(46, 194, 126, 0.06);
+    border-left-color: var(--success);
+  }
+  .flag .icon { font-weight: 700; color: var(--warning); }
+  .flag.ok .icon { color: var(--success); }
+
+  .toast {
+    position: fixed; bottom: var(--space-xl); left: 50%; transform: translateX(-50%);
+    background: var(--text-primary); color: white; padding: var(--space-sm) var(--space-lg);
+    border-radius: var(--radius-md); box-shadow: var(--shadow-md);
+    opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 1000;
+  }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<img id="hero-bg"
+     src="https://min8t.com/landing/assets/min8t/landing-bg-1920.webp"
+     srcset="https://min8t.com/landing/assets/min8t/landing-bg-1280.webp?v=q75 1280w, https://min8t.com/landing/assets/min8t/landing-bg-1920.webp 1920w, https://min8t.com/landing/assets/min8t/landing-bg.webp 2560w"
+     sizes="100vw"
+     alt=""
+     aria-hidden="true"
+     decoding="async"
+     fetchpriority="high"
+     width="1920" height="1072">
+
+<header class="site-header bg-black" style="position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 1.5rem;">
+  <div class="site-header-inner container mx-auto" style="max-width:1280px;display:flex;align-items:center;justify-content:space-between;">
+    <a href="https://min8t.com/" aria-label="MiN8T home" class="site-logo" style="display:inline-flex;align-items:center;gap:0.5rem;text-decoration:none;color:#fff;">
+      <img src="https://min8t.com/landing/assets/min8t/min8t-logo-circled-white.svg" alt="MiN8T" width="32" height="32" loading="eager" style="height:32px;width:auto;">
+      <span style="color:#fff;font-weight:700;font-size:1.25rem;font-family:'PP Neue Montreal','Roboto',sans-serif;">MiN8T</span>
+      <span style="color:rgba(255,255,255,0.5);font-size:0.625rem;letter-spacing:0.1em;text-transform:uppercase;">Powered by ABLA</span>
+    </a>
+    <nav class="site-nav bg-menu-main" style="border-radius:9999px;padding:0.5rem 1rem;display:flex;gap:1.25rem;align-items:center;background:rgba(43,49,44,0.78);backdrop-filter:saturate(180%) blur(12px);-webkit-backdrop-filter:saturate(180%) blur(12px);border:1px solid rgba(255,255,255,0.08);">
+      <a href="https://min8t.com/tools/" style="color:#fff;text-decoration:none;font-size:0.95rem;font-weight:500;">All Tools</a>
+      <a href="https://min8t.com/" style="color:#fff;text-decoration:none;font-size:0.95rem;font-weight:500;">Home</a>
+      <a data-btn-arrow href="https://app.min8t.com/signup?ref=tools-header-analyzer" class="btn inline-flex items-center" title="Try MiN8T free" style="display:inline-flex;align-items:center;height:40px;text-decoration:none;gap:0;">
+        <span class="button_circle bg-green" style="background:#28ef91;border-radius:9999px;height:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;transition:all 0.3s;">
+          <img src="https://min8t.com/landing/assets/img/arrow-right.svg" alt="" loading="lazy" width="16" height="16" style="height:60%;width:40%;object-fit:contain;">
+        </span>
+        <span class="anim-btn bg-green" style="background:#28ef91;color:#2b312c;border-radius:9999px;padding:0.5rem 1rem;display:flex;align-items:center;font-weight:700;font-size:1rem;">Try MiN8T free</span>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <h1>Email Header Analyzer</h1>
+  <p>Paste raw email headers from "Show original" (Gmail) / "View source" (Outlook) / "All Headers" (Apple Mail). The analyzer parses the hop trail, extracts the originating IP, decodes SPF/DKIM/DMARC results, and flags suspicious patterns. Free, in-browser, nothing uploaded.</p>
+
+  <div class="ha-input">
+    <label for="headers-input" style="text-transform:uppercase; font-size:0.75rem; letter-spacing:0.05em; color:var(--text-muted); margin-bottom:4px;">Paste raw email headers</label>
+    <textarea id="headers-input" placeholder="Paste headers here, starting from a line like 'Received: from ...' or 'Delivered-To: ...'…" spellcheck="false" autocomplete="off"></textarea>
+  </div>
+
+  <div class="ha-controls">
+    <button type="button" class="btn" id="analyze-btn">Analyze</button>
+    <button type="button" class="btn btn-secondary" id="sample-btn">Use sample headers</button>
+    <button type="button" class="btn btn-secondary" id="sample-spoof-btn">Use spoofed sample</button>
+    <button type="button" class="btn btn-secondary" id="clear-btn">Clear</button>
+    <span class="stats" id="stats">0 chars</span>
+  </div>
+
+  <div class="results" id="results">
+    <div class="result-card">
+      <div class="head">Summary</div>
+      <div class="body">
+        <div class="badges" id="auth-badges"></div>
+        <div class="summary-grid" id="summary-grid"></div>
+      </div>
+    </div>
+
+    <div class="result-card">
+      <div class="head">Suspicious patterns</div>
+      <div class="body"><div class="flags" id="flags-list"></div></div>
+    </div>
+
+    <div class="result-card">
+      <div class="head">Hop trail (origin to destination)</div>
+      <div class="body"><div id="hops-list"></div></div>
+    </div>
+
+    <div class="result-card">
+      <div class="head">All headers</div>
+      <div class="body">
+        <input type="search" id="raw-search" class="raw-search" placeholder="Filter by header name…">
+        <div style="overflow-x:auto;">
+          <table class="raw-table" id="raw-table">
+            <thead><tr><th style="width:200px;">Header</th><th>Value</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2>How to find raw headers</h2>
+  <ul>
+    <li><strong>Gmail:</strong> open the message, three-dot menu, "Show original" - the new tab shows the raw RFC-5322 message. Copy from the top down to the blank line before the body.</li>
+    <li><strong>Outlook (desktop / web):</strong> open the message, File menu, Properties (Outlook desktop) or three-dot menu, "View message source" (Outlook web). Headers are in the "Internet headers" textarea or as the top of the source.</li>
+    <li><strong>Apple Mail:</strong> View menu, Message submenu, All Headers (Cmd+Shift+H). Or "Raw Source" for the full message.</li>
+    <li><strong>Yahoo:</strong> open the message, More menu, "View Raw Message".</li>
+  </ul>
+
+  <h2>What gets parsed</h2>
+  <ul>
+    <li><strong>Header values:</strong> From, To, Subject, Date, Message-ID, Return-Path, Reply-To, List-Unsubscribe.</li>
+    <li><strong>Hop trail:</strong> every Received: header in chronological order (origin first), with timestamp and per-hop delay.</li>
+    <li><strong>Auth verdicts:</strong> SPF, DKIM, DMARC results from Authentication-Results: and ARC-Authentication-Results: headers.</li>
+    <li><strong>DKIM signature details:</strong> signing domain (d=), selector (s=), and the body-hash header (b=).</li>
+    <li><strong>Originating IP:</strong> the IP address from the bottom-most Received: header (the first hop in the chain).</li>
+    <li><strong>Suspicious flags:</strong> hop delays > 60s, hop count > 10, From/Return-Path domain mismatch, DKIM signed by an unrelated domain, missing auth headers, missing Message-ID.</li>
+  </ul>
+
+  <h2>FAQ</h2>
+  <div class="faq">
+    <details>
+      <summary>How do I find raw email headers?</summary>
+      <p>Gmail: three-dot menu, "Show original". Outlook: File menu, Properties. Apple Mail: View menu, Message, All Headers (Cmd+Shift+H). Yahoo: More menu, "View Raw Message".</p>
+    </details>
+    <details>
+      <summary>What does the hop trail tell me?</summary>
+      <p>Each <code>Received:</code> header is added by a mail server as the message passes through. The bottom-most line is the origin (sender's outbound MTA); the top-most is your incoming server. The hop trail is the path the message took. Delays over 60 seconds between consecutive hops are unusual.</p>
+    </details>
+    <details>
+      <summary>How are SPF, DKIM, and DMARC reported?</summary>
+      <p>The receiving server adds an <code>Authentication-Results:</code> header summarizing each check. We parse <code>spf=</code>, <code>dkim=</code>, and <code>dmarc=</code> entries and render them as pass/fail/neutral/temperror badges. <code>ARC-Authentication-Results:</code> is also parsed - that's the chain when forwarded.</p>
+    </details>
+    <details>
+      <summary>What is the originating IP?</summary>
+      <p>The IP of the very first server that handled the message - the sender's outbound MTA. We extract it from the bottom-most <code>Received:</code> header. If it doesn't match the From: domain's published SPF record, the message likely failed SPF.</p>
+    </details>
+    <details>
+      <summary>What suspicious patterns get flagged?</summary>
+      <p>Hop delays over 60s, hop count over 10, missing or weak Authentication-Results, From-domain ≠ Return-Path domain (classic spoofing tell), DKIM signed by an unrelated domain, missing Message-ID. Each is a starting point for investigation, not a definitive verdict.</p>
+    </details>
+    <details>
+      <summary>Does my email get sent anywhere?</summary>
+      <p>No. The parser runs entirely in your browser. Zero outbound requests.</p>
+    </details>
+    <details>
+      <summary>Can I look up the originating IP's reputation?</summary>
+      <p>We surface the IP and link to MXToolbox / Spamhaus where you can run reputation lookups manually. We don't run those queries server-side - would require rate-limited DNS and a backend.</p>
+    </details>
+    <details>
+      <summary>What if my email is being delivered to spam?</summary>
+      <p>Start here to verify SPF/DKIM/DMARC pass. If any fail, fix DNS first. If all pass and you're still going to spam, try the <a href="../spam-checker/">Spam Score Checker</a> for content signals, or use DeliverIQ for continuous DMARC monitoring.</p>
+    </details>
+  </div>
+
+  <div class="conversion-cta">
+    <h2>Continuous deliverability monitoring</h2>
+    <p>This tool diagnoses one message. <strong>DeliverIQ</strong> watches your domain's DMARC reports, alerts on auth-failure spikes, and tracks reputation across all your sending sources continuously.</p>
+    <a class="btn" id="cta-deliveriq" href="https://min8t.com/deliveriq?ref=tools-header-analyzer">See DeliverIQ →</a>
+  </div>
+
+  <h2>More free tools for email marketers</h2>
+  <div class="related-tools">
+    <a class="tool-card" href="../spam-checker/"><h3>Spam Score Checker</h3><p>21-rule SpamAssassin-style score for any HTML email body.</p></a>
+    <a class="tool-card" href="../inbox-preview/"><h3>Inbox Preview</h3><p>Side-by-side preview of your HTML email in Gmail, Apple Mail, and Outlook.</p></a>
+    <a class="tool-card" href="../css-inliner/"><h3>CSS Inliner</h3><p>Convert &lt;style&gt; blocks into inline style attributes.</p></a>
+    <a class="tool-card" href="../mjml-converter/"><h3>MJML Converter</h3><p>Compile MJML markup to email-safe HTML.</p></a>
+    <a class="tool-card" href="../subject-line-analyzer/"><h3>Subject Line Analyzer</h3><p>Score your subject line on length, spam triggers, sentiment, and more.</p></a>
+    <a class="tool-card" href="../font-checker/"><h3>Email-Safe Font Checker</h3><p>Will your font render in Outlook? Per-client matrix + fallback stacks.</p></a>
+    <a class="tool-card" href="../utm-builder/"><h3>UTM Builder</h3><p>Build tracked links for your campaigns with one click.</p></a>
+  </div>
+</main>
+
+<footer class="footer pt-20 main-content bg-black" id="contact">
+  <div class="container mx-auto px-4 xl:px-0">
+    <div class="footer-contact-bloc">
+      <div class="bg-light-gray p-2 lg:p-8 flex flex-wrap rounded-xl">
+        <div class="w-full xl:w-4/12">
+          <h2 class="text-2xl lg:text-[40px] py-5 px-4 lg:py-10 xl:p-0">Ready to start?</h2>
+        </div>
+        <div class="w-full xl:w-8/12">
+          <div class="flex flex-wrap">
+            <div class="w-full xl:w-6/12 bg-white xl:aspect-video rounded-xl flex flex-col">
+              <h3 class="text-lg lg:text-xl roboto-medium w-full lg:w-8/12 xl:w-9/12 2xl:w-10/12 p-4 pb-28 xl:py-4">Stay up to date - the latest on email design and deliverability.</h3>
+              <div class="xl:flex-grow"></div>
+              <div class="form newsletter px-4 pb-4">
+                <form id="tools-newsletter-form" action="https://min8t.com/api/newsletter" method="post">
+                  <div style="display:flex;gap:8px;">
+                    <input type="email" name="email" autocomplete="email" placeholder="your@email.com" required
+                      style="flex:1;padding:12px 16px;border:1px solid #ddd;border-radius:9999px;font-size:14px;font-family:inherit;outline:none;color:#1a1a1a;background:#fff;" />
+                    <button type="submit"
+                      style="background:#2b312c;color:#fff;border:none;padding:12px 24px;border-radius:9999px;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;white-space:nowrap;">Subscribe</button>
+                  </div>
+                  <div class="newsletter-msg" style="font-size:13px;margin-top:8px;min-height:20px;"></div>
+                </form>
+              </div>
+            </div>
+            <div class="w-full xl:w-6/12 p-4 xl:py-4 bg-green xl:aspect-video rounded-xl relative flex flex-col justify-between">
+              <h3 class="text-lg lg:text-xl roboto-medium w-full lg:w-8/12 p-0 mb-4">Let's get you building. Start your free account today.</h3>
+              <div style="display:flex;gap:8px;padding-bottom:16px;">
+                <input id="tools-signup-email-input" name="email" type="email" autocomplete="email" placeholder="your@email.com"
+                  style="flex:1;padding:12px 16px;border:none;border-radius:9999px;font-size:14px;font-family:inherit;outline:none;background:#1a1a1a;color:#fff;" />
+                <button type="button" onclick="var e=document.getElementById('tools-signup-email-input').value;window.top.location.href='https://min8t.com/signup'+(e?'?email='+encodeURIComponent(e):'');"
+                  style="background:#2b312c;color:#fff;border:none;padding:12px 24px;border-radius:9999px;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;white-space:nowrap;">Get started</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-navigation py-20">
+    <div class="flex flex-wrap container mx-auto px-4 xl:px-0">
+      <div class="w-full lg:w-4/12 mb-10 lg:mb-0 pr-8">
+        <a href="https://min8t.com/" class="fade inline-block mb-4">
+          <img src="https://min8t.com/landing/assets/min8t/min8t-logo-circled-white.svg" alt="MiN8T" width="40" height="40" style="height:40px;width:auto;" loading="lazy">
+        </a>
+        <p style="color:rgba(255,255,255,0.7);font-size:14px;line-height:1.6;margin-bottom:20px;">The email marketing operations platform.<br>Replace Stripo, ZeroBounce, BeeFree, Litmus, and 4 more tools.<br>Inbox guaranteed across 108+ ESPs.</p>
+      </div>
+      <div class="w-6/12 lg:w-2/12 mb-8 lg:mb-0">
+        <h4 style="color:rgba(255,255,255,0.7);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:20px;">Product</h4>
+        <ul style="list-style:none;padding:0;margin:0;">
+          <li class="mb-4"><a href="https://min8t.com/api" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">API</a></li>
+          <li class="mb-4"><a href="https://min8t.com/pricing" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">Pricing</a></li>
+          <li class="mb-4"><a href="https://min8t.com/tools/" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">Free Tools</a></li>
+        </ul>
+      </div>
+      <div class="w-6/12 lg:w-2/12 mb-8 lg:mb-0">
+        <h4 style="color:rgba(255,255,255,0.7);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:20px;">Resources</h4>
+        <ul style="list-style:none;padding:0;margin:0;">
+          <li class="mb-4"><a href="https://min8t.com/articles" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">Blog</a></li>
+          <li class="mb-4"><a href="https://min8t.com/insights" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">Insights &amp; Guides</a></li>
+          <li class="mb-4"><a href="https://min8t.com/app/docs" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">Documentation</a></li>
+        </ul>
+      </div>
+      <div class="w-6/12 lg:w-2/12 mb-8 lg:mb-0">
+        <h4 style="color:rgba(255,255,255,0.7);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:20px;">Legal</h4>
+        <ul style="list-style:none;padding:0;margin:0;">
+          <li class="mb-4"><a href="https://min8t.com/app/legal/privacy" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">Privacy Policy</a></li>
+          <li class="mb-4"><a href="https://min8t.com/app/legal/terms" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="container mx-auto px-4 xl:px-0" style="border-top:1px solid rgba(255,255,255,0.08);padding:24px 0;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;">
+    <div style="color:rgba(255,255,255,0.7);font-size:13px;">
+      &copy; 2026 MiN8T. All rights reserved. Powered by <strong style="color:rgba(255,255,255,0.7);">ABLA</strong>.
+    </div>
+    <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;">
+      <span style="color:rgba(255,255,255,0.7);font-size:11px;">108+ ESP Integrations</span>
+      <span style="color:rgba(255,255,255,0.7);font-size:11px;">SOC 2 Compliant</span>
+      <span style="color:rgba(255,255,255,0.7);font-size:11px;">GDPR Ready</span>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script type="module" src="./app.js"></script>
+</body>
+</html>
