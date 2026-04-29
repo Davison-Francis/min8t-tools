@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GIF Compressor - Free, Email-Optimized | MiN8T</title>
+<meta name="description" content="Compress animated GIFs in your browser using full gifsicle. Email-aware presets (Outlook-safe, mobile-friendly, max compression). No upload, no signup.">
+<link rel="canonical" href="https://min8t.com/tools/gif-compressor/">
+<meta property="og:title" content="Free GIF Compressor - Email-Optimized | MiN8T">
+<meta property="og:description" content="Compress animated GIFs without uploading anywhere. Powered by gifsicle compiled to WebAssembly. Email-aware presets included.">
+<meta property="og:url" content="https://min8t.com/tools/gif-compressor/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0066ff">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "GIF Compressor",
+  "url": "https://min8t.com/tools/gif-compressor/",
+  "applicationCategory": "MultimediaApplication",
+  "operatingSystem": "All",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Compress animated GIFs in the browser using full gifsicle (WebAssembly). Email-aware presets, before/after preview, ZIP bulk download. Free, no signup."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Free Tools", "item": "https://min8t.com/tools/" },
+    { "@type": "ListItem", "position": 2, "name": "GIF Compressor", "item": "https://min8t.com/tools/gif-compressor/" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Will my animated GIF actually animate in email?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Most email clients yes. The big exception is Outlook desktop on Windows (2007 through 2019 and 365 on Win), which strips animation and only displays the first frame. Apple Mail (iOS + macOS), Gmail, Yahoo, and Outlook on the web all play the animation. So design your GIF such that the FIRST frame is meaningful on its own - assume Outlook readers see it as a static image."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What size should an email GIF be?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Total email payload under 1 MB is the deliverability sweet spot. A single GIF should aim for under 500 KB - 200 KB if you can, especially if there are other images in the email. The 'Outlook-safe' preset in this tool targets exactly this: max 600 px wide, lossy 80, 128 colors, optimized to under 500 KB for typical inputs."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "GIF vs APNG vs MP4 vs WebP for email?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "GIF is the only universal format. APNG works in Apple Mail and Outlook iOS but not Outlook desktop or Gmail. MP4 video doesn't render at all in email - clients strip the video tag. WebP animation is supported in Apple Mail, Outlook on the web, and Gmail Android, but not Outlook desktop or Gmail web. So if cross-client matters, GIF is still the only safe choice."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does gifsicle compression work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Three knobs: (1) lossy compression (--lossy=N, where N is 0-200) trades visual quality for size by allowing slight color drift between frames. 80 is a strong default; 100+ is aggressive. (2) Color reduction (--colors=N) cuts the palette - 128 colors is invisible to the eye for most photographic content; 64 is fine for solid-color graphics. (3) Optimization level (-O1 / -O2 / -O3) controls how hard gifsicle works to compress: O3 is best but slowest."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should I use prefers-reduced-motion in email?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It would be ideal but no major email client honors @media (prefers-reduced-motion) yet. The accessibility recommendation is to keep animation subtle - no flashing faster than 3 Hz (general WCAG seizure-safe threshold), no high-contrast strobing, and no critical information conveyed only through motion (since Outlook readers won't see it at all)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many loops should an email GIF have?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "1 to 3 loops is the standard for email. Infinite loops are annoying and read as unprofessional in most contexts. Use --loopcount=N in gifsicle to set this; the tool sets loopcount to 1 by default for the Outlook-safe preset."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does my GIF leave my device?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. The full gifsicle binary is compiled to WebAssembly and runs in your browser. Your GIF is compressed in-memory and the result is offered as a download. Zero outbound requests for the file - check DevTools Network tab if you want to verify."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is my GIF actually getting larger after compression?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "If the input GIF was already optimally compressed (e.g., it was previously run through gifsicle or ezgif), forcing compression again can occasionally INCREASE size by 1-5 % due to gifsicle's frame-deduplication overhead. The 'Maximum compression' preset adds aggressive lossy + color reduction to guarantee a smaller output, but at visible quality cost. If your GIF is already small, you may not need this tool."
+      }
+    }
+  ]
+}
+</script>
+
+<link rel="stylesheet" href="../_shared/styles.css">
+<style>
+  .gc-dropzone {
+    border: 2px dashed var(--border-strong);
+    border-radius: var(--radius-lg);
+    padding: var(--space-2xl);
+    text-align: center;
+    background: var(--bg-alt);
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    margin-top: var(--space-lg);
+  }
+  .gc-dropzone:hover, .gc-dropzone.dragging {
+    border-color: var(--brand-primary);
+    background: rgba(0, 102, 255, 0.04);
+  }
+  .gc-dropzone strong { display: block; font-size: 1.1rem; margin-bottom: var(--space-xs); }
+  .gc-dropzone .hint { color: var(--text-muted); font-size: 0.9rem; margin-top: var(--space-xs); }
+  .gc-dropzone input[type=file] { display: none; }
+
+  .presets {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-sm);
+    margin-top: var(--space-md);
+  }
+  @media (max-width: 600px) { .presets { grid-template-columns: 1fr; } }
+  .preset-btn {
+    padding: var(--space-sm) var(--space-md);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    text-align: left;
+  }
+  .preset-btn:hover { border-color: var(--brand-primary); }
+  .preset-btn.active { border-color: var(--brand-primary); background: rgba(0,102,255,0.05); }
+  .preset-btn strong { display: block; font-size: 0.95rem; color: var(--text-primary); margin-bottom: 2px; }
+  .preset-btn .preset-meta { font-size: 0.8rem; color: var(--text-muted); }
+
+  .controls {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-md);
+    margin-top: var(--space-md);
+    padding: var(--space-md);
+    background: var(--bg-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+  }
+  @media (max-width: 700px) { .controls { grid-template-columns: 1fr 1fr; } }
+  .controls label { font-size: 0.85rem; color: var(--text-secondary); }
+  .controls .value { font-family: var(--font-mono); color: var(--brand-primary); font-weight: 600; }
+  .controls input[type=range], .controls input[type=number] { width: 100%; }
+  .controls input[type=number] { padding: 4px 8px; }
+
+  .summary {
+    margin-top: var(--space-lg);
+    padding: var(--space-lg);
+    background: linear-gradient(135deg, rgba(0,102,255,0.04), rgba(0,196,167,0.06)), var(--bg);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--brand-accent);
+    border-radius: var(--radius-md);
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: var(--space-md);
+  }
+  .summary .label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 2px; }
+  .summary .total { font-family: var(--font-mono); font-size: 1.5rem; font-weight: 600; color: var(--text-primary); }
+  .summary .total.warn { color: var(--warning); }
+  .summary .total.bad  { color: var(--danger); }
+
+  .results { margin-top: var(--space-lg); display: flex; flex-direction: column; gap: var(--space-md); }
+  .result-card {
+    padding: var(--space-md);
+    border: 1px solid var(--border); border-radius: var(--radius-md);
+    background: var(--bg);
+  }
+  .result-card.processing { opacity: 0.6; }
+  .result-card .head {
+    display: flex; gap: var(--space-md); align-items: center;
+    margin-bottom: var(--space-sm);
+  }
+  .result-card .head strong {
+    flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .result-card .head .stats { font-size: 0.85rem; color: var(--text-secondary); font-family: var(--font-mono); }
+  .result-card .head .stats .reduction { color: var(--success); font-weight: 600; }
+  .result-card .head .stats .reduction.bad { color: var(--danger); }
+  .result-card .compare {
+    display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-sm);
+  }
+  .result-card .compare figure {
+    margin: 0; text-align: center; background: var(--bg-alt);
+    border-radius: var(--radius-sm); padding: var(--space-xs);
+  }
+  .result-card .compare figcaption {
+    font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--text-muted); margin-bottom: 4px;
+  }
+  .result-card .compare img {
+    max-width: 100%; max-height: 200px; display: block; margin: 0 auto;
+    border-radius: var(--radius-sm);
+  }
+  .result-card .actions { margin-top: var(--space-sm); display: flex; gap: var(--space-xs); }
+
+  .toast {
+    position: fixed; bottom: var(--space-xl); left: 50%; transform: translateX(-50%);
+    background: var(--text-primary); color: white; padding: var(--space-sm) var(--space-lg);
+    border-radius: var(--radius-md); box-shadow: var(--shadow-md);
+    opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 1000;
+  }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-logo" href="https://min8t.com/" aria-label="MiN8T home">
+      <img src="../_shared/brand/min8t-logo.svg" alt="MiN8T" width="120" height="32">
+    </a>
+    <nav class="site-nav">
+      <a href="../">Free Tools</a>
+      <a href="https://app.min8t.com/?ref=tools-gif-compressor" class="cta-editor">Open Editor →</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <h1>GIF Compressor (Email-Optimized)</h1>
+  <p>Compress animated GIFs without uploading anywhere - the full <a href="https://www.lcdf.org/gifsicle/" rel="noopener">gifsicle</a> binary runs in your browser via WebAssembly. Three email-aware presets: Outlook-safe (under 500 KB), mobile-friendly, max compression. Drag, drop, download.</p>
+
+  <label class="gc-dropzone" id="dropzone">
+    <strong>Drop GIFs here, or click to browse</strong>
+    <span class="hint">Animated GIF only. Max 25 MB per file.</span>
+    <span class="hint" style="color: var(--text-muted)">First use loads gifsicle WASM (~600 KB) - cached locally afterward.</span>
+    <input type="file" id="file-input" accept="image/gif" multiple>
+  </label>
+
+  <div class="presets" id="presets">
+    <button type="button" class="preset-btn active" data-preset="outlook">
+      <strong>Outlook-safe</strong>
+      <div class="preset-meta">600 px · lossy 80 · 128 colors · 1 loop</div>
+    </button>
+    <button type="button" class="preset-btn" data-preset="mobile">
+      <strong>Mobile-friendly</strong>
+      <div class="preset-meta">480 px · lossy 100 · 64 colors</div>
+    </button>
+    <button type="button" class="preset-btn" data-preset="max">
+      <strong>Maximum compression</strong>
+      <div class="preset-meta">400 px · lossy 200 · 32 colors</div>
+    </button>
+  </div>
+
+  <div class="controls">
+    <div>
+      <label for="width-input">Max width <span class="value" id="width-value">600</span> px</label>
+      <input type="range" id="width-input" min="200" max="1200" step="20" value="600">
+    </div>
+    <div>
+      <label for="lossy-input">Lossy <span class="value" id="lossy-value">80</span></label>
+      <input type="range" id="lossy-input" min="0" max="200" step="5" value="80">
+    </div>
+    <div>
+      <label for="colors-input">Colors <span class="value" id="colors-value">128</span></label>
+      <input type="range" id="colors-input" min="8" max="256" step="8" value="128">
+    </div>
+    <div>
+      <label for="loops-input">Loops</label>
+      <input type="number" id="loops-input" min="0" max="100" step="1" value="1">
+    </div>
+  </div>
+
+  <div class="summary" id="summary" hidden>
+    <div>
+      <div class="label">Total compressed payload</div>
+      <div class="total" id="total-size">0 KB</div>
+    </div>
+    <div style="display:flex; gap: var(--space-sm);">
+      <button type="button" class="btn btn-secondary" id="clear-btn">Clear all</button>
+      <button type="button" class="btn btn-primary" id="zip-btn">Download all as ZIP</button>
+    </div>
+  </div>
+
+  <div class="results" id="results"></div>
+
+  <h2>How to use</h2>
+  <ol>
+    <li>Drop one or more GIFs (max 25 MB each).</li>
+    <li>Pick a preset, or fine-tune width / lossy / colors / loops manually. Settings re-apply live to all uploads.</li>
+    <li>Each GIF compresses in your browser (gifsicle WASM, ~600 KB on first load, cached afterward). Inference is 2-15 s per GIF depending on size.</li>
+    <li>Download individually or grab a ZIP. Total payload counter turns red over 1 MB - the email-deliverability danger zone.</li>
+  </ol>
+
+  <h2>Why email GIFs need their own compressor</h2>
+  <p>Generic GIF compressors (ezgif, online-image-tools, etc.) optimize for screen resolution and file size in isolation. <strong>Email</strong> has additional constraints: a 1 MB total payload budget, Outlook desktop's first-frame-only fallback, and the deliverability impact of large attachments. The Outlook-safe preset on this tool targets all three: max 600 px width fits the standard 600 px email body, lossy 80 + 128 colors gets typical animations under 500 KB, and 1 loop avoids the read-as-spam infinite-animation pattern.</p>
+
+  <h2>FAQ</h2>
+  <div class="faq">
+    <details>
+      <summary>Will my animated GIF actually animate in email?</summary>
+      <p>Most email clients yes. The big exception is <strong>Outlook desktop on Windows</strong> (2007 through 2019 and 365 on Win), which strips animation and only displays the first frame. Apple Mail (iOS + macOS), Gmail, Yahoo, and Outlook on the web all play the animation. So design your GIF such that the FIRST frame is meaningful on its own - assume Outlook readers see it as a static image.</p>
+    </details>
+    <details>
+      <summary>What size should an email GIF be?</summary>
+      <p>Total email payload under 1 MB is the deliverability sweet spot. A single GIF should aim for under 500 KB - 200 KB if you can, especially if there are other images in the email. The "Outlook-safe" preset in this tool targets exactly this: max 600 px wide, lossy 80, 128 colors, optimized to under 500 KB for typical inputs.</p>
+    </details>
+    <details>
+      <summary>GIF vs APNG vs MP4 vs WebP for email?</summary>
+      <p>GIF is the only universal format. APNG works in Apple Mail and Outlook iOS but not Outlook desktop or Gmail. MP4 video doesn't render at all in email - clients strip the video tag. WebP animation is supported in Apple Mail, Outlook on the web, and Gmail Android, but not Outlook desktop or Gmail web. So if cross-client matters, GIF is still the only safe choice.</p>
+    </details>
+    <details>
+      <summary>How does gifsicle compression work?</summary>
+      <p>Three knobs: <strong>lossy compression</strong> (<code>--lossy=N</code>, where N is 0-200) trades visual quality for size by allowing slight color drift between frames. 80 is a strong default; 100+ is aggressive. <strong>Color reduction</strong> (<code>--colors=N</code>) cuts the palette - 128 colors is invisible to the eye for most photographic content; 64 is fine for solid-color graphics. <strong>Optimization level</strong> (<code>-O1</code> / <code>-O2</code> / <code>-O3</code>) controls how hard gifsicle works to compress: O3 is best but slowest.</p>
+    </details>
+    <details>
+      <summary>Should I use prefers-reduced-motion in email?</summary>
+      <p>It would be ideal but no major email client honors <code>@media (prefers-reduced-motion)</code> yet. The accessibility recommendation is to keep animation subtle - no flashing faster than 3 Hz (general WCAG seizure-safe threshold), no high-contrast strobing, and no critical information conveyed only through motion (since Outlook readers won't see it at all).</p>
+    </details>
+    <details>
+      <summary>How many loops should an email GIF have?</summary>
+      <p>1 to 3 loops is the standard for email. Infinite loops are annoying and read as unprofessional in most contexts. Use <code>--loopcount=N</code> in gifsicle to set this; the tool sets loopcount to 1 by default for the Outlook-safe preset.</p>
+    </details>
+    <details>
+      <summary>Does my GIF leave my device?</summary>
+      <p>No. The full gifsicle binary is compiled to WebAssembly and runs in your browser. Your GIF is compressed in-memory and the result is offered as a download. Zero outbound requests for the file - check DevTools Network tab if you want to verify.</p>
+    </details>
+    <details>
+      <summary>Why is my GIF actually getting larger after compression?</summary>
+      <p>If the input GIF was already optimally compressed (e.g., it was previously run through gifsicle or ezgif), forcing compression again can occasionally INCREASE size by 1-5 % due to gifsicle's frame-deduplication overhead. The "Maximum compression" preset adds aggressive lossy + color reduction to guarantee a smaller output, but at visible quality cost. If your GIF is already small, you may not need this tool.</p>
+    </details>
+  </div>
+
+  <div class="conversion-cta">
+    <h2>Drop the GIF into a real email</h2>
+    <p>MiN8T's editor handles animated GIFs end-to-end - upload, preview animation in the canvas, and ship to any ESP. No more bouncing between tools.</p>
+    <a class="btn" id="cta-editor" href="https://app.min8t.com/?ref=tools-gif-compressor">Open MiN8T Editor →</a>
+  </div>
+
+  <h2>More free tools for email marketers</h2>
+  <div class="related-tools">
+    <a class="tool-card" href="../utm-builder/"><h3>UTM Campaign URL Builder</h3><p>Build tracked links for your email campaigns with one click.</p></a>
+    <a class="tool-card" href="../image-compressor/"><h3>Email Image Compressor</h3><p>Compress and resize images so your emails stay under inbox size limits.</p></a>
+    <a class="tool-card" href="../email-signature-generator/"><h3>Email Signature Generator</h3><p>Outlook-safe HTML signatures with one-click copy.</p></a>
+    <a class="tool-card" href="../subject-line-analyzer/"><h3>Subject Line Analyzer</h3><p>Score your subject line on length, spam triggers, sentiment, and more.</p></a>
+    <a class="tool-card" href="../background-remover/"><h3>Background Remover</h3><p>Remove image backgrounds 100% in your browser.</p></a>
+    <a class="tool-card" href="../font-checker/"><h3>Email-Safe Font Checker</h3><p>Will your font render in Outlook? Per-client matrix + fallback stacks.</p></a>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <p>Made by <a href="https://min8t.com/">MiN8T</a>, the email design platform that respects your time.</p>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script type="module" src="./app.js"></script>
+</body>
+</html>
