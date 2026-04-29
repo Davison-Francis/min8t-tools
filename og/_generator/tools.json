@@ -1,0 +1,18 @@
+[
+  { "slug": "utm-builder",                 "title": "UTM Campaign URL Builder",     "subtitle": "Track every email click. Free, instant, no signup." },
+  { "slug": "image-compressor",            "title": "Email Image Compressor",       "subtitle": "Shrink images for inbox-friendly email weight." },
+  { "slug": "email-signature-generator",   "title": "Email Signature Generator",    "subtitle": "Outlook-safe HTML signatures with one-click copy." },
+  { "slug": "subject-line-analyzer",       "title": "Subject Line Analyzer",        "subtitle": "Score length, spam triggers, sentiment, and more." },
+  { "slug": "background-remover",          "title": "Background Remover",           "subtitle": "Remove image backgrounds 100% in your browser." },
+  { "slug": "plain-text-converter",        "title": "HTML to Plain Text",           "subtitle": "Plain-text alternative for the multipart MIME body." },
+  { "slug": "font-checker",                "title": "Email-Safe Font Checker",      "subtitle": "Will your font render in Outlook? Per-client matrix." },
+  { "slug": "palette-extractor",           "title": "Brand Color Palette",          "subtitle": "Extract palette + tints from your logo." },
+  { "slug": "gif-compressor",              "title": "GIF Compressor",               "subtitle": "Email-aware presets. Outlook-safe, mobile-friendly." },
+  { "slug": "spam-checker",                "title": "Spam Score Checker",           "subtitle": "21 SpamAssassin-style rules. Free, unlimited." },
+  { "slug": "inbox-preview",               "title": "Inbox Preview",                "subtitle": "Side-by-side render: Gmail, Apple Mail, Outlook." },
+  { "slug": "css-inliner",                 "title": "CSS Inliner",                  "subtitle": "Inline CSS for email. Preserves @media + keyframes." },
+  { "slug": "mjml-converter",              "title": "MJML to HTML",                 "subtitle": "Compile MJML in your browser. Live preview." },
+  { "slug": "header-analyzer",             "title": "Email Header Analyzer",        "subtitle": "Trace SMTP hops, decode SPF/DKIM/DMARC." },
+  { "slug": "button-generator",            "title": "Bulletproof Button Generator", "subtitle": "Email-safe CTAs with VML fallback for Outlook." },
+  { "slug": "ab-test-calculator",          "title": "A/B Test Sample Size",         "subtitle": "Plan email A/B tests. Power, confidence, lift." }
+]
