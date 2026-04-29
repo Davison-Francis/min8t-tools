@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CSS Inliner for Email - Free HTML Email CSS Inline Tool | MiN8T</title>
+<meta name="description" content="Paste HTML email with style blocks, get back the same HTML with all CSS inlined as style attributes. Preserves @media, @keyframes, and pseudo-classes. Free, in-browser, no signup.">
+<link rel="canonical" href="https://min8t.com/tools/css-inliner/">
+<meta property="og:title" content="CSS Inliner for Email - Free | MiN8T">
+<meta property="og:description" content="Inline CSS for HTML email - preserves @media, @keyframes, pseudo-classes. Free, no signup.">
+<meta property="og:url" content="https://min8t.com/tools/css-inliner/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#28ef91">
+
+<link rel="icon" href="https://min8t.com/favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="https://min8t.com/favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="https://min8t.com/apple-touch-icon.png">
+
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/roboto/Roboto-Regular.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/roboto/Roboto-Medium.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/roboto/Roboto-Bold.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/pp-neue-montreal/ppneuemontreal-book.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/pp-neue-montreal/ppneuemontreal-bold.woff2" crossorigin>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "CSS Inliner for Email",
+  "url": "https://min8t.com/tools/css-inliner/",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "All",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Inline CSS into HTML email style attributes. Preserves @media, @keyframes, and pseudo-classes. In-browser, no signup."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Free Tools", "item": "https://min8t.com/tools/" },
+    { "@type": "ListItem", "position": 2, "name": "CSS Inliner", "item": "https://min8t.com/tools/css-inliner/" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Why does email need inline CSS?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Most email clients strip or partially strip <style> blocks at the head of an email. Gmail's web interface keeps them, but Gmail's mobile apps don't. Outlook desktop honors only some properties from <style> and ignores others entirely. Yahoo, AOL, and several mobile clients ignore <style> blocks completely. Inline styles - styles written directly on the element via the style attribute - are the only CSS form supported by every email client without exception. Inlining your CSS before sending is how you guarantee your design renders consistently."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does this tool actually do?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It parses your HTML, finds every CSS rule in <style> blocks, computes which elements each rule matches, and writes the matching declarations as style attributes on each element - respecting CSS specificity, !important, and the cascade. After inlining, the original <style> blocks are reduced to only the rules that can't be inlined: @media queries, @supports, @keyframes, and rules with pseudo-classes like :hover."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why preserve @media queries instead of flattening?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "@media queries are how you make email responsive. They live in <style> blocks because there's no way to express 'apply this style only on screens narrower than 600px' as an inline attribute. Apple Mail, Gmail web (large viewport), and modern Android Gmail honor @media queries inside <head> <style> blocks. Inlining the rule once would break the conditional behavior. So we leave @media (and @supports, @keyframes) untouched - only the unconditional rules get inlined."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How are pseudo-classes like :hover handled?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "They can't be inlined - inline styles have no concept of state. If you write a:hover { color: red } and we tried to inline it, every link would just be red permanently. So pseudo-class rules (:hover, :focus, :active, :visited, ::before, ::after, :first-child, etc) are kept as-is in the <style> block. Email clients that support hover (Apple Mail, Gmail web, Yahoo) will honor them; clients that don't (Outlook desktop) will ignore the styled state, which is fine."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does specificity work in the inliner?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Standard CSS rules apply: when two rules target the same property on the same element, the one with higher specificity wins. The inliner computes specificity for each selector (counting IDs, classes/attributes/pseudo-classes, and element types), and for each property writes the winning declaration's value as the inline style. !important wins over non-important, source order breaks ties at equal specificity, and existing inline styles in your input are preserved unless overridden by an !important rule."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does my HTML get sent anywhere?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Everything happens in your browser. The inliner uses a hidden iframe to parse your HTML and access the browser's native CSS engine, then writes the result back into the output textarea. Open DevTools Network tab while inlining - you'll see zero outbound requests for your HTML."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What's the Gmail 102 KB clip threshold?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Gmail clips emails larger than 102 KB and shows a 'View entire message' link to expand. The clip can hide tracking pixels, unsubscribe links, and the back half of your campaign content. Inlining tends to grow file size because the same rule may be repeated as inline styles across many elements. The output panel shows the final size with a warning if you cross 102 KB - common fixes are to remove unused selectors before inlining or to compress repeated style fragments."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why use a hosted inliner instead of build-time tools?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "If you have a build pipeline, juice / mjml / litmus all inline at build. Use those - they're more accurate. This tool exists for the cases where you don't: pasted ESP exports, hand-written test emails, designs from a no-code tool that don't have a build step, last-minute fixes during a campaign. Free, fast, no install."
+      }
+    }
+  ]
+}
+</script>
+
+<link rel="preload" href="https://min8t.com/landing/css/main.css?v=combined" as="style">
+<link rel="stylesheet" href="https://min8t.com/landing/css/main.css?v=combined">
+<link rel="stylesheet" href="../_shared/styles.css?v=4">
+<link rel="stylesheet" href="../_shared/tools.css?v=1">
+
+<style>
+  .ci-grid {
+    margin-top: var(--space-lg);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+  }
+  @media (max-width: 800px) { .ci-grid { grid-template-columns: 1fr; } }
+
+  .ci-pane {
+    display: flex; flex-direction: column;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .ci-pane-header {
+    padding: var(--space-sm) var(--space-md);
+    background: var(--bg-alt);
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.85rem;
+  }
+  .ci-pane-header strong { font-weight: 600; }
+  .ci-pane-header .small { font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono); }
+
+  .ci-pane textarea {
+    flex: 1;
+    border: 0;
+    padding: var(--space-md);
+    font-family: var(--font-mono); font-size: 0.8rem; line-height: 1.5;
+    resize: none;
+    min-height: 360px;
+    background: var(--bg);
+    color: var(--text-primary);
+    outline: none;
+  }
+
+  .ci-controls { margin-top: var(--space-sm); display: flex; gap: var(--space-sm); flex-wrap: wrap; align-items: center; }
+  .ci-controls .auto-toggle {
+    margin-left: auto;
+    font-size: 0.85rem; color: var(--text-muted);
+    display: flex; align-items: center; gap: 6px; cursor: pointer;
+  }
+  .ci-controls .auto-toggle input { accent-color: var(--brand-green); }
+
+  .stats-grid {
+    margin-top: var(--space-md);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-sm);
+  }
+  @media (max-width: 700px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+  .stat-card {
+    background: var(--bg-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--space-sm) var(--space-md);
+    text-align: center;
+  }
+  .stat-card .value { font-size: 1.5rem; font-weight: 700; color: var(--text-primary); font-family: var(--font-mono); }
+  .stat-card .label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; }
+  .stat-card.warning .value { color: var(--warning); }
+  .stat-card.success .value { color: var(--success); }
+
+  .toast {
+    position: fixed; bottom: var(--space-xl); left: 50%; transform: translateX(-50%);
+    background: var(--text-primary); color: white; padding: var(--space-sm) var(--space-lg);
+    border-radius: var(--radius-md); box-shadow: var(--shadow-md);
+    opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 1000;
+  }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<img id="hero-bg"
+     src="https://min8t.com/landing/assets/min8t/landing-bg-1920.webp"
+     srcset="https://min8t.com/landing/assets/min8t/landing-bg-1280.webp?v=q75 1280w, https://min8t.com/landing/assets/min8t/landing-bg-1920.webp 1920w, https://min8t.com/landing/assets/min8t/landing-bg.webp 2560w"
+     sizes="100vw"
+     alt=""
+     aria-hidden="true"
+     decoding="async"
+     fetchpriority="high"
+     width="1920" height="1072">
+
+<header class="site-header bg-black" style="position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 1.5rem;">
+  <div class="site-header-inner container mx-auto" style="max-width:1280px;display:flex;align-items:center;justify-content:space-between;">
+    <a href="https://min8t.com/" aria-label="MiN8T home" class="site-logo" style="display:inline-flex;align-items:center;gap:0.5rem;text-decoration:none;color:#fff;">
+      <img src="https://min8t.com/landing/assets/min8t/min8t-logo-circled-white.svg" alt="MiN8T" width="32" height="32" loading="eager" style="height:32px;width:auto;">
+      <span style="color:#fff;font-weight:700;font-size:1.25rem;font-family:'PP Neue Montreal','Roboto',sans-serif;">MiN8T</span>
+      <span style="color:rgba(255,255,255,0.5);font-size:0.625rem;letter-spacing:0.1em;text-transform:uppercase;">Powered by ABLA</span>
+    </a>
+    <nav class="site-nav bg-menu-main" style="border-radius:9999px;padding:0.5rem 1rem;display:flex;gap:1.25rem;align-items:center;background:rgba(43,49,44,0.78);backdrop-filter:saturate(180%) blur(12px);-webkit-backdrop-filter:saturate(180%) blur(12px);border:1px solid rgba(255,255,255,0.08);">
+      <a href="https://min8t.com/tools/" style="color:#fff;text-decoration:none;font-size:0.95rem;font-weight:500;">All Tools</a>
+      <a href="https://min8t.com/" style="color:#fff;text-decoration:none;font-size:0.95rem;font-weight:500;">Home</a>
+      <a data-btn-arrow href="https://app.min8t.com/signup?ref=tools-css-inliner" class="btn inline-flex items-center" title="Try MiN8T free" style="display:inline-flex;align-items:center;height:40px;text-decoration:none;gap:0;">
+        <span class="button_circle bg-green" style="background:#28ef91;border-radius:9999px;height:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;transition:all 0.3s;">
+          <img src="https://min8t.com/landing/assets/img/arrow-right.svg" alt="" loading="lazy" width="16" height="16" style="height:60%;width:40%;object-fit:contain;">
+        </span>
+        <span class="anim-btn bg-green" style="background:#28ef91;color:#2b312c;border-radius:9999px;padding:0.5rem 1rem;display:flex;align-items:center;font-weight:700;font-size:1rem;">Try MiN8T free</span>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <h1>CSS Inliner for HTML Email</h1>
+  <p>Paste HTML email source with <code>&lt;style&gt;</code> blocks, get back the same HTML with all CSS inlined as <code>style</code> attributes. <code>@media</code>, <code>@keyframes</code>, <code>@supports</code>, and pseudo-class rules are preserved in the original <code>&lt;style&gt;</code> block (those can't be inlined). Specificity, <code>!important</code>, and the cascade are honored. Free, in-browser, no signup.</p>
+
+  <div class="ci-grid">
+    <div class="ci-pane">
+      <div class="ci-pane-header">
+        <strong>HTML input</strong>
+        <span class="small" id="input-stats">0 chars</span>
+      </div>
+      <textarea id="html-input" placeholder="Paste your HTML email source with <style> blocks here…" spellcheck="false" autocomplete="off"></textarea>
+    </div>
+    <div class="ci-pane">
+      <div class="ci-pane-header">
+        <strong>Inlined output</strong>
+        <span class="small" id="output-stats">0 chars</span>
+      </div>
+      <textarea id="html-output" placeholder="Inlined HTML will appear here…" spellcheck="false" autocomplete="off" readonly></textarea>
+    </div>
+  </div>
+
+  <div class="ci-controls">
+    <button type="button" class="btn" id="inline-btn">Inline CSS</button>
+    <button type="button" class="btn btn-secondary" id="sample-btn">Use sample email</button>
+    <button type="button" class="btn btn-secondary" id="copy-btn">Copy output</button>
+    <button type="button" class="btn btn-secondary" id="download-btn">Download .html</button>
+    <button type="button" class="btn btn-secondary" id="clear-btn">Clear</button>
+    <label class="auto-toggle"><input type="checkbox" id="auto-toggle" checked> Auto-inline on paste</label>
+  </div>
+
+  <div class="stats-grid" id="stats-grid">
+    <div class="stat-card"><div class="value" id="stat-rules-inlined">0</div><div class="label">Rules inlined</div></div>
+    <div class="stat-card"><div class="value" id="stat-rules-preserved">0</div><div class="label">Rules preserved</div></div>
+    <div class="stat-card"><div class="value" id="stat-elements-touched">0</div><div class="label">Elements styled</div></div>
+    <div class="stat-card" id="stat-size-card"><div class="value" id="stat-size">0 KB</div><div class="label">Output size</div></div>
+  </div>
+
+  <h2>How to use</h2>
+  <ol>
+    <li>Copy the full HTML source of your email - the same content you'd paste into your ESP's HTML editor or design tool's source view.</li>
+    <li>Paste into the input panel above. With auto-inline on, the output appears immediately.</li>
+    <li>Verify the output renders correctly - the structure should be identical, but every styled element now has a <code>style</code> attribute.</li>
+    <li>Copy or download the result and use it in your ESP, or run the inbox preview tool to check across Gmail / Apple Mail / Outlook.</li>
+  </ol>
+
+  <h2>What gets inlined and what doesn't</h2>
+  <ul>
+    <li><strong>Inlined:</strong> all unconditional class / id / element / attribute selectors that don't contain pseudo-classes or pseudo-elements.</li>
+    <li><strong>Preserved (kept in <code>&lt;style&gt;</code>):</strong> <code>@media</code> queries, <code>@supports</code> blocks, <code>@keyframes</code> and <code>@font-face</code> declarations, <code>@import</code> statements, and any rule whose selector contains <code>:hover</code>, <code>:focus</code>, <code>:active</code>, <code>:first-child</code>, <code>::before</code>, <code>::after</code>, etc.</li>
+    <li><strong>Existing inline styles:</strong> kept. They only get overridden by an <code>!important</code> rule from a <code>&lt;style&gt;</code> block.</li>
+    <li><strong>Specificity:</strong> when two rules target the same property on the same element, the higher-specificity rule wins. <code>!important</code> always wins. Source order breaks ties.</li>
+  </ul>
+
+  <h2>FAQ</h2>
+  <div class="faq">
+    <details>
+      <summary>Why does email need inline CSS?</summary>
+      <p>Most email clients strip or partially strip <code>&lt;style&gt;</code> blocks at the head of an email. Gmail's web interface keeps them, but Gmail's mobile apps don't. Outlook desktop honors only some properties from <code>&lt;style&gt;</code> and ignores others entirely. Yahoo, AOL, and several mobile clients ignore <code>&lt;style&gt;</code> blocks completely. Inline styles are the only CSS form supported by every email client without exception.</p>
+    </details>
+    <details>
+      <summary>What does this tool actually do?</summary>
+      <p>It parses your HTML, finds every CSS rule in <code>&lt;style&gt;</code> blocks, computes which elements each rule matches, and writes the matching declarations as <code>style</code> attributes on each element - respecting CSS specificity, <code>!important</code>, and the cascade. After inlining, the original <code>&lt;style&gt;</code> blocks are reduced to only the rules that can't be inlined: <code>@media</code>, <code>@supports</code>, <code>@keyframes</code>, and pseudo-class rules.</p>
+    </details>
+    <details>
+      <summary>Why preserve @media queries instead of flattening?</summary>
+      <p><code>@media</code> queries are how you make email responsive. They live in <code>&lt;style&gt;</code> blocks because there's no way to express "apply this style only on screens narrower than 600px" as an inline attribute. Apple Mail, Gmail web, and modern Android Gmail honor <code>@media</code> queries inside <code>&lt;head&gt;</code> <code>&lt;style&gt;</code> blocks. Inlining the rule once would break the conditional behavior.</p>
+    </details>
+    <details>
+      <summary>How are pseudo-classes like :hover handled?</summary>
+      <p>They can't be inlined - inline styles have no concept of state. If you write <code>a:hover { color: red }</code> and we tried to inline it, every link would just be red permanently. Pseudo-class rules are kept as-is in the <code>&lt;style&gt;</code> block. Clients that support hover (Apple Mail, Gmail web, Yahoo) will honor them; clients that don't (Outlook desktop) will ignore the styled state.</p>
+    </details>
+    <details>
+      <summary>How does specificity work in the inliner?</summary>
+      <p>Standard CSS rules apply: when two rules target the same property on the same element, the higher-specificity selector wins. The inliner counts IDs, classes/attributes/pseudo-classes, and element types per selector, and for each property writes the winning declaration's value as inline. <code>!important</code> wins over non-important. Source order breaks ties.</p>
+    </details>
+    <details>
+      <summary>Does my HTML get sent anywhere?</summary>
+      <p>No. Everything happens in your browser. The inliner uses a hidden iframe to parse your HTML and access the browser's native CSS engine, then writes the result back into the output panel. Zero outbound requests.</p>
+    </details>
+    <details>
+      <summary>What's the Gmail 102 KB clip threshold?</summary>
+      <p>Gmail clips emails larger than 102 KB and shows a "View entire message" link. The clip can hide tracking pixels and unsubscribe links. Inlining tends to grow file size because the same rule may be repeated as inline styles across many elements. The output size card flags any output above 102 KB.</p>
+    </details>
+    <details>
+      <summary>Why use a hosted inliner instead of build-time tools?</summary>
+      <p>If you have a build pipeline, juice / mjml / litmus all inline at build - use those, they're more accurate. This tool exists for the cases where you don't: pasted ESP exports, hand-written test emails, designs from a no-code tool, last-minute fixes during a campaign.</p>
+    </details>
+  </div>
+
+  <div class="conversion-cta">
+    <h2>Send the email this output is for</h2>
+    <p>MiN8T's editor inlines CSS automatically on export and ships HTML that's already Outlook-safe. Skip the manual inline step.</p>
+    <a class="btn" id="cta-editor" href="https://app.min8t.com/?ref=tools-css-inliner">Open MiN8T Editor →</a>
+  </div>
+
+  <h2>More free tools for email marketers</h2>
+  <div class="related-tools">
+    <a class="tool-card" href="../inbox-preview/"><h3>Inbox Preview</h3><p>Preview your inlined HTML across Gmail, Apple Mail, and Outlook side-by-side.</p></a>
+    <a class="tool-card" href="../spam-checker/"><h3>Spam Score Checker</h3><p>21-rule SpamAssassin-style score for any HTML email body.</p></a>
+    <a class="tool-card" href="../font-checker/"><h3>Email-Safe Font Checker</h3><p>Will your font render in Outlook? Per-client matrix + fallback stacks.</p></a>
+    <a class="tool-card" href="../subject-line-analyzer/"><h3>Subject Line Analyzer</h3><p>Score your subject line on length, spam triggers, sentiment, and more.</p></a>
+    <a class="tool-card" href="../image-compressor/"><h3>Email Image Compressor</h3><p>Compress and resize images so your emails stay under inbox size limits.</p></a>
+    <a class="tool-card" href="../email-signature-generator/"><h3>Email Signature Generator</h3><p>Outlook-safe HTML signatures with one-click copy.</p></a>
+    <a class="tool-card" href="../plain-text-converter/"><h3>HTML to Plain-Text</h3><p>Generate the plain-text alternative for the multipart MIME body.</p></a>
+  </div>
+</main>
+
+<footer class="footer pt-20 main-content bg-black" id="contact">
+  <div class="container mx-auto px-4 xl:px-0">
+    <div class="footer-contact-bloc">
+      <div class="bg-light-gray p-2 lg:p-8 flex flex-wrap rounded-xl">
+        <div class="w-full xl:w-4/12">
+          <h2 class="text-2xl lg:text-[40px] py-5 px-4 lg:py-10 xl:p-0">Ready to start?</h2>
+        </div>
+        <div class="w-full xl:w-8/12">
+          <div class="flex flex-wrap">
+            <div class="w-full xl:w-6/12 bg-white xl:aspect-video rounded-xl flex flex-col">
+              <h3 class="text-lg lg:text-xl roboto-medium w-full lg:w-8/12 xl:w-9/12 2xl:w-10/12 p-4 pb-28 xl:py-4">Stay up to date - the latest on email design and deliverability.</h3>
+              <div class="xl:flex-grow"></div>
+              <div class="form newsletter px-4 pb-4">
+                <form id="tools-newsletter-form" action="https://min8t.com/api/newsletter" method="post">
+                  <div style="display:flex;gap:8px;">
+                    <input type="email" name="email" autocomplete="email" placeholder="your@email.com" required
+                      style="flex:1;padding:12px 16px;border:1px solid #ddd;border-radius:9999px;font-size:14px;font-family:inherit;outline:none;color:#1a1a1a;background:#fff;" />
+                    <button type="submit"
+                      style="background:#2b312c;color:#fff;border:none;padding:12px 24px;border-radius:9999px;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;white-space:nowrap;">Subscribe</button>
+                  </div>
+                  <div class="newsletter-msg" style="font-size:13px;margin-top:8px;min-height:20px;"></div>
+                </form>
+              </div>
+            </div>
+            <div class="w-full xl:w-6/12 p-4 xl:py-4 bg-green xl:aspect-video rounded-xl relative flex flex-col justify-between">
+              <h3 class="text-lg lg:text-xl roboto-medium w-full lg:w-8/12 p-0 mb-4">Let's get you building. Start your free account today.</h3>
+              <div style="display:flex;gap:8px;padding-bottom:16px;">
+                <input id="tools-signup-email-input" name="email" type="email" autocomplete="email" placeholder="your@email.com"
+                  style="flex:1;padding:12px 16px;border:none;border-radius:9999px;font-size:14px;font-family:inherit;outline:none;background:#1a1a1a;color:#fff;" />
+                <button type="button" onclick="var e=document.getElementById('tools-signup-email-input').value;window.top.location.href='https://min8t.com/signup'+(e?'?email='+encodeURIComponent(e):'');"
+                  style="background:#2b312c;color:#fff;border:none;padding:12px 24px;border-radius:9999px;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;white-space:nowrap;">Get started</button>
+              </div>
+            </div>
+          </div>
+          <a href="https://min8t.com/signup">
+            <div class="banner w-full bg-black p-4 lg:p-10 rounded-xl">
+              <div class="flex items-center">
+                <div class="w-2/12">
+                  <img src="https://min8t.com/landing/assets/min8t/min8t-logo-circled-white.svg" alt="MiN8T" width="60" height="60" style="max-height:60px;" loading="lazy">
+                </div>
+                <div class="w-10/12">
+                  <h3 class="text-lg lg:text-xl font-normal text-white px-4">
+                    108+ ESP integrations. Built-in deliverability. AI-powered design. Try MiN8T free today.
+                  </h3>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-navigation py-20">
+    <div class="flex flex-wrap container mx-auto px-4 xl:px-0">
+      <div class="w-full lg:w-4/12 mb-10 lg:mb-0 pr-8">
+        <a href="https://min8t.com/" class="fade inline-block mb-4">
+          <img src="https://min8t.com/landing/assets/min8t/min8t-logo-circled-white.svg" alt="MiN8T" width="40" height="40" style="height:40px;width:auto;" loading="lazy">
+        </a>
+        <p style="color:rgba(255,255,255,0.7);font-size:14px;line-height:1.6;margin-bottom:20px;">The email marketing operations platform.<br>Replace Stripo, ZeroBounce, BeeFree, Litmus, and 4 more tools.<br>Inbox guaranteed across 108+ ESPs.</p>
+      </div>
+      <div class="w-6/12 lg:w-2/12 mb-8 lg:mb-0">
+        <h4 style="color:rgba(255,255,255,0.7);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:20px;">Product</h4>
+        <ul style="list-style:none;padding:0;margin:0;">
+          <li class="mb-4"><a href="https://min8t.com/api" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">API</a></li>
+          <li class="mb-4"><a href="https://min8t.com/pricing" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">Pricing</a></li>
+          <li class="mb-4"><a href="https://min8t.com/tools/" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">Free Tools</a></li>
+        </ul>
+      </div>
+      <div class="w-6/12 lg:w-2/12 mb-8 lg:mb-0">
+        <h4 style="color:rgba(255,255,255,0.7);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:20px;">Resources</h4>
+        <ul style="list-style:none;padding:0;margin:0;">
+          <li class="mb-4"><a href="https://min8t.com/articles" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">Blog</a></li>
+          <li class="mb-4"><a href="https://min8t.com/insights" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">Insights &amp; Guides</a></li>
+          <li class="mb-4"><a href="https://min8t.com/app/docs" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">Documentation</a></li>
+        </ul>
+      </div>
+      <div class="w-6/12 lg:w-2/12 mb-8 lg:mb-0">
+        <h4 style="color:rgba(255,255,255,0.7);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:20px;">Legal</h4>
+        <ul style="list-style:none;padding:0;margin:0;">
+          <li class="mb-4"><a href="https://min8t.com/app/legal/privacy" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">Privacy Policy</a></li>
+          <li class="mb-4"><a href="https://min8t.com/app/legal/terms" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="container mx-auto px-4 xl:px-0" style="border-top:1px solid rgba(255,255,255,0.08);padding:24px 0;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;">
+    <div style="color:rgba(255,255,255,0.7);font-size:13px;">
+      &copy; 2026 MiN8T. All rights reserved. Powered by <strong style="color:rgba(255,255,255,0.7);">ABLA</strong>.
+    </div>
+    <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;">
+      <span style="color:rgba(255,255,255,0.7);font-size:11px;">108+ ESP Integrations</span>
+      <span style="color:rgba(255,255,255,0.7);font-size:11px;">SOC 2 Compliant</span>
+      <span style="color:rgba(255,255,255,0.7);font-size:11px;">GDPR Ready</span>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script type="module" src="./app.js"></script>
+</body>
+</html>
