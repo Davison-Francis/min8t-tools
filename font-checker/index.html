@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Email-Safe Font Checker - Will My Font Render in Outlook? | MiN8T</title>
+<meta name="description" content="Check whether any font renders in Gmail, Outlook, Apple Mail, and 12 other email clients. Get a copy-paste-ready CSS fallback stack. Free, no signup.">
+<link rel="canonical" href="https://min8t.com/tools/font-checker/">
+<meta property="og:title" content="Email-Safe Font Checker | MiN8T">
+<meta property="og:description" content="Will Roboto / Inter / Montserrat render in Outlook? Check before you ship. Free, instant, with copy-paste CSS fallback stacks.">
+<meta property="og:url" content="https://min8t.com/tools/font-checker/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0066ff">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Email-Safe Font Checker",
+  "url": "https://min8t.com/tools/font-checker/",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "All",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Check email-client font support across Gmail, Outlook, Apple Mail, and more. Returns a copy-paste CSS fallback stack."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Free Tools", "item": "https://min8t.com/tools/" },
+    { "@type": "ListItem", "position": 2, "name": "Email-Safe Font Checker", "item": "https://min8t.com/tools/font-checker/" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Why do fonts break in Outlook?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Outlook 2007 through 2019 (and 365 on Windows) use Microsoft Word's HTML rendering engine, which strips @font-face declarations. So if your email loads Roboto via @font-face from Google Fonts, Outlook for Windows ignores the rule entirely and falls back to whatever's next in your font-family stack. The fix is to always provide a fallback stack ending in a web-safe font (Arial, Helvetica, Georgia, etc.). Outlook for Mac, by contrast, uses WebKit and renders @font-face fine."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are web-safe fonts for email?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Fonts pre-installed on essentially every operating system, so they render without needing @font-face: Arial, Helvetica, Verdana, Tahoma, Trebuchet MS, Times New Roman, Times, Georgia, Palatino, Garamond, Courier New, Arial Black, Impact, and Comic Sans MS. Pick from this list as your fallback for any custom font."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use Google Fonts in email?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, but only some clients render them. Google Fonts work in Apple Mail (iOS + macOS), Outlook on Mac, Outlook for iOS/Android (mobile WebView), and Outlook on the web. They do NOT work in Outlook desktop on Windows, Gmail (desktop or mobile), Yahoo Mail, or AOL. So always supply a web-safe fallback like 'Roboto, Helvetica, Arial, sans-serif'."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does font fallback work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "When a CSS font-family declaration lists multiple fonts (e.g. font-family: 'Roboto', Helvetica, Arial, sans-serif), the rendering engine tries each one in order and uses the first one available. If Roboto isn't rendered (because @font-face was stripped or never loaded), it tries Helvetica. If Helvetica isn't installed, Arial. The final generic family (sans-serif, serif, monospace) is the absolute fallback to a system default."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should I use system-ui or -apple-system?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "These keywords resolve to the OS default UI font - San Francisco on Apple, Segoe UI on Windows, Roboto on Android. They give you a 'native' look without an @font-face download. Email-client support is good in Apple Mail and most mobile clients but inconsistent in Outlook. Use them as part of a stack, not standalone: e.g. font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What about webfonts in Outlook on the web vs Outlook desktop?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Outlook on the web (outlook.live.com / outlook.office.com) is a modern WebView and renders @font-face. Outlook desktop on Windows uses Word and does not. Same brand, same logo, opposite font support. Always test both."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does Comic Sans MS render but Roboto doesn't, in Outlook?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Comic Sans MS is pre-installed on Windows. Outlook (Word engine) finds it locally and renders it. Roboto isn't pre-installed and Outlook strips @font-face, so it can't fetch it - falls back to your stack. The lesson: 'web-safe' has nothing to do with the font being safe to use design-wise; it just means the font is on every machine, so no download is needed."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is the data here from caniemail?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. The @font-face support matrix is a snapshot from caniemail.com (CC BY 4.0, snapshot 2026-04). The web-safe font list is the well-known cross-platform set used by Microsoft, Apple, and Google's email-design guides."
+      }
+    }
+  ]
+}
+</script>
+
+<link rel="stylesheet" href="../_shared/styles.css">
+<style>
+  .fc-input-row {
+    margin-top: var(--space-lg);
+    display: flex; gap: var(--space-sm);
+  }
+  .fc-input-row input {
+    flex: 1; font-size: 1.1rem; padding: var(--space-md);
+  }
+
+  .fc-summary {
+    margin-top: var(--space-lg);
+    padding: var(--space-lg);
+    background: linear-gradient(135deg, rgba(0, 102, 255, 0.04), rgba(0, 196, 167, 0.06)), var(--bg);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--brand-accent);
+    border-radius: var(--radius-md);
+  }
+  .fc-summary .label {
+    font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--text-muted); margin-bottom: 4px;
+  }
+  .fc-summary .verdict {
+    font-size: 1.05rem; font-weight: 500; color: var(--text-primary);
+    margin-bottom: var(--space-md);
+  }
+  .fc-summary .verdict .badge {
+    display: inline-block; padding: 2px 10px; border-radius: 999px;
+    font-size: 0.75rem; font-weight: 600; margin-right: var(--space-xs);
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .fc-summary .verdict .badge.web-safe { background: rgba(46, 194, 126, 0.15); color: var(--success); }
+  .fc-summary .verdict .badge.webfont  { background: rgba(245, 165, 36, 0.15); color: var(--warning); }
+  .fc-summary .verdict .badge.system   { background: rgba(0, 102, 255, 0.12); color: var(--brand-primary); }
+  .fc-summary .verdict .badge.unknown  { background: var(--bg-muted); color: var(--text-secondary); }
+
+  .stack-block {
+    display: flex; gap: var(--space-sm); align-items: stretch;
+    margin-top: var(--space-sm);
+  }
+  .stack-block code {
+    flex: 1; padding: var(--space-sm) var(--space-md);
+    background: #0a1628; color: #c8d3e3;
+    font-family: var(--font-mono); font-size: 0.85rem;
+    border-radius: var(--radius-sm);
+    word-break: break-all;
+  }
+
+  .matrix {
+    margin-top: var(--space-lg);
+    border-collapse: collapse; width: 100%;
+    font-size: 0.9rem;
+  }
+  .matrix th, .matrix td {
+    padding: 10px 14px; text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .matrix th {
+    background: var(--bg-alt);
+    font-size: 0.75rem; text-transform: uppercase;
+    letter-spacing: 0.05em; color: var(--text-muted);
+    font-weight: 600;
+  }
+  .matrix tr:hover td { background: var(--bg-alt); }
+  .status-cell { font-weight: 500; white-space: nowrap; }
+  .status-cell.renders     { color: var(--success); }
+  .status-cell.fallback    { color: var(--warning); }
+  .status-cell.broken      { color: var(--danger); }
+  .status-cell .dot        { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; vertical-align: middle; }
+  .status-cell.renders .dot  { background: var(--success); }
+  .status-cell.fallback .dot { background: var(--warning); }
+  .status-cell.broken .dot   { background: var(--danger); }
+  .matrix td.note { color: var(--text-muted); font-size: 0.85rem; }
+
+  .quick-fonts {
+    margin-top: var(--space-md);
+    display: flex; flex-wrap: wrap; gap: var(--space-xs);
+  }
+  .quick-fonts .label {
+    font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--text-muted); width: 100%; margin-bottom: 4px;
+  }
+  .quick-fonts button {
+    padding: 4px 12px; background: var(--bg); border: 1px solid var(--border);
+    color: var(--text-secondary); font-size: 0.85rem; border-radius: 999px;
+    cursor: pointer;
+  }
+  .quick-fonts button:hover { border-color: var(--brand-primary); color: var(--brand-primary); }
+
+  .empty-state {
+    margin-top: var(--space-lg);
+    padding: var(--space-2xl);
+    text-align: center;
+    background: var(--bg-alt);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius-md);
+    color: var(--text-muted);
+  }
+
+  .toast {
+    position: fixed; bottom: var(--space-xl); left: 50%; transform: translateX(-50%);
+    background: var(--text-primary); color: white; padding: var(--space-sm) var(--space-lg);
+    border-radius: var(--radius-md); box-shadow: var(--shadow-md);
+    opacity: 0; transition: opacity 0.2s;
+    pointer-events: none; z-index: 1000;
+  }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-logo" href="https://min8t.com/" aria-label="MiN8T home">
+      <img src="../_shared/brand/min8t-logo.svg" alt="MiN8T" width="120" height="32">
+    </a>
+    <nav class="site-nav">
+      <a href="../">Free Tools</a>
+      <a href="https://app.min8t.com/?ref=tools-font-checker" class="cta-editor">Open Editor →</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <h1>Email-Safe Font Checker</h1>
+  <p>Will your font render in Outlook? Type a font name and see exactly which email clients support it - and get a copy-paste-ready CSS fallback stack so design degrades gracefully where webfonts don't load.</p>
+
+  <div class="fc-input-row">
+    <input type="text" id="font-input" placeholder="Type a font name (e.g. Roboto, Helvetica, Inter)" autocomplete="off">
+  </div>
+
+  <div class="quick-fonts">
+    <span class="label">Try one:</span>
+    <button type="button" data-font="Arial">Arial</button>
+    <button type="button" data-font="Helvetica">Helvetica</button>
+    <button type="button" data-font="Roboto">Roboto</button>
+    <button type="button" data-font="Inter">Inter</button>
+    <button type="button" data-font="Montserrat">Montserrat</button>
+    <button type="button" data-font="Open Sans">Open Sans</button>
+    <button type="button" data-font="Georgia">Georgia</button>
+    <button type="button" data-font="Comic Sans MS">Comic Sans MS</button>
+    <button type="button" data-font="SF Pro">SF Pro</button>
+    <button type="button" data-font="Segoe UI">Segoe UI</button>
+  </div>
+
+  <div class="empty-state" id="empty-state">Type a font name above to see its email-client support matrix.</div>
+
+  <div id="results" hidden>
+    <div class="fc-summary">
+      <div class="label">Verdict</div>
+      <div class="verdict" id="verdict"></div>
+      <div class="label">Recommended CSS stack</div>
+      <div class="stack-block">
+        <code id="stack"></code>
+        <button type="button" class="btn btn-secondary" id="copy-stack-btn">Copy</button>
+      </div>
+    </div>
+
+    <h2>Per-client support matrix</h2>
+    <table class="matrix">
+      <thead>
+        <tr><th>Client</th><th>Status</th><th>What happens</th></tr>
+      </thead>
+      <tbody id="matrix-body"></tbody>
+    </table>
+  </div>
+
+  <h2>How to read the results</h2>
+  <ul>
+    <li><strong style="color:var(--success)">● Renders</strong> - the client will display the requested font.</li>
+    <li><strong style="color:var(--warning)">● Falls back</strong> - the requested font isn't supported, so the client will use the next font in your CSS stack. As long as you ship a stack ending in a web-safe font, this is fine.</li>
+    <li><strong style="color:var(--danger)">● Broken</strong> - rare, would mean no fallback at all. If you see this, fix your CSS stack.</li>
+  </ul>
+
+  <h2>Why this tool exists</h2>
+  <p>Email font rendering is split: half the clients support <code>@font-face</code> webfonts (Apple Mail, Outlook on Mac, Outlook on the web, mobile Outlook), half don't (Outlook desktop on Windows, Gmail, Yahoo, AOL). For any font that isn't pre-installed on every device, you have to design your fallback chain knowing that ~half of opens will land on the fallback. This tool tells you exactly which clients fall back so you can choose a font with a sympathetic web-safe sibling - Inter pairs with Helvetica, Merriweather pairs with Georgia, Roboto pairs with Helvetica.</p>
+
+  <h2>FAQ</h2>
+  <div class="faq">
+    <details>
+      <summary>Why do fonts break in Outlook?</summary>
+      <p>Outlook 2007 through 2019 (and 365 on Windows) use Microsoft Word's HTML rendering engine, which strips <code>@font-face</code> declarations. So if your email loads Roboto via Google Fonts, Outlook for Windows ignores the rule and falls back to whatever's next in your <code>font-family</code> stack. The fix is to always provide a fallback stack ending in a web-safe font (Arial, Helvetica, Georgia, etc.). Outlook for Mac uses WebKit and renders <code>@font-face</code> fine.</p>
+    </details>
+    <details>
+      <summary>What are web-safe fonts for email?</summary>
+      <p>Fonts pre-installed on essentially every operating system: Arial, Helvetica, Verdana, Tahoma, Trebuchet MS, Times New Roman, Times, Georgia, Palatino, Garamond, Courier New, Arial Black, Impact, and Comic Sans MS. Pick from this list as your fallback for any custom font.</p>
+    </details>
+    <details>
+      <summary>Can I use Google Fonts in email?</summary>
+      <p>Yes, but only some clients render them. Google Fonts work in Apple Mail (iOS + macOS), Outlook on Mac, Outlook for iOS/Android (mobile WebView), and Outlook on the web. They do NOT work in Outlook desktop on Windows, Gmail (desktop or mobile), Yahoo Mail, or AOL. So always supply a web-safe fallback like <code>'Roboto', Helvetica, Arial, sans-serif</code>.</p>
+    </details>
+    <details>
+      <summary>How does font fallback work?</summary>
+      <p>When a CSS <code>font-family</code> declaration lists multiple fonts (e.g. <code>font-family: 'Roboto', Helvetica, Arial, sans-serif</code>), the rendering engine tries each one in order and uses the first one available. The final generic family (<code>sans-serif</code>, <code>serif</code>, <code>monospace</code>) is the absolute fallback to a system default.</p>
+    </details>
+    <details>
+      <summary>Should I use system-ui or -apple-system?</summary>
+      <p>These keywords resolve to the OS default UI font - San Francisco on Apple, Segoe UI on Windows, Roboto on Android. They give you a 'native' look without an <code>@font-face</code> download. Email-client support is good in Apple Mail and most mobile clients but inconsistent in Outlook. Use them as part of a stack, not standalone.</p>
+    </details>
+    <details>
+      <summary>What about Outlook on the web vs Outlook desktop?</summary>
+      <p>Outlook on the web is a modern WebView and renders <code>@font-face</code>. Outlook desktop on Windows uses Word and does not. Same brand, same logo, opposite font support. Always test both.</p>
+    </details>
+    <details>
+      <summary>Why does Comic Sans MS render but Roboto doesn't, in Outlook?</summary>
+      <p>Comic Sans MS is pre-installed on Windows. Outlook (Word engine) finds it locally and renders it. Roboto isn't pre-installed and Outlook strips <code>@font-face</code>, so it can't fetch it - falls back to your stack. The lesson: "web-safe" has nothing to do with the font being safe to use design-wise; it just means the font is on every machine, so no download is needed.</p>
+    </details>
+    <details>
+      <summary>Is the data here from caniemail?</summary>
+      <p>Yes. The <code>@font-face</code> support matrix is a snapshot from <a href="https://www.caniemail.com/" rel="noopener">caniemail.com</a> (CC BY 4.0, snapshot 2026-04). The web-safe font list is the well-known cross-platform set used by Microsoft, Apple, and Google's email-design guides.</p>
+    </details>
+  </div>
+
+  <div class="conversion-cta">
+    <h2>Build the email this font goes into</h2>
+    <p>MiN8T's editor lets you set a font with one click and exports clean HTML to any ESP - with the proper fallback stack baked in.</p>
+    <a class="btn" id="cta-editor" href="https://app.min8t.com/?ref=tools-font-checker">Open MiN8T Editor →</a>
+  </div>
+
+  <h2>More free tools for email marketers</h2>
+  <div class="related-tools">
+    <a class="tool-card" href="../utm-builder/"><h3>UTM Campaign URL Builder</h3><p>Build tracked links for your email campaigns with one click.</p></a>
+    <a class="tool-card" href="../image-compressor/"><h3>Email Image Compressor</h3><p>Compress and resize images so your emails stay under inbox size limits.</p></a>
+    <a class="tool-card" href="../email-signature-generator/"><h3>Email Signature Generator</h3><p>Outlook-safe HTML signatures with one-click copy.</p></a>
+    <a class="tool-card" href="../subject-line-analyzer/"><h3>Subject Line Analyzer</h3><p>Score your subject line on length, spam triggers, sentiment, and more.</p></a>
+    <a class="tool-card" href="../background-remover/"><h3>Background Remover</h3><p>Remove image backgrounds 100% in your browser.</p></a>
+    <a class="tool-card" href="../plain-text-converter/"><h3>HTML to Plain-Text Converter</h3><p>Generate the plain-text MIME alternative from any HTML email.</p></a>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <p>Made by <a href="https://min8t.com/">MiN8T</a>, the email design platform that respects your time.</p>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script type="module" src="./app.js"></script>
+</body>
+</html>
