@@ -185,12 +185,21 @@ input, textarea, select {
   font-family: inherit;
   font-size: 1rem;
   padding: var(--space-sm) var(--space-md);
-  border: 1px solid var(--border);
+  /* Border + bg both lifted from the v1 token rewrite: the previous values
+     (--border = 0.12 alpha, bg = 0.6 alpha of brand dark) blended into the
+     glass <main> panel and made fields read as borderless. The combination
+     below gives a clearly visible recess on the dark glass without
+     overpowering the brand-green focus ring. */
+  border: 1px solid rgba(255, 255, 255, 0.28);
   border-radius: var(--radius-md);
-  background: rgba(43, 49, 44, 0.6);
+  background: rgba(0, 0, 0, 0.3);
   color: var(--text-primary);
   width: 100%;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+
+input:hover, textarea:hover, select:hover {
+  border-color: rgba(255, 255, 255, 0.45);
 }
 
 input::placeholder, textarea::placeholder {
@@ -357,4 +366,44 @@ label {
   h1 { font-size: 2rem; }
   h2 { font-size: 1.5rem; }
   main { padding: var(--space-lg) var(--space-md); }
+}
+
+/* ---------------------------------------------------------------
+   Footer scope override - the landing's "Ready to start?" footer
+   bloc uses .bg-light-gray + .bg-white card backgrounds with
+   no explicit color on its h2/h3. Our global h1/h2/h3 rule above
+   sets color: var(--text-primary) which is white on dark theme;
+   that turned the headings invisible on those light cards.
+   Re-anchor heading + body color INSIDE light-bg cards to the
+   dark brand color so the cards stay readable. Inputs inside
+   .bg-white also need to recover their dark text + light bg.
+   --------------------------------------------------------------- */
+.bg-light-gray,
+.bg-light-gray h1,
+.bg-light-gray h2,
+.bg-light-gray h3,
+.bg-light-gray p,
+.bg-light-gray label,
+.bg-white,
+.bg-white h1,
+.bg-white h2,
+.bg-white h3,
+.bg-white p,
+.bg-white label {
+  color: #2b312c;
+}
+
+.bg-white input,
+.bg-white textarea,
+.bg-white select,
+.bg-light-gray input,
+.bg-light-gray textarea,
+.bg-light-gray select {
+  background: #fff;
+  color: #1a1a1a;
+  border: 1px solid #ddd;
+}
+.bg-white input::placeholder,
+.bg-light-gray input::placeholder {
+  color: #999;
 }
