@@ -61,9 +61,25 @@ html, body {
   font-size: 16px;
   line-height: 1.6;
   color: var(--text-primary);
-  background: var(--bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Premium textured background.
+   Layer 1 — soft radial gradient anchored top-right (brand teal at 4% opacity).
+   Layer 2 — soft radial gradient anchored bottom-left (brand blue at 3%).
+   Layer 3 — subtle dotted grain (8x8 SVG, 12% opacity) for tactile depth.
+   Layer 4 — base off-white so the gradients have something to wash over.
+   The combined cost is one CSS rule; no images downloaded. */
+body {
+  background-color: var(--bg-alt);
+  background-image:
+    radial-gradient(circle at 90% -10%,  rgba(0, 196, 167, 0.08), transparent 55%),
+    radial-gradient(circle at -10% 110%, rgba(0, 102, 255, 0.06), transparent 55%),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8'><circle cx='1' cy='1' r='0.6' fill='%230a1628' fill-opacity='0.04'/></svg>");
+  background-attachment: fixed, fixed, fixed;
+  background-size: auto, auto, 8px 8px;
+  background-repeat: no-repeat, no-repeat, repeat;
 }
 
 body {
@@ -76,8 +92,19 @@ main {
   flex: 1;
   width: 100%;
   max-width: var(--container-max);
-  margin: 0 auto;
-  padding: var(--space-xl) var(--space-md);
+  margin: var(--space-xl) auto;
+  padding: var(--space-2xl);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+@media (max-width: 600px) {
+  main {
+    margin: var(--space-md);
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+  }
 }
 
 h1, h2, h3 {
@@ -148,11 +175,16 @@ label {
   font-size: 0.875rem;
 }
 
-/* Site header — included by every tool */
+/* Site header — sticky, semi-transparent with backdrop blur for premium feel */
 .site-header {
-  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(225, 229, 235, 0.6);
   padding: var(--space-md) 0;
-  background: var(--bg);
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: saturate(180%) blur(12px);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
 }
 .site-header-inner {
   max-width: var(--container-max);
@@ -163,14 +195,25 @@ label {
   justify-content: space-between;
 }
 .site-logo {
-  font-weight: 700;
-  font-size: 1.25rem;
-  color: var(--text-primary);
+  display: inline-flex;
+  align-items: center;
   text-decoration: none;
 }
-.site-logo:hover { text-decoration: none; }
+.site-logo img { height: 32px; width: auto; display: block; }
+.site-logo:hover { text-decoration: none; opacity: 0.85; }
 .site-nav { display: flex; gap: var(--space-lg); align-items: center; }
-.site-nav a { color: var(--text-secondary); font-size: 0.95rem; }
+.site-nav a { color: var(--text-secondary); font-size: 0.95rem; font-weight: 500; }
+.site-nav a:hover { color: var(--brand-primary); text-decoration: none; }
+.site-nav .cta-editor {
+  background: var(--brand-primary);
+  color: white !important;
+  padding: 6px 14px;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  transition: background 0.15s, transform 0.05s;
+}
+.site-nav .cta-editor:hover { background: var(--brand-primary-dark); }
+.site-nav .cta-editor:active { transform: translateY(1px); }
 
 /* Footer */
 .site-footer {
