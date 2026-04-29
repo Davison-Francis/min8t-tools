@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free Email Signature Generator — Outlook-Safe HTML | MiN8T</title>
+<meta name="description" content="Free HTML email signature generator with three Outlook-safe templates. Live preview, one-click copy for Gmail / Outlook / Apple Mail. No signup.">
+<link rel="canonical" href="https://min8t.com/tools/email-signature-generator/">
+<meta property="og:title" content="Free Email Signature Generator | MiN8T">
+<meta property="og:description" content="Outlook-safe HTML email signatures with one-click copy. Three templates, live preview, no signup.">
+<meta property="og:url" content="https://min8t.com/tools/email-signature-generator/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0066ff">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Email Signature Generator",
+  "url": "https://min8t.com/tools/email-signature-generator/",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "All",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Generate Outlook-safe HTML email signatures. Live preview, three template designs, copy for Gmail or HTML source for Outlook."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Free Tools", "item": "https://min8t.com/tools/" },
+    { "@type": "ListItem", "position": 2, "name": "Email Signature Generator", "item": "https://min8t.com/tools/email-signature-generator/" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I add an HTML signature in Gmail?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "In Gmail web, click the gear icon → See all settings → Signature → Create new. Paste the rendered signature (use the 'Copy for Gmail' button — it copies as rich text, not HTML source). Save changes at the bottom of the page. Gmail's signature editor doesn't accept HTML directly; pasting rich-text content is the only path."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I add an HTML signature in Outlook?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Outlook 2016/2019/365: File → Options → Mail → Signatures → New. The signature editor accepts pasted rich content from this tool — use 'Copy for Gmail' to grab the rendered signature and paste it. For Outlook on the web, open Settings → Mail → Compose and reply, paste into the signature box. If formatting breaks, fall back to 'Copy HTML source' and edit the .htm file in your Outlook signatures folder directly."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I add a signature in Apple Mail?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Apple Mail (macOS): Mail → Settings → Signatures → click + to add. Paste the rendered signature. Apple Mail accepts rich content cleanly. To preserve exact HTML, drag the rendered HTML file from a browser tab into the signature panel — Apple Mail will keep the structure verbatim."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why do my email signatures break in Outlook?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Outlook uses Microsoft Word's HTML rendering engine, which strips most modern CSS. Specifically: no flexbox, no grid, no background-image, no @media queries, no margin (use cellpadding/cellspacing on tables instead), no rem/em (use px). The templates in this tool are built with Outlook in mind: pure table-based layouts with inline styles, fixed pixel widths, and no fancy CSS. If you've copied a signature from elsewhere and it breaks, it's almost certainly using flex/grid for layout — rebuild it as a table."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should I include a photo in my email signature?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Optional but signals personality. Keep it under 200 KB and at most 100×100 px (200×200 for retina). Use JPEG (universal) or PNG (if you need transparency around a circular crop). Host it on a public URL — don't paste a data: URL into the signature, since Outlook may strip it and emails on slow connections won't load it. Many people use their LinkedIn profile photo URL or a dedicated CDN bucket."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What size should an email signature be?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Keep the total HTML under 5 KB and the photo (if any) under 200 KB. Width should be 500-600 px so it fits in mobile inboxes and doesn't overflow Gmail's reply window. Tall, decorated signatures with banner ads and quote boxes look cluttered and trigger spam-filter heuristics — keep it short, professional, scannable."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use animated GIFs in my email signature?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Technically yes, but most clients only show the first frame. Outlook desktop is the worst offender — it strips animation entirely. If you want motion, ship a static fallback that works as a single frame, or skip the animation. The accessibility benefit (no flicker for users with vestibular disorders) is also worth considering."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I include a calendar booking link in my signature?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Add the link as a regular link in the signature — your Calendly, SavvyCal, Cal.com, or HubSpot meeting URL. Use a clear call-to-action like 'Book a 15-min chat' rather than the bare URL. Don't embed an iframe or button-image — both break in most clients. A plain styled link is universal."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do email signatures need a legal disclaimer?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Depends on your jurisdiction and industry. EU companies typically need company name, registered address, and registration number under e-commerce / company-law rules. Healthcare and financial services often require confidentiality notices. Generic 'this email is confidential' boilerplate is largely unenforceable but conventional in some industries. Check with your legal team — there's no one-size-fits-all answer."
+      }
+    }
+  ]
+}
+</script>
+
+<link rel="stylesheet" href="../_shared/styles.css">
+<style>
+  .esg-layout {
+    display: grid;
+    grid-template-columns: minmax(260px, 1fr) minmax(360px, 1.4fr);
+    gap: var(--space-lg);
+    margin-top: var(--space-lg);
+  }
+  @media (max-width: 800px) { .esg-layout { grid-template-columns: 1fr; } }
+
+  .esg-form {
+    display: flex; flex-direction: column; gap: var(--space-md);
+    padding: var(--space-md);
+    background: var(--bg-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+  }
+  .esg-form h3 {
+    margin: 0;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+  }
+  .esg-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-sm); }
+  .field-row { display: flex; flex-direction: column; }
+  .field-row .hint { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+  .color-row {
+    display: grid; grid-template-columns: 1fr 56px; gap: var(--space-sm); align-items: end;
+  }
+  .color-row input[type=color] { padding: 4px; height: 42px; cursor: pointer; }
+
+  .templates {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-xs);
+    margin-top: var(--space-xs);
+  }
+  .template-btn {
+    padding: var(--space-sm); border: 1px solid var(--border); background: var(--bg);
+    border-radius: var(--radius-sm); font-size: 0.8rem; font-weight: 500;
+    cursor: pointer; color: var(--text-secondary);
+  }
+  .template-btn.active {
+    border-color: var(--brand-primary);
+    color: var(--brand-primary);
+    background: rgba(0, 102, 255, 0.06);
+  }
+
+  .esg-preview {
+    display: flex; flex-direction: column; gap: var(--space-md);
+  }
+  .preview-box {
+    background:
+      linear-gradient(135deg, rgba(0, 102, 255, 0.04), rgba(0, 196, 167, 0.06)),
+      var(--bg);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--brand-accent);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    min-height: 220px;
+  }
+  .preview-box .label {
+    font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--text-muted); margin-bottom: var(--space-sm);
+  }
+  .preview-iframe {
+    width: 100%; min-height: 180px; border: 0;
+    background: white;
+    border-radius: var(--radius-sm);
+  }
+  .copy-row { display: flex; gap: var(--space-sm); flex-wrap: wrap; }
+  details.html-source {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--bg);
+  }
+  details.html-source summary {
+    cursor: pointer; font-weight: 500; color: var(--text-primary);
+    list-style: none;
+  }
+  details.html-source summary::-webkit-details-marker { display: none; }
+  details.html-source summary::before { content: '▸ '; color: var(--text-muted); }
+  details.html-source[open] summary::before { content: '▾ '; }
+  details.html-source pre {
+    margin: var(--space-sm) 0 0;
+    padding: var(--space-md);
+    background: #0a1628;
+    color: #c8d3e3;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    border-radius: var(--radius-sm);
+    overflow-x: auto;
+    max-height: 300px;
+  }
+
+  .toast {
+    position: fixed; bottom: var(--space-xl); left: 50%; transform: translateX(-50%);
+    background: var(--text-primary); color: white; padding: var(--space-sm) var(--space-lg);
+    border-radius: var(--radius-md); box-shadow: var(--shadow-md);
+    opacity: 0; transition: opacity 0.2s;
+    pointer-events: none; z-index: 1000;
+  }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-logo" href="https://min8t.com/" aria-label="MiN8T home">
+      <img src="../_shared/brand/min8t-logo.svg" alt="MiN8T" width="120" height="32">
+    </a>
+    <nav class="site-nav">
+      <a href="../">Free Tools</a>
+      <a href="https://app.min8t.com/?ref=tools-email-signature-generator" class="cta-editor">Open Editor →</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <h1>Free Email Signature Generator</h1>
+  <p>Outlook-safe HTML signatures, three template designs, live preview, one-click copy. Built with table-based layouts and inline styles — guaranteed to render correctly across Gmail, Outlook, Apple Mail, and every other major client.</p>
+
+  <div class="esg-layout">
+    <!-- LEFT: form -->
+    <form class="esg-form" id="esg-form" autocomplete="off">
+      <h3>Template</h3>
+      <div class="templates" id="templates">
+        <button type="button" class="template-btn active" data-template="classic">Classic</button>
+        <button type="button" class="template-btn" data-template="minimal">Minimal</button>
+        <button type="button" class="template-btn" data-template="accent">Accent bar</button>
+      </div>
+
+      <h3>Identity</h3>
+      <div class="field-row">
+        <label for="f-name">Full name</label>
+        <input type="text" id="f-name" name="name" placeholder="Jane Doe" value="Jane Doe">
+      </div>
+      <div class="esg-row">
+        <div class="field-row">
+          <label for="f-title">Job title</label>
+          <input type="text" id="f-title" name="title" placeholder="Marketing Lead" value="Marketing Lead">
+        </div>
+        <div class="field-row">
+          <label for="f-company">Company</label>
+          <input type="text" id="f-company" name="company" placeholder="Acme Co" value="Acme Co">
+        </div>
+      </div>
+
+      <h3>Contact</h3>
+      <div class="field-row">
+        <label for="f-email">Email</label>
+        <input type="email" id="f-email" name="email" placeholder="jane@example.com" value="jane@acme.co">
+      </div>
+      <div class="esg-row">
+        <div class="field-row">
+          <label for="f-phone">Phone</label>
+          <input type="tel" id="f-phone" name="phone" placeholder="+1 555 0100" value="+1 555 0100">
+        </div>
+        <div class="field-row">
+          <label for="f-website">Website</label>
+          <input type="url" id="f-website" name="website" placeholder="https://example.com" value="https://acme.co">
+        </div>
+      </div>
+
+      <h3>Visual</h3>
+      <div class="field-row">
+        <label for="f-photo">Photo URL <span class="hint" style="font-weight:normal">(optional)</span></label>
+        <input type="url" id="f-photo" name="photo" placeholder="https://example.com/photo.jpg">
+        <span class="hint">Host on a CDN. Square JPEG/PNG, ~200×200 px, under 200 KB.</span>
+      </div>
+      <div class="color-row">
+        <div class="field-row">
+          <label for="f-color">Brand color</label>
+          <input type="text" id="f-color-text" placeholder="#0066ff" value="#0066ff">
+        </div>
+        <input type="color" id="f-color" value="#0066ff" aria-label="Brand color picker">
+      </div>
+
+      <h3>Social <span style="font-weight:normal; font-size:0.75rem; color:var(--text-muted)">(only filled ones appear)</span></h3>
+      <div class="esg-row">
+        <div class="field-row">
+          <label for="f-linkedin">LinkedIn URL</label>
+          <input type="url" id="f-linkedin" name="linkedin" placeholder="https://linkedin.com/in/...">
+        </div>
+        <div class="field-row">
+          <label for="f-twitter">Twitter / X URL</label>
+          <input type="url" id="f-twitter" name="twitter" placeholder="https://x.com/...">
+        </div>
+      </div>
+      <div class="esg-row">
+        <div class="field-row">
+          <label for="f-instagram">Instagram URL</label>
+          <input type="url" id="f-instagram" name="instagram" placeholder="https://instagram.com/...">
+        </div>
+        <div class="field-row">
+          <label for="f-github">GitHub URL</label>
+          <input type="url" id="f-github" name="github" placeholder="https://github.com/...">
+        </div>
+      </div>
+    </form>
+
+    <!-- RIGHT: preview + copy -->
+    <div class="esg-preview">
+      <div class="preview-box">
+        <div class="label">Live preview</div>
+        <iframe id="preview-iframe" class="preview-iframe" title="Signature preview"></iframe>
+      </div>
+
+      <div class="copy-row">
+        <button type="button" class="btn btn-primary" id="copy-rich">Copy for Gmail / Apple Mail</button>
+        <button type="button" class="btn btn-secondary" id="copy-source">Copy HTML source</button>
+      </div>
+
+      <details class="html-source">
+        <summary>View the raw HTML</summary>
+        <pre id="source-pre"></pre>
+      </details>
+    </div>
+  </div>
+
+  <h2>How to install your new signature</h2>
+  <ol>
+    <li><strong>Gmail / Apple Mail / Outlook on the web:</strong> click "Copy for Gmail / Apple Mail" — pastes as rich content into the signature editor.</li>
+    <li><strong>Outlook desktop (2016/2019/365):</strong> File → Options → Mail → Signatures → New, then paste the rich-content version. If formatting breaks, use "Copy HTML source" and replace the contents of your <code>.htm</code> file in <code>%APPDATA%\Microsoft\Signatures\</code>.</li>
+    <li><strong>Other clients:</strong> most signature editors accept rich-content paste. If they don't, "Copy HTML source" gives you the raw markup to paste anywhere.</li>
+  </ol>
+
+  <h2>Why these templates work in Outlook</h2>
+  <p>Outlook desktop uses Microsoft Word's HTML engine, which strips flexbox, grid, background-image, and @media queries. The templates in this tool use only what survives that engine: <code>&lt;table&gt;</code>-based layout with <code>cellpadding</code>/<code>cellspacing</code> instead of CSS margins, inline styles only (no <code>&lt;style&gt;</code> blocks, which Outlook ignores anyway), pixel-only widths, and a 500-600 px overall width that fits cleanly in mobile and desktop reading panes alike.</p>
+  <p>Most "free signature generator" tools online use a Vue/React form with no awareness of Outlook's quirks — paste their output into Outlook and you get a stack of bare text. The templates here have been tested against the <a href="https://www.caniemail.com/" rel="noopener">caniemail</a> compatibility matrix; every CSS property used is supported by at least 95% of email clients.</p>
+
+  <h2>FAQ</h2>
+  <div class="faq">
+    <details>
+      <summary>How do I add an HTML signature in Gmail?</summary>
+      <p>In Gmail web, click the gear icon → See all settings → Signature → Create new. Paste the rendered signature (use the "Copy for Gmail" button — it copies as rich text, not HTML source). Save changes at the bottom of the page. Gmail's signature editor doesn't accept HTML directly; pasting rich-text content is the only path.</p>
+    </details>
+    <details>
+      <summary>How do I add an HTML signature in Outlook?</summary>
+      <p>Outlook 2016/2019/365: File → Options → Mail → Signatures → New. The signature editor accepts pasted rich content from this tool — use "Copy for Gmail" to grab the rendered signature and paste it. For Outlook on the web, open Settings → Mail → Compose and reply, paste into the signature box. If formatting breaks, fall back to "Copy HTML source" and edit the <code>.htm</code> file in your Outlook signatures folder directly.</p>
+    </details>
+    <details>
+      <summary>How do I add a signature in Apple Mail?</summary>
+      <p>Apple Mail (macOS): Mail → Settings → Signatures → click + to add. Paste the rendered signature. Apple Mail accepts rich content cleanly. To preserve exact HTML, drag the rendered HTML file from a browser tab into the signature panel — Apple Mail will keep the structure verbatim.</p>
+    </details>
+    <details>
+      <summary>Why do my email signatures break in Outlook?</summary>
+      <p>Outlook uses Microsoft Word's HTML rendering engine, which strips most modern CSS. Specifically: no flexbox, no grid, no <code>background-image</code>, no <code>@media</code> queries, no <code>margin</code> (use <code>cellpadding</code>/<code>cellspacing</code> on tables instead), no <code>rem</code>/<code>em</code> (use <code>px</code>). The templates in this tool are built with Outlook in mind: pure table-based layouts with inline styles, fixed pixel widths, and no fancy CSS.</p>
+    </details>
+    <details>
+      <summary>Should I include a photo in my email signature?</summary>
+      <p>Optional but signals personality. Keep it under 200 KB and at most 100×100 px (200×200 for retina). Use JPEG (universal) or PNG (if you need transparency around a circular crop). Host it on a public URL — don't paste a data: URL into the signature, since Outlook may strip it and emails on slow connections won't load it.</p>
+    </details>
+    <details>
+      <summary>What size should an email signature be?</summary>
+      <p>Keep the total HTML under 5 KB and the photo (if any) under 200 KB. Width should be 500-600 px so it fits in mobile inboxes and doesn't overflow Gmail's reply window. Tall, decorated signatures with banner ads and quote boxes look cluttered and trigger spam-filter heuristics — keep it short, professional, scannable.</p>
+    </details>
+    <details>
+      <summary>Can I use animated GIFs in my email signature?</summary>
+      <p>Technically yes, but most clients only show the first frame. Outlook desktop is the worst offender — it strips animation entirely. If you want motion, ship a static fallback that works as a single frame, or skip the animation.</p>
+    </details>
+    <details>
+      <summary>How do I include a calendar booking link in my signature?</summary>
+      <p>Add the link as a regular link in the signature — your Calendly, SavvyCal, Cal.com, or HubSpot meeting URL. Use a clear call-to-action like "Book a 15-min chat" rather than the bare URL. Don't embed an iframe or button-image — both break in most clients. A plain styled link is universal.</p>
+    </details>
+    <details>
+      <summary>Do email signatures need a legal disclaimer?</summary>
+      <p>Depends on your jurisdiction and industry. EU companies typically need company name, registered address, and registration number under e-commerce / company-law rules. Healthcare and financial services often require confidentiality notices. Check with your legal team — there's no one-size-fits-all answer.</p>
+    </details>
+  </div>
+
+  <div class="conversion-cta">
+    <h2>Build the email this signature goes into</h2>
+    <p>MiN8T is a full email design platform with the same Outlook-safe approach you see here, applied to entire campaigns. Drop your signature into a template in seconds.</p>
+    <a class="btn" id="cta-editor" href="https://app.min8t.com/?ref=tools-email-signature-generator">Open MiN8T Editor →</a>
+  </div>
+
+  <h2>More free tools for email marketers</h2>
+  <div class="related-tools">
+    <a class="tool-card" href="../utm-builder/">
+      <h3>UTM Campaign URL Builder</h3>
+      <p>Build tracked links for your email campaigns with one click.</p>
+    </a>
+    <a class="tool-card" href="../image-compressor/">
+      <h3>Email Image Compressor</h3>
+      <p>Compress and resize images so your emails stay under inbox size limits.</p>
+    </a>
+    <a class="tool-card" href="../subject-line-analyzer/">
+      <h3>Subject Line Analyzer</h3>
+      <p>Score your subject line on length, spam triggers, sentiment, and more.</p>
+    </a>
+    <a class="tool-card" href="../background-remover/">
+      <h3>Background Remover</h3>
+      <p>Remove image backgrounds 100% in your browser. Your image never leaves your device.</p>
+    </a>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <p>Made by <a href="https://min8t.com/">MiN8T</a>, the email design platform that respects your time.</p>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script type="module" src="./app.js"></script>
+</body>
+</html>
