@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HTML to Plain-Text Email Converter - Free | MiN8T</title>
+<meta name="description" content="Convert HTML email to RFC-2822-compliant plain text. Free, in your browser. Use the output as the text/plain MIME alternative in your email send.">
+<link rel="canonical" href="https://min8t.com/tools/plain-text-converter/">
+<meta property="og:title" content="HTML to Plain-Text Email Converter | MiN8T">
+<meta property="og:description" content="Generate the plain-text MIME alternative from any HTML email. Free, no signup, in-browser.">
+<meta property="og:url" content="https://min8t.com/tools/plain-text-converter/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0066ff">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "HTML to Plain-Text Email Converter",
+  "url": "https://min8t.com/tools/plain-text-converter/",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "All",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Convert HTML email source to plain-text MIME alternative. Preserves link references and respects RFC-2822 line widths. Free, no signup."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Free Tools", "item": "https://min8t.com/tools/" },
+    { "@type": "ListItem", "position": 2, "name": "HTML to Plain-Text Converter", "item": "https://min8t.com/tools/plain-text-converter/" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Why does an HTML email need a plain-text alternative?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Three reasons. (1) Deliverability: spam filters score emails that ship only HTML lower than emails with both HTML and plain-text parts; the absence of a text alternative is a signal of spam-like senders. (2) Accessibility: screen readers and minimal-HTML clients (e.g. some webmail security previews, some CLI mail clients) read the plain-text version. (3) Standards compliance: RFC 2046 specifies that multipart/alternative emails should include a text/plain part as the lowest-common-denominator fallback."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do email clients decide which version to show?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Modern clients (Gmail, Outlook, Apple Mail, etc.) default to HTML and only show plain text if HTML is missing or the user has explicitly disabled HTML rendering. The plain-text version is rarely seen by humans - its main value is for spam filters and accessibility tooling that read it before the HTML."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How are links handled?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "By default, the converter inlines URLs after their link text in parentheses, e.g. 'Click here (https://example.com)'. This preserves both the call-to-action wording and the destination, so a user reading the plain-text version still has the URL to click or copy. Some senders prefer to drop the URL entirely and let the link text stand alone - the tool has a setting for that."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What's the recommended line width for plain-text email?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "RFC 5322 recommends 78 characters per line maximum (with 76 being a common practical default to leave room for quoting). Most ESPs auto-wrap at 76 if you don't. The converter wraps at 76 by default."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can the plain-text version say something different from the HTML?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, and arguably it should. The plain-text is your hedge against image-blocking and HTML-stripping. Some senders write a tighter, link-free pitch for the plain-text version since the audience reading it is most likely a spam filter scanning for ratio of text to links. The auto-converted version is a starting point; manually trimming it before send is reasonable."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does this tool send my email anywhere?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. The conversion runs entirely in your browser via the standard DOMParser API. Your HTML input never leaves your device."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What gets stripped vs. preserved?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Preserved: text content, headings (rendered as uppercase or with surrounding blank lines), paragraphs (with blank lines), lists (with * or 1. prefixes), block quotes (indented), and links (with URL inline). Stripped: all CSS, all images (replaced with their alt text in brackets, e.g. [Logo]), all <style>/<script>/<meta> blocks, and inline formatting like bold/italic (the text content stays, just without the markup)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should I just let my ESP auto-generate the plain-text version?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Mailchimp, Klaviyo, SendGrid, and most ESPs do auto-generate, and the output is usually fine. Where this tool helps: pre-flighting deliverability before the send (you can see the actual text-version content), or for transactional and self-hosted SMTP setups where you're building the multipart message yourself."
+      }
+    }
+  ]
+}
+</script>
+
+<link rel="stylesheet" href="../_shared/styles.css">
+<style>
+  .ptc-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+    margin-top: var(--space-lg);
+  }
+  @media (max-width: 800px) { .ptc-layout { grid-template-columns: 1fr; } }
+  .ptc-pane { display: flex; flex-direction: column; gap: var(--space-xs); }
+  .ptc-pane label {
+    text-transform: uppercase; font-size: 0.75rem;
+    letter-spacing: 0.05em; color: var(--text-muted);
+  }
+  .ptc-pane textarea {
+    min-height: 320px; font-family: var(--font-mono); font-size: 0.85rem;
+    line-height: 1.5; padding: var(--space-md); resize: vertical;
+  }
+  .ptc-pane.output textarea { background: var(--bg-alt); }
+  .ptc-controls {
+    display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: var(--space-sm);
+    align-items: end; margin-top: var(--space-md);
+    padding: var(--space-md);
+    background: var(--bg-alt);
+    border: 1px solid var(--border); border-radius: var(--radius-md);
+  }
+  @media (max-width: 700px) { .ptc-controls { grid-template-columns: 1fr 1fr; } }
+  .ptc-controls .field-row { display: flex; flex-direction: column; }
+  .ptc-controls label {
+    font-size: 0.75rem; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+  .ptc-actions {
+    margin-top: var(--space-md);
+    display: flex; gap: var(--space-sm); flex-wrap: wrap; align-items: center;
+  }
+  .ptc-actions .stats {
+    margin-left: auto; font-size: 0.85rem; color: var(--text-muted);
+    font-family: var(--font-mono);
+  }
+  .toast {
+    position: fixed; bottom: var(--space-xl); left: 50%; transform: translateX(-50%);
+    background: var(--text-primary); color: white; padding: var(--space-sm) var(--space-lg);
+    border-radius: var(--radius-md); box-shadow: var(--shadow-md);
+    opacity: 0; transition: opacity 0.2s;
+    pointer-events: none; z-index: 1000;
+  }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-logo" href="https://min8t.com/" aria-label="MiN8T home">
+      <img src="../_shared/brand/min8t-logo.svg" alt="MiN8T" width="120" height="32">
+    </a>
+    <nav class="site-nav">
+      <a href="../">Free Tools</a>
+      <a href="https://app.min8t.com/?ref=tools-plain-text-converter" class="cta-editor">Open Editor →</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <h1>HTML to Plain-Text Email Converter</h1>
+  <p>Generate the plain-text MIME alternative from any HTML email. Used as the <code>text/plain</code> part of a multipart message - improves deliverability, satisfies RFC 2046, and gives screen-reader and minimal-client users a readable fallback. Free, in your browser, your email never leaves your device.</p>
+
+  <div class="ptc-controls">
+    <div class="field-row">
+      <label for="line-width">Line width</label>
+      <input type="number" id="line-width" min="40" max="120" step="1" value="76">
+    </div>
+    <div class="field-row">
+      <label for="link-style">Links</label>
+      <select id="link-style">
+        <option value="inline" selected>Inline as text (URL)</option>
+        <option value="reference">Numbered references at end</option>
+        <option value="strip">Drop URL, keep text</option>
+      </select>
+    </div>
+    <div class="field-row">
+      <label for="header-style">Headings</label>
+      <select id="header-style">
+        <option value="uppercase" selected>UPPERCASE</option>
+        <option value="underline">Underline with -</option>
+        <option value="plain">Plain text</option>
+      </select>
+    </div>
+    <button type="button" class="btn btn-secondary" id="sample-btn">Use sample</button>
+  </div>
+
+  <div class="ptc-layout">
+    <div class="ptc-pane">
+      <label for="html-input">HTML input</label>
+      <textarea id="html-input" placeholder="Paste your HTML email source here…"></textarea>
+    </div>
+    <div class="ptc-pane output">
+      <label for="text-output">Plain-text output</label>
+      <textarea id="text-output" readonly placeholder="Plain-text version appears here…"></textarea>
+    </div>
+  </div>
+
+  <div class="ptc-actions">
+    <button type="button" class="btn btn-primary" id="copy-btn">Copy plain text</button>
+    <button type="button" class="btn btn-secondary" id="download-btn">Download as .txt</button>
+    <button type="button" class="btn btn-secondary" id="clear-btn">Clear</button>
+    <span class="stats" id="stats">0 chars</span>
+  </div>
+
+  <h2>How to use the plain-text alternative</h2>
+  <p>Most ESPs (Mailchimp, Klaviyo, SendGrid, Resend, Postmark, etc.) auto-generate plain-text versions when you upload HTML. If you're sending via custom SMTP or a transactional API that exposes the multipart structure, you'll need to set the <code>text/plain</code> part yourself - paste the output from this tool there.</p>
+
+  <h2>Why bother?</h2>
+  <p>Even though almost no one reads the plain-text version directly, it influences <strong>deliverability</strong>. Spam filters use the ratio of text-to-link content as one signal of spam-like behaviour, and HTML-only emails (no <code>text/plain</code> alternative) score lower in many enterprise spam systems. The cost of including it is essentially zero - your ESP, or this tool, generates it from the HTML you already wrote.</p>
+  <p>The other usually-ignored audience: <strong>screen readers, CLI mail clients (Mutt, Pine), and minimal-rendering security previews</strong> in some corporate environments. Those users see the plain-text version, not the HTML. If your email's call-to-action only exists in a styled HTML button, those users miss it. The plain-text version, with the URL inlined, gives them a way through.</p>
+
+  <h2>FAQ</h2>
+  <div class="faq">
+    <details>
+      <summary>Why does an HTML email need a plain-text alternative?</summary>
+      <p>Three reasons. (1) <strong>Deliverability:</strong> spam filters score emails that ship only HTML lower than emails with both HTML and plain-text parts. (2) <strong>Accessibility:</strong> screen readers and minimal-HTML clients read the plain-text version. (3) <strong>Standards compliance:</strong> RFC 2046 specifies that <code>multipart/alternative</code> emails should include a <code>text/plain</code> part.</p>
+    </details>
+    <details>
+      <summary>How do email clients decide which version to show?</summary>
+      <p>Modern clients (Gmail, Outlook, Apple Mail) default to HTML and only show plain text if HTML is missing or the user has explicitly disabled HTML rendering. The plain-text version is rarely seen by humans - its main value is for spam filters and accessibility tooling.</p>
+    </details>
+    <details>
+      <summary>How are links handled?</summary>
+      <p>By default, the converter inlines URLs after their link text in parentheses, e.g. <code>Click here (https://example.com)</code>. Switch to <em>numbered references</em> for a footer-style list of links, or <em>drop URL</em> if you want only the link text.</p>
+    </details>
+    <details>
+      <summary>What's the recommended line width for plain-text email?</summary>
+      <p>RFC 5322 recommends 78 characters per line maximum (with 76 being a common practical default to leave room for quoting). Most ESPs auto-wrap at 76 if you don't. The converter wraps at 76 by default.</p>
+    </details>
+    <details>
+      <summary>Can the plain-text version say something different from the HTML?</summary>
+      <p>Yes, and arguably it should. The plain-text is your hedge against image-blocking and HTML-stripping. Some senders write a tighter, link-free pitch for it since the audience is most likely a spam filter scanning the ratio of text to links. The auto-converted version is a starting point; trimming it before send is reasonable.</p>
+    </details>
+    <details>
+      <summary>Does this tool send my email anywhere?</summary>
+      <p>No. The conversion runs entirely in your browser via the standard <code>DOMParser</code> API. Your HTML input never leaves your device.</p>
+    </details>
+    <details>
+      <summary>What gets stripped vs. preserved?</summary>
+      <p><strong>Preserved:</strong> text content, headings (uppercase / underlined / plain - your choice), paragraphs, lists (with <code>*</code> or <code>1.</code> prefixes), block quotes (indented), and links (with URL inline). <strong>Stripped:</strong> all CSS, images (replaced with alt text in brackets, e.g. <code>[Logo]</code>), <code>&lt;style&gt;</code> / <code>&lt;script&gt;</code> / <code>&lt;meta&gt;</code> blocks, and inline formatting like bold or italic (the text stays, just without the markup).</p>
+    </details>
+    <details>
+      <summary>Should I just let my ESP auto-generate the plain-text version?</summary>
+      <p>Mailchimp, Klaviyo, SendGrid, and most ESPs do auto-generate, and the output is usually fine. Where this tool helps: pre-flighting deliverability before the send, or for transactional and self-hosted SMTP setups where you're building the multipart message yourself.</p>
+    </details>
+  </div>
+
+  <div class="conversion-cta">
+    <h2>Compose the HTML side first</h2>
+    <p>MiN8T's editor exports clean HTML to any ESP. Drop the result here for the plain-text counterpart, or let the ESP auto-generate.</p>
+    <a class="btn" id="cta-editor" href="https://app.min8t.com/?ref=tools-plain-text-converter">Open MiN8T Editor →</a>
+  </div>
+
+  <h2>More free tools for email marketers</h2>
+  <div class="related-tools">
+    <a class="tool-card" href="../utm-builder/"><h3>UTM Campaign URL Builder</h3><p>Build tracked links for your email campaigns with one click.</p></a>
+    <a class="tool-card" href="../image-compressor/"><h3>Email Image Compressor</h3><p>Compress and resize images so your emails stay under inbox size limits.</p></a>
+    <a class="tool-card" href="../email-signature-generator/"><h3>Email Signature Generator</h3><p>Outlook-safe HTML signatures with one-click copy.</p></a>
+    <a class="tool-card" href="../subject-line-analyzer/"><h3>Subject Line Analyzer</h3><p>Score your subject line on length, spam triggers, sentiment, and more.</p></a>
+    <a class="tool-card" href="../background-remover/"><h3>Background Remover</h3><p>Remove image backgrounds 100% in your browser.</p></a>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <p>Made by <a href="https://min8t.com/">MiN8T</a>, the email design platform that respects your time.</p>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script type="module" src="./app.js"></script>
+</body>
+</html>
