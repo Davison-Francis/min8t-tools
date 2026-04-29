@@ -133,18 +133,23 @@ main {
   }
 }
 
-h1, h2, h3 {
-  line-height: 1.2;
-  margin: 0 0 var(--space-md);
+/* Headings: only force white inside the dark glass <main> and tool-hero
+   blocks. Outside (e.g. in the footer's light-bg cards), main.css's own
+   h1/h2/h3 rule (color: #2b312c) takes effect naturally. This avoids
+   the v2 regression where "Ready to start?" + "Stay up to date" were
+   white-on-light = invisible. */
+main h1, main h2, main h3,
+.tools-hero h1, .tools-hero h2, .tools-hero h3 {
   color: var(--text-primary);
   font-family: var(--font-display);
+  line-height: 1.2;
 }
 
-h1 { font-size: 2.5rem; font-weight: 700; }
-h2 { font-size: 1.75rem; font-weight: 600; margin-top: var(--space-2xl); }
-h3 { font-size: 1.25rem; font-weight: 600; margin-top: var(--space-xl); }
+main h1, .tools-hero h1 { font-size: 2.5rem; font-weight: 700; margin: 0 0 var(--space-md); }
+main h2, .tools-hero h2 { font-size: 1.75rem; font-weight: 600; margin: var(--space-2xl) 0 var(--space-md); }
+main h3, .tools-hero h3 { font-size: 1.25rem; font-weight: 600; margin: var(--space-xl) 0 var(--space-md); }
 
-p { margin: 0 0 var(--space-md); color: var(--text-secondary); }
+main p { margin: 0 0 var(--space-md); color: var(--text-secondary); }
 
 a { color: var(--brand-primary); text-decoration: none; }
 a:hover { text-decoration: underline; }
@@ -369,30 +374,11 @@ label {
 }
 
 /* ---------------------------------------------------------------
-   Footer scope override - the landing's "Ready to start?" footer
-   bloc uses .bg-light-gray + .bg-white card backgrounds with
-   no explicit color on its h2/h3. Our global h1/h2/h3 rule above
-   sets color: var(--text-primary) which is white on dark theme;
-   that turned the headings invisible on those light cards.
-   Re-anchor heading + body color INSIDE light-bg cards to the
-   dark brand color so the cards stay readable. Inputs inside
-   .bg-white also need to recover their dark text + light bg.
+   Form inputs inside the footer's light-bg cards revert to a light
+   styling. The global input rule above sets dark glass bg + white
+   text, which would render as white-on-white inside the .bg-white
+   newsletter card.
    --------------------------------------------------------------- */
-.bg-light-gray,
-.bg-light-gray h1,
-.bg-light-gray h2,
-.bg-light-gray h3,
-.bg-light-gray p,
-.bg-light-gray label,
-.bg-white,
-.bg-white h1,
-.bg-white h2,
-.bg-white h3,
-.bg-white p,
-.bg-white label {
-  color: #2b312c;
-}
-
 .bg-white input,
 .bg-white textarea,
 .bg-white select,
