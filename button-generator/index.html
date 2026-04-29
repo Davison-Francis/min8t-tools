@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bulletproof Email Button Generator - Free CTA HTML with VML for Outlook | MiN8T</title>
+<meta name="description" content="Generate email-safe HTML buttons with VML fallback for Outlook desktop. Real bulletproof buttons - rounded corners survive Word rendering. Free, no signup.">
+<link rel="canonical" href="https://min8t.com/tools/button-generator/">
+<meta property="og:title" content="Bulletproof Email Button Generator - Free | MiN8T">
+<meta property="og:description" content="Email-safe CTA buttons with VML for Outlook desktop. Free.">
+<meta property="og:url" content="https://min8t.com/tools/button-generator/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#28ef91">
+
+<link rel="icon" href="https://min8t.com/favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="https://min8t.com/favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="https://min8t.com/apple-touch-icon.png">
+
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/roboto/Roboto-Regular.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/roboto/Roboto-Medium.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/roboto/Roboto-Bold.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/pp-neue-montreal/ppneuemontreal-book.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/pp-neue-montreal/ppneuemontreal-bold.woff2" crossorigin>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Bulletproof Email Button Generator",
+  "url": "https://min8t.com/tools/button-generator/",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "All",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Generate email-safe HTML buttons with VML fallback for Outlook desktop. Free, no signup."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Free Tools", "item": "https://min8t.com/tools/" },
+    { "@type": "ListItem", "position": 2, "name": "Button Generator", "item": "https://min8t.com/tools/button-generator/" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is a 'bulletproof' button?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A bulletproof email button is an HTML button that renders correctly in every major email client - including Outlook desktop, which uses Microsoft Word to render HTML. The 'bulletproof' part comes from including a VML <v:roundrect> fallback wrapped in MSO conditional comments. Without VML, Outlook desktop ignores CSS border-radius and renders the button as a plain rectangle. The bulletproof pattern serves modern HTML to clients that understand it, and VML to Outlook only."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does Outlook need VML?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Outlook 2007 through 2019 (and parts of Microsoft 365) render HTML email through Microsoft Word's HTML engine. Word doesn't support CSS border-radius, padding-on-anchor-tags, or many modern CSS features. VML (Vector Markup Language) is Microsoft's pre-SVG vector format that Word does support. By wrapping a VML <v:roundrect> in <!--[if mso]>...<![endif]--> conditional comments, we give Outlook a real rounded button while every other client sees the modern HTML version."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why don't most free button generators include VML?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "VML is verbose and ugly. The full bulletproof pattern adds 8-10 lines of conditional XML for one button. Most free generators ship the modern-CSS-only version because it looks cleaner in the output. The trade-off: their buttons render as squares in Outlook desktop. If your audience uses Outlook (which still has 7-9 percent market share), that's a real problem."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What email clients does the output work in?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Apple Mail (macOS / iOS), Gmail web, Gmail Android, Gmail iOS, Outlook web, Outlook macOS, Outlook 2007-2019 desktop, Outlook 365 desktop, Yahoo, AOL, Spark, Thunderbird, Proton Mail. Tested patterns from buttons.cm. The VML fallback handles every Outlook desktop version on Windows."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I use the output?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Copy the HTML and paste it directly into your email source - either inside your ESP's HTML editor, into the source view of an editor like MiN8T, or into the relevant <td> of your hand-coded email. The button renders inline; no setup is required. If you're using a builder that strips HTML comments, you'll lose the VML fallback - in that case, switch to a builder that preserves them."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I add hover states?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Hover states only work in clients that honor <style> blocks: Apple Mail, Gmail web (large viewport), Yahoo, Outlook web. Outlook desktop, Gmail mobile, and most Android clients ignore them. We don't include a hover state by default - if you need one, add a <style> block with .your-button:hover { background-color: ... } rule above your email body. The button generator output uses a class called 'btn-cta' you can target."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why use buttons instead of styled links?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Buttons get clicked at higher rates than text links in marketing emails - sometimes 2-3x higher. They're easier to spot in a busy inbox, easier to tap on mobile (the entire pill is the click target, not just text characters), and signal action more strongly. The exception: transactional emails (password resets, receipts) where text links feel less promotional and more native to the message. Pick by intent."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I test the output?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use our Inbox Preview tool to see the output across Gmail, Apple Mail, and an Outlook approximation. The Outlook column applies a CSS reset that mimics the Word rendering engine - the bulletproof button should still look correct because the VML fallback survives. For pixel-perfect Outlook testing, you still need Litmus or Email on Acid (real Word on real Windows)."
+      }
+    }
+  ]
+}
+</script>
+
+<link rel="preload" href="https://min8t.com/landing/css/main.css?v=combined" as="style">
+<link rel="stylesheet" href="https://min8t.com/landing/css/main.css?v=combined">
+<link rel="stylesheet" href="../_shared/styles.css?v=5">
+<link rel="stylesheet" href="../_shared/tools.css?v=1">
+
+<style>
+  /* Push <main> below the fixed glass nav. Same convention as the other tools. */
+  body { padding-top: 80px; }
+  @media (max-width: 600px) { body { padding-top: 72px; } }
+
+  .bg-grid {
+    margin-top: var(--space-lg);
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: var(--space-lg);
+  }
+  @media (max-width: 900px) { .bg-grid { grid-template-columns: 1fr; } }
+
+  .bg-controls {
+    display: flex; flex-direction: column; gap: var(--space-sm);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    align-self: start;
+    position: sticky; top: 96px;
+  }
+  @media (max-width: 900px) { .bg-controls { position: static; } }
+  .bg-controls label {
+    display: flex; flex-direction: column; gap: 4px;
+    font-size: 0.78rem; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .bg-controls input[type="text"],
+  .bg-controls input[type="url"],
+  .bg-controls input[type="number"],
+  .bg-controls select {
+    padding: 8px 10px;
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    font-size: 0.85rem; font-family: inherit;
+    background: var(--bg); color: var(--text-primary);
+  }
+  .bg-controls .row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-sm);
+  }
+  .bg-controls input[type="color"] {
+    width: 100%; height: 40px;
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    background: var(--bg);
+    padding: 2px;
+  }
+
+  .bg-output {
+    display: flex; flex-direction: column; gap: var(--space-md);
+  }
+  .preview-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .preview-card > .head {
+    padding: var(--space-sm) var(--space-md);
+    background: var(--bg-alt);
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.85rem; font-weight: 600;
+  }
+  .preview-card iframe {
+    width: 100%; min-height: 180px; border: 0;
+    background: white;
+  }
+  .preview-card pre {
+    margin: 0;
+    padding: var(--space-md);
+    overflow: auto;
+    font-family: var(--font-mono); font-size: 0.78rem; line-height: 1.5;
+    color: var(--text-primary); background: var(--bg);
+    max-height: 480px;
+    white-space: pre;
+  }
+
+  .preset-row {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-sm);
+    margin-top: var(--space-sm);
+  }
+  @media (max-width: 600px) { .preset-row { grid-template-columns: repeat(2, 1fr); } }
+  .preset {
+    padding: var(--space-sm) var(--space-md);
+    background: var(--bg-alt); color: var(--text-primary);
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    font-size: 0.78rem; cursor: pointer;
+    text-align: center;
+    transition: border-color 0.15s;
+  }
+  .preset:hover { border-color: var(--brand-green); }
+
+  .toast {
+    position: fixed; bottom: var(--space-xl); left: 50%; transform: translateX(-50%);
+    background: var(--text-primary); color: white; padding: var(--space-sm) var(--space-lg);
+    border-radius: var(--radius-md); box-shadow: var(--shadow-md);
+    opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 1000;
+  }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<img id="hero-bg"
+     src="https://min8t.com/landing/assets/min8t/landing-bg-1920.webp"
+     srcset="https://min8t.com/landing/assets/min8t/landing-bg-1280.webp?v=q75 1280w, https://min8t.com/landing/assets/min8t/landing-bg-1920.webp 1920w, https://min8t.com/landing/assets/min8t/landing-bg.webp 2560w"
+     sizes="100vw"
+     alt=""
+     aria-hidden="true"
+     decoding="async"
+     fetchpriority="high"
+     width="1920" height="1072">
+
+<header class="site-header bg-black" style="position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 1.5rem;">
+  <div class="site-header-inner container mx-auto" style="max-width:1280px;display:flex;align-items:center;justify-content:space-between;">
+    <a href="https://min8t.com/" aria-label="MiN8T home" class="site-logo" style="display:inline-flex;align-items:center;gap:0.5rem;text-decoration:none;color:#fff;">
+      <img src="https://min8t.com/landing/assets/min8t/min8t-logo-circled-white.svg" alt="MiN8T" width="32" height="32" loading="eager" style="height:32px;width:auto;">
+      <span style="color:#fff;font-weight:700;font-size:1.25rem;font-family:'PP Neue Montreal','Roboto',sans-serif;">MiN8T</span>
+      <span style="color:rgba(255,255,255,0.5);font-size:0.625rem;letter-spacing:0.1em;text-transform:uppercase;">Powered by ABLA</span>
+    </a>
+    <nav class="site-nav bg-menu-main" style="border-radius:9999px;padding:0.5rem 1rem;display:flex;gap:1.25rem;align-items:center;background:rgba(43,49,44,0.78);backdrop-filter:saturate(180%) blur(12px);-webkit-backdrop-filter:saturate(180%) blur(12px);border:1px solid rgba(255,255,255,0.08);">
+      <a href="https://min8t.com/tools/" style="color:#fff;text-decoration:none;font-size:0.95rem;font-weight:500;">All Tools</a>
+      <a href="https://min8t.com/" style="color:#fff;text-decoration:none;font-size:0.95rem;font-weight:500;">Home</a>
+      <a data-btn-arrow href="https://app.min8t.com/signup?ref=tools-button-generator" class="btn inline-flex items-center" title="Try MiN8T free" style="display:inline-flex;align-items:center;height:40px;text-decoration:none;gap:0;">
+        <span class="button_circle bg-green" style="background:#28ef91;border-radius:9999px;height:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;transition:all 0.3s;">
+          <img src="https://min8t.com/landing/assets/img/arrow-right.svg" alt="" loading="lazy" width="16" height="16" style="height:60%;width:40%;object-fit:contain;">
+        </span>
+        <span class="anim-btn bg-green" style="background:#28ef91;color:#2b312c;border-radius:9999px;padding:0.5rem 1rem;display:flex;align-items:center;font-weight:700;font-size:1rem;">Try MiN8T free</span>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <h1>Bulletproof Email Button Generator</h1>
+  <p>Configure a CTA button. Get email-safe HTML with the full VML fallback for Outlook desktop. The button renders correctly in every major client - Apple Mail, Gmail, Yahoo, Outlook desktop, Outlook web - because we ship the bulletproof pattern, not the modern-CSS-only shortcut. Free, no signup.</p>
+
+  <div class="bg-grid">
+    <div class="bg-controls">
+      <label>Button text
+        <input type="text" id="text" value="Read the post">
+      </label>
+      <label>Link URL
+        <input type="url" id="url" value="https://min8t.com/articles">
+      </label>
+      <div class="row">
+        <label>Background
+          <input type="color" id="bg-color" value="#28ef91">
+        </label>
+        <label>Text color
+          <input type="color" id="text-color" value="#2b312c">
+        </label>
+      </div>
+      <div class="row">
+        <label>Border color
+          <input type="color" id="border-color" value="#28ef91">
+        </label>
+        <label>Border width (px)
+          <input type="number" id="border-width" value="0" min="0" max="4">
+        </label>
+      </div>
+      <div class="row">
+        <label>Corner radius (px)
+          <input type="number" id="radius" value="999" min="0" max="999">
+        </label>
+        <label>Font size (px)
+          <input type="number" id="font-size" value="16" min="10" max="32">
+        </label>
+      </div>
+      <div class="row">
+        <label>Padding X (px)
+          <input type="number" id="pad-x" value="32" min="0" max="60">
+        </label>
+        <label>Padding Y (px)
+          <input type="number" id="pad-y" value="14" min="0" max="40">
+        </label>
+      </div>
+      <label>Font family
+        <select id="font-family">
+          <option value="Arial, Helvetica, sans-serif">Arial / Helvetica</option>
+          <option value="Helvetica, Arial, sans-serif">Helvetica / Arial</option>
+          <option value="Verdana, Geneva, sans-serif">Verdana</option>
+          <option value="Tahoma, Geneva, sans-serif">Tahoma</option>
+          <option value="Georgia, serif">Georgia</option>
+          <option value="'Times New Roman', Times, serif">Times New Roman</option>
+          <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+          <option value="'Courier New', Courier, monospace">Courier New</option>
+        </select>
+      </label>
+      <label>Font weight
+        <select id="font-weight">
+          <option value="400">Regular (400)</option>
+          <option value="500">Medium (500)</option>
+          <option value="600">Semi-bold (600)</option>
+          <option value="700" selected>Bold (700)</option>
+        </select>
+      </label>
+      <label>Alignment
+        <select id="align">
+          <option value="center" selected>Center</option>
+          <option value="left">Left</option>
+          <option value="right">Right</option>
+        </select>
+      </label>
+      <label>Open in
+        <select id="target">
+          <option value="_blank" selected>New tab (_blank)</option>
+          <option value="_self">Same tab (_self)</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="bg-output">
+      <div class="preview-card">
+        <div class="head">
+          <span>Live preview</span>
+          <span style="color:var(--text-muted);font-size:0.75rem;">Modern WebView (Apple Mail / Gmail / Yahoo)</span>
+        </div>
+        <iframe id="preview-iframe" title="Button preview" sandbox="allow-same-origin"></iframe>
+      </div>
+
+      <div class="preview-card">
+        <div class="head">
+          <span>Generated HTML</span>
+          <span><button type="button" class="btn btn-secondary" id="copy-btn" style="padding:4px 12px;font-size:0.78rem;">Copy</button></span>
+        </div>
+        <pre id="output-html"></pre>
+      </div>
+
+      <div>
+        <strong style="font-size:0.85rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);">Presets</strong>
+        <div class="preset-row" id="preset-row">
+          <button type="button" class="preset" data-preset="stripe">Stripe-style</button>
+          <button type="button" class="preset" data-preset="mailchimp">Mailchimp-style</button>
+          <button type="button" class="preset" data-preset="minimal">Minimal</button>
+          <button type="button" class="preset" data-preset="pill">Pill</button>
+          <button type="button" class="preset" data-preset="square">Square</button>
+          <button type="button" class="preset" data-preset="outlined">Outlined</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2>How the bulletproof pattern works</h2>
+  <p>Modern email clients render the inner <code>&lt;a&gt;</code> tag with proper padding and rounded corners. Outlook desktop on Windows renders HTML through the Microsoft Word engine, which ignores <code>border-radius</code> and treats <code>&lt;a&gt;</code> padding inconsistently.</p>
+  <p>The fix: wrap the modern button in <code>&lt;!--[if mso]&gt;...&lt;![endif]--&gt;</code> conditional comments, and inside that block emit a VML <code>&lt;v:roundrect&gt;</code>. The conditional is a comment to every other client (so they ignore the VML), but Outlook 2007-2019 desktop (and parts of Microsoft 365 on Windows) honor it and render the VML version. Result: every client sees a real rounded button.</p>
+
+  <h2>FAQ</h2>
+  <div class="faq">
+    <details>
+      <summary>What is a bulletproof button?</summary>
+      <p>An HTML button that renders correctly in every major email client - including Outlook desktop, which uses Microsoft Word to render HTML. The bulletproof part comes from including a VML <code>&lt;v:roundrect&gt;</code> fallback wrapped in MSO conditional comments. Without VML, Outlook desktop ignores CSS border-radius and renders the button as a plain rectangle.</p>
+    </details>
+    <details>
+      <summary>Why does Outlook need VML?</summary>
+      <p>Outlook 2007 through 2019 (and parts of Microsoft 365) render HTML email through Microsoft Word's HTML engine. Word doesn't support CSS <code>border-radius</code> or many modern features. VML (Vector Markup Language) is Microsoft's pre-SVG vector format that Word does support. The bulletproof pattern serves modern HTML to clients that understand it, and VML to Outlook only.</p>
+    </details>
+    <details>
+      <summary>Why don't most free button generators include VML?</summary>
+      <p>VML is verbose. The full bulletproof pattern adds 8-10 lines of conditional XML for one button. Most generators ship the modern-CSS-only version because it looks cleaner. The trade-off: their buttons render as squares in Outlook desktop. If your audience uses Outlook (still 7-9 percent market share), that's a real problem.</p>
+    </details>
+    <details>
+      <summary>What email clients does the output work in?</summary>
+      <p>Apple Mail (macOS / iOS), Gmail web, Gmail Android, Gmail iOS, Outlook web, Outlook macOS, Outlook 2007-2019 desktop, Outlook 365 desktop, Yahoo, AOL, Spark, Thunderbird, Proton Mail. Patterns from buttons.cm.</p>
+    </details>
+    <details>
+      <summary>How do I use the output?</summary>
+      <p>Copy the HTML and paste directly into your email source - your ESP's HTML editor, an editor like MiN8T, or a hand-coded email's <code>&lt;td&gt;</code>. No setup. If your builder strips HTML comments, you'll lose the VML - switch to a builder that preserves them.</p>
+    </details>
+    <details>
+      <summary>Can I add hover states?</summary>
+      <p>Hover only works in clients that honor <code>&lt;style&gt;</code> blocks (Apple Mail, Gmail web, Yahoo, Outlook web). Outlook desktop and most mobile clients ignore them. Add a <code>.btn-cta:hover { background-color: ... }</code> rule above your email body if you need one - the output uses class <code>btn-cta</code>.</p>
+    </details>
+    <details>
+      <summary>Why use buttons instead of styled links?</summary>
+      <p>Buttons get clicked at higher rates than text links in marketing emails - often 2-3x. Easier to spot, easier to tap, signal action more strongly. Exception: transactional emails (password resets, receipts) where text links feel more native.</p>
+    </details>
+    <details>
+      <summary>How do I test the output?</summary>
+      <p>Use our <a href="../inbox-preview/">Inbox Preview tool</a> for browser-based testing across Gmail, Apple Mail, and an Outlook approximation. For pixel-perfect Outlook testing, you still need Litmus or Email on Acid.</p>
+    </details>
+  </div>
+
+  <div class="conversion-cta">
+    <h2>Drop the button into a real template</h2>
+    <p>MiN8T's editor has every email-safe component pre-built: bulletproof buttons, columns, dividers, image rows. Build the whole template, not just the button.</p>
+    <a class="btn" id="cta-editor" href="https://app.min8t.com/?ref=tools-button-generator">Open MiN8T Editor →</a>
+  </div>
+
+  <h2>More free tools for email marketers</h2>
+  <div class="related-tools">
+    <a class="tool-card" href="../inbox-preview/"><h3>Inbox Preview</h3><p>Test your button across Gmail, Apple Mail, and Outlook approximation.</p></a>
+    <a class="tool-card" href="../css-inliner/"><h3>CSS Inliner</h3><p>Convert &lt;style&gt; blocks into inline style attributes.</p></a>
+    <a class="tool-card" href="../mjml-converter/"><h3>MJML Converter</h3><p>Compile MJML markup to email-safe HTML.</p></a>
+    <a class="tool-card" href="../font-checker/"><h3>Email-Safe Font Checker</h3><p>Will your font render in Outlook? Per-client matrix.</p></a>
+    <a class="tool-card" href="../palette-extractor/"><h3>Brand Color Palette</h3><p>Extract palette + tints from your logo. CSS / Tailwind / JSON.</p></a>
+    <a class="tool-card" href="../utm-builder/"><h3>UTM Builder</h3><p>Build tracked links for your campaigns with one click.</p></a>
+    <a class="tool-card" href="../subject-line-analyzer/"><h3>Subject Line Analyzer</h3><p>Score your subject line on length, spam triggers, sentiment.</p></a>
+  </div>
+</main>
+
+<footer class="footer pt-20 main-content bg-black" id="contact">
+  <div class="container mx-auto px-4 xl:px-0">
+    <div class="footer-contact-bloc">
+      <div class="bg-light-gray p-2 lg:p-8 flex flex-wrap rounded-xl">
+        <div class="w-full xl:w-4/12">
+          <h2 class="text-2xl lg:text-[40px] py-5 px-4 lg:py-10 xl:p-0">Ready to start?</h2>
+        </div>
+        <div class="w-full xl:w-8/12">
+          <div class="flex flex-wrap">
+            <div class="w-full xl:w-6/12 bg-white xl:aspect-video rounded-xl flex flex-col">
+              <h3 class="text-lg lg:text-xl roboto-medium w-full lg:w-8/12 xl:w-9/12 2xl:w-10/12 p-4 pb-28 xl:py-4">Stay up to date - the latest on email design and deliverability.</h3>
+              <div class="xl:flex-grow"></div>
+              <div class="form newsletter px-4 pb-4">
+                <form id="tools-newsletter-form" action="https://min8t.com/api/newsletter" method="post">
+                  <div style="display:flex;gap:8px;">
+                    <input type="email" name="email" autocomplete="email" placeholder="your@email.com" required
+                      style="flex:1;padding:12px 16px;border:1px solid #ddd;border-radius:9999px;font-size:14px;font-family:inherit;outline:none;color:#1a1a1a;background:#fff;" />
+                    <button type="submit"
+                      style="background:#2b312c;color:#fff;border:none;padding:12px 24px;border-radius:9999px;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;white-space:nowrap;">Subscribe</button>
+                  </div>
+                  <div class="newsletter-msg" style="font-size:13px;margin-top:8px;min-height:20px;"></div>
+                </form>
+              </div>
+            </div>
+            <div class="w-full xl:w-6/12 p-4 xl:py-4 bg-green xl:aspect-video rounded-xl relative flex flex-col justify-between">
+              <h3 class="text-lg lg:text-xl roboto-medium w-full lg:w-8/12 p-0 mb-4">Let's get you building. Start your free account today.</h3>
+              <div style="display:flex;gap:8px;padding-bottom:16px;">
+                <input id="tools-signup-email-input" name="email" type="email" autocomplete="email" placeholder="your@email.com"
+                  style="flex:1;padding:12px 16px;border:none;border-radius:9999px;font-size:14px;font-family:inherit;outline:none;background:#1a1a1a;color:#fff;" />
+                <button type="button" onclick="var e=document.getElementById('tools-signup-email-input').value;window.top.location.href='https://min8t.com/signup'+(e?'?email='+encodeURIComponent(e):'');"
+                  style="background:#2b312c;color:#fff;border:none;padding:12px 24px;border-radius:9999px;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;white-space:nowrap;">Get started</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-navigation py-20">
+    <div class="flex flex-wrap container mx-auto px-4 xl:px-0">
+      <div class="w-full lg:w-4/12 mb-10 lg:mb-0 pr-8">
+        <a href="https://min8t.com/" class="fade inline-block mb-4">
+          <img src="https://min8t.com/landing/assets/min8t/min8t-logo-circled-white.svg" alt="MiN8T" width="40" height="40" style="height:40px;width:auto;" loading="lazy">
+        </a>
+        <p style="color:rgba(255,255,255,0.7);font-size:14px;line-height:1.6;margin-bottom:20px;">The email marketing operations platform.<br>Replace Stripo, ZeroBounce, BeeFree, Litmus, and 4 more tools.<br>Inbox guaranteed across 108+ ESPs.</p>
+      </div>
+      <div class="w-6/12 lg:w-2/12 mb-8 lg:mb-0">
+        <h4 style="color:rgba(255,255,255,0.7);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:20px;">Product</h4>
+        <ul style="list-style:none;padding:0;margin:0;">
+          <li class="mb-4"><a href="https://min8t.com/api" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">API</a></li>
+          <li class="mb-4"><a href="https://min8t.com/pricing" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">Pricing</a></li>
+          <li class="mb-4"><a href="https://min8t.com/tools/" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">Free Tools</a></li>
+        </ul>
+      </div>
+      <div class="w-6/12 lg:w-2/12 mb-8 lg:mb-0">
+        <h4 style="color:rgba(255,255,255,0.7);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:20px;">Resources</h4>
+        <ul style="list-style:none;padding:0;margin:0;">
+          <li class="mb-4"><a href="https://min8t.com/articles" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">Blog</a></li>
+          <li class="mb-4"><a href="https://min8t.com/insights" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">Insights &amp; Guides</a></li>
+          <li class="mb-4"><a href="https://min8t.com/app/docs" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">Documentation</a></li>
+        </ul>
+      </div>
+      <div class="w-6/12 lg:w-2/12 mb-8 lg:mb-0">
+        <h4 style="color:rgba(255,255,255,0.7);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:20px;">Legal</h4>
+        <ul style="list-style:none;padding:0;margin:0;">
+          <li class="mb-4"><a href="https://min8t.com/app/legal/privacy" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">Privacy Policy</a></li>
+          <li class="mb-4"><a href="https://min8t.com/app/legal/terms" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="container mx-auto px-4 xl:px-0" style="border-top:1px solid rgba(255,255,255,0.08);padding:24px 0;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;">
+    <div style="color:rgba(255,255,255,0.7);font-size:13px;">
+      &copy; 2026 MiN8T. All rights reserved. Powered by <strong style="color:rgba(255,255,255,0.7);">ABLA</strong>.
+    </div>
+    <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;">
+      <span style="color:rgba(255,255,255,0.7);font-size:11px;">108+ ESP Integrations</span>
+      <span style="color:rgba(255,255,255,0.7);font-size:11px;">SOC 2 Compliant</span>
+      <span style="color:rgba(255,255,255,0.7);font-size:11px;">GDPR Ready</span>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script type="module" src="./app.js"></script>
+</body>
+</html>
