@@ -3,8 +3,18 @@ main = "index.js"
 compatibility_date = "2026-04-29"
 account_id = "626e6ac44d135aa0f72c82e6ed5761af"
 
-# API endpoints for the free tools that need server-side compute. Currently:
+# API endpoints for the free tools that need server-side compute:
 #   POST /api/tools/subject-analyze  — score an email subject line
+#   POST /api/tools/spam-check       — score email body for spam triggers
+#   POST /api/tools/lead-capture     — store email in KV tagged by source tool
 [[routes]]
 pattern = "min8t.com/api/tools/*"
 zone_name = "min8t.com"
+
+# KV namespace for lead capture (§4.3 of FREE_TOOLS_SEO_AND_LAUNCH_PLAN.md).
+# Created 2026-04-29. Each lead is stored as:
+#   key   = lead:<unix_ts_ms>:<tool_slug>:<sha256(email)[:16]>
+#   value = { email, tool, consent, ts, ua, ip_country, payload? }
+[[kv_namespaces]]
+binding = "LEADS"
+id = "cb6ed96d789d486381678861c41edbe9"

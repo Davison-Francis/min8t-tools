@@ -431,6 +431,16 @@
     <a class="btn" id="cta-editor" href="https://app.min8t.com/templates?ref=tools-image-compressor">Drop into a template →</a>
   </div>
 
+
+  <!-- Lead capture (§4.3) -->
+  <div id="lead-capture-mount"></div>
+  <script type="module">
+    import { renderLeadCapture } from '../_shared/lead-capture.js';
+    renderLeadCapture({
+      target: document.getElementById('lead-capture-mount'),
+      tool: 'image-compressor',
+    });
+  </script>
   <!-- RELATED TOOLS -->
   <h2>More free tools for email marketers</h2>
   <div class="related-tools">

@@ -437,6 +437,16 @@
     <a class="btn" id="cta-deliveriq" href="https://min8t.com/deliveriq?ref=tools-header-analyzer">See DeliverIQ →</a>
   </div>
 
+
+  <!-- Lead capture (§4.3) -->
+  <div id="lead-capture-mount"></div>
+  <script type="module">
+    import { renderLeadCapture } from '../_shared/lead-capture.js';
+    renderLeadCapture({
+      target: document.getElementById('lead-capture-mount'),
+      tool: 'header-analyzer',
+    });
+  </script>
   <h2>More free tools for email marketers</h2>
   <div class="related-tools">
     <a class="tool-card" href="../spam-checker/"><h3>Spam Score Checker</h3><p>21-rule SpamAssassin-style score for any HTML email body.</p></a>

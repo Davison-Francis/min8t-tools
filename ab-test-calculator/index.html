@@ -472,6 +472,16 @@
     <a class="btn" id="cta-editor" href="https://app.min8t.com/?ref=tools-ab-test-calculator">Open MiN8T Editor →</a>
   </div>
 
+
+  <!-- Lead capture (§4.3) -->
+  <div id="lead-capture-mount"></div>
+  <script type="module">
+    import { renderLeadCapture } from '../_shared/lead-capture.js';
+    renderLeadCapture({
+      target: document.getElementById('lead-capture-mount'),
+      tool: 'ab-test-calculator',
+    });
+  </script>
   <h2>More free tools for email marketers</h2>
   <div class="related-tools">
     <a class="tool-card" href="../subject-line-analyzer/"><h3>Subject Line Analyzer</h3><p>Score your subject line on length, spam triggers, sentiment.</p></a>

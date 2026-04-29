@@ -385,6 +385,16 @@
     <a class="btn" id="cta-editor" href="https://app.min8t.com/?ref=tools-subject-line-analyzer">Open MiN8T Editor →</a>
   </div>
 
+
+  <!-- Lead capture (§4.3) -->
+  <div id="lead-capture-mount"></div>
+  <script type="module">
+    import { renderLeadCapture } from '../_shared/lead-capture.js';
+    renderLeadCapture({
+      target: document.getElementById('lead-capture-mount'),
+      tool: 'subject-line-analyzer',
+    });
+  </script>
   <h2>More free tools for email marketers</h2>
   <div class="related-tools">
     <a class="tool-card" href="../utm-builder/"><h3>UTM Campaign URL Builder</h3><p>Build tracked links for your email campaigns with one click.</p></a>

@@ -39,7 +39,7 @@ function corsHeaders(origin) {
 }
 
 export default {
-  async fetch(request) {
+  async fetch(request, env) {
     const origin = request.headers.get('Origin') || '';
     const url = new URL(request.url);
 
@@ -55,10 +55,114 @@ export default {
     if (url.pathname === '/api/tools/spam-check') {
       return handleSpamCheck(request, origin);
     }
+    if (url.pathname === '/api/tools/lead-capture') {
+      return handleLeadCapture(request, origin, env);
+    }
 
     return new Response('Not found', { status: 404, headers: corsHeaders(origin) });
   },
 };
+
+// ---- Lead capture (§4.3 of FREE_TOOLS_SEO_AND_LAUNCH_PLAN.md) ----
+// Stores email leads in KV tagged by source tool. No transactional email
+// is sent yet (no Resend/SMTP creds wired up). The lead is captured for
+// later nurture campaigns.
+
+const ALLOWED_TOOL_SLUGS = new Set([
+  'utm-builder', 'image-compressor', 'email-signature-generator',
+  'subject-line-analyzer', 'background-remover', 'plain-text-converter',
+  'font-checker', 'palette-extractor', 'gif-compressor', 'spam-checker',
+  'inbox-preview', 'css-inliner', 'mjml-converter', 'header-analyzer',
+  'button-generator', 'ab-test-calculator',
+]);
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+async function sha256Hex(str) {
+  const buf = new TextEncoder().encode(str);
+  const hash = await crypto.subtle.digest('SHA-256', buf);
+  return Array.from(new Uint8Array(hash))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+async function handleLeadCapture(request, origin, env) {
+  if (request.method !== 'POST') {
+    return errResp('Method not allowed', 405, origin);
+  }
+  if (!env || !env.LEADS) {
+    return errResp('Storage not configured', 503, origin);
+  }
+  let body;
+  try { body = await request.json(); } catch { return errResp('Invalid JSON', 400, origin); }
+
+  const email = String(body?.email ?? '').trim().toLowerCase();
+  const tool = String(body?.tool ?? '').trim();
+  const consent = body?.consent === true;
+
+  if (!EMAIL_RE.test(email) || email.length > 254) {
+    return errResp('Invalid email', 400, origin);
+  }
+  if (!ALLOWED_TOOL_SLUGS.has(tool)) {
+    return errResp('Invalid tool', 400, origin);
+  }
+  if (!consent) {
+    return errResp('Consent required', 400, origin);
+  }
+
+  // Rate-limit by IP via KV TTL — at most 5 captures per minute per IP
+  const cf = request.cf || {};
+  const ip = request.headers.get('CF-Connecting-IP') || '0.0.0.0';
+  const ipBucket = `rl:${ip}:${Math.floor(Date.now() / 60_000)}`;
+  const rlCount = parseInt((await env.LEADS.get(ipBucket)) || '0', 10);
+  if (rlCount >= 5) {
+    return errResp('Too many requests', 429, origin);
+  }
+
+  const ts = Date.now();
+  const emailHash = (await sha256Hex(email)).slice(0, 16);
+  const key = `lead:${ts}:${tool}:${emailHash}`;
+  const value = {
+    email,
+    tool,
+    consent: true,
+    ts,
+    iso: new Date(ts).toISOString(),
+    ua: (request.headers.get('User-Agent') || '').slice(0, 200),
+    ip_country: cf.country || '',
+    referer: (request.headers.get('Referer') || '').slice(0, 500),
+  };
+
+  // Also keep an "email index" key so future de-dupe is easy
+  const indexKey = `email:${emailHash}`;
+  const existing = await env.LEADS.get(indexKey, 'json');
+  const tools = new Set(existing?.tools || []);
+  tools.add(tool);
+  const indexValue = {
+    email,
+    first_seen: existing?.first_seen || ts,
+    last_seen: ts,
+    tools: Array.from(tools),
+  };
+
+  await Promise.all([
+    env.LEADS.put(key, JSON.stringify(value)),
+    env.LEADS.put(indexKey, JSON.stringify(indexValue)),
+    env.LEADS.put(ipBucket, String(rlCount + 1), { expirationTtl: 120 }),
+  ]);
+
+  return new Response(
+    JSON.stringify({ ok: true, message: "You're on the list. We'll email when we ship new tools." }),
+    {
+      status: 200,
+      headers: {
+        'content-type': 'application/json',
+        'cache-control': 'no-store',
+        ...corsHeaders(origin),
+      },
+    }
+  );
+}
 
 async function handleSpamCheck(request, origin) {
   if (request.method !== 'POST') {
