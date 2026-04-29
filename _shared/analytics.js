@@ -1,36 +1,82 @@
 // MiN8T Tools - shared analytics helper
-// Each tool calls trackToolUsed() once per successful action and trackCtaClicked()
-// when the user follows a conversion link.
+// Sends events directly to GA4 via the Measurement Protocol.
+// We bypass gtag.js because google's gtag.js endpoint returns 404 for our
+// measurement ID even though /g/collect accepts events for the same ID
+// (a known GA4 propagation oddity for some properties).
 //
-// GA4 measurement ID for the MainMin8t web stream (id=14586533552, min8t.com).
-// Per-page override still possible via window.__GA_MEASUREMENT_ID__ before this
-// module loads.
+// GA4 measurement ID: G-NZ3TYHTYSW (MainMin8t stream, id=14586533552)
+// Per-page override via window.__GA_MEASUREMENT_ID__ before this module loads.
 
 const GA_ID = window.__GA_MEASUREMENT_ID__ || 'G-NZ3TYHTYSW';
+const GA_ENDPOINT = 'https://www.google-analytics.com/g/collect';
 
-function ensureGtag() {
-  if (window.gtag || !GA_ID) return;
-  const s = document.createElement('script');
-  s.async = true;
-  s.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
-  document.head.appendChild(s);
-  window.dataLayer = window.dataLayer || [];
-  window.gtag = function () { window.dataLayer.push(arguments); };
-  window.gtag('js', new Date());
-  window.gtag('config', GA_ID, { send_page_view: true });
+// ---- Persistent client ID (matches GA's client_id field) ----
+function getClientId() {
+  const KEY = '_ga_cid';
+  let cid = localStorage.getItem(KEY);
+  if (!cid) {
+    // Format: <random>.<timestamp>, mimics GA's _ga cookie payload
+    cid = `${Math.floor(Math.random() * 2147483647)}.${Math.floor(Date.now() / 1000)}`;
+    try { localStorage.setItem(KEY, cid); } catch (_) { /* private mode */ }
+  }
+  return cid;
+}
+
+// Per-pageload session id (matches GA4's session_start grouping)
+const SESSION_ID = String(Math.floor(Date.now() / 1000));
+
+function buildBaseParams() {
+  return {
+    v: '2',
+    tid: GA_ID,
+    cid: getClientId(),
+    sid: SESSION_ID,
+    sct: '1',                 // session count
+    seg: '1',                 // session engaged
+    dl: location.href,
+    dr: document.referrer || '',
+    dt: document.title,
+    ul: navigator.language || 'en-us',
+    sr: `${screen.width}x${screen.height}`,
+    _z: 'fetch',
+  };
+}
+
+function send(eventName, eventParams = {}) {
+  if (!GA_ID) return;
+  const params = {
+    ...buildBaseParams(),
+    en: eventName,
+  };
+  // Event params get prefixed: ep.<key> for strings, epn.<key> for numbers
+  for (const [k, v] of Object.entries(eventParams)) {
+    if (v == null) continue;
+    if (typeof v === 'number') {
+      params[`epn.${k}`] = String(v);
+    } else {
+      params[`ep.${k}`] = String(v);
+    }
+  }
+  const qs = new URLSearchParams(params).toString();
+
+  // Prefer sendBeacon for reliability on page unload; fall back to fetch.
+  const url = `${GA_ENDPOINT}?${qs}`;
+  if (navigator.sendBeacon) {
+    try {
+      navigator.sendBeacon(url);
+      return;
+    } catch (_) { /* fall through */ }
+  }
+  fetch(url, { method: 'POST', keepalive: true, mode: 'no-cors' }).catch(() => {});
 }
 
 export function trackToolUsed(tool, action = 'generate', extra = {}) {
-  ensureGtag();
-  if (!window.gtag) return;
-  window.gtag('event', 'tool_used', { tool, action, ...extra });
+  send('tool_used', { tool, action, ...extra });
 }
 
 export function trackCtaClicked(tool, target = 'editor', extra = {}) {
-  ensureGtag();
-  if (!window.gtag) return;
-  window.gtag('event', 'cta_clicked', { tool, target, ...extra });
+  send('cta_clicked', { tool, target, ...extra });
 }
 
-// Auto-init: if GA_ID is set, fire pageview on load
-if (GA_ID) ensureGtag();
+// Auto-fire page_view on module load (matches gtag's default send_page_view)
+if (GA_ID) send('page_view');
