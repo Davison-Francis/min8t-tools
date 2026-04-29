@@ -190,30 +190,33 @@ input, textarea, select {
   font-family: inherit;
   font-size: 1rem;
   padding: var(--space-sm) var(--space-md);
-  /* Default field borders MUST be visible on the dark glass <main> over
-     the bright wave. Previous values (alpha 0.12, then 0.28) read as
-     borderless. Using a near-opaque dark fill + 0.5-alpha white border
-     so each field is a clearly distinct recess in the glass. */
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: var(--radius-md);
-  background: rgba(15, 18, 16, 0.85);
-  color: var(--text-primary);
+  /* !important is required: the landing's main.css ships Tailwind's
+     preflight which has
+       input[type="text"], input[type="url"], ... { border: 0; background: transparent }
+     with selector specificity (0,1,1) - beats our plain "input" rule
+     (0,0,1) regardless of source order. !important short-circuits the
+     specificity contest so our visible-by-default field border applies
+     across every input type. */
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  border-radius: var(--radius-md) !important;
+  background: rgba(15, 18, 16, 0.85) !important;
+  color: var(--text-primary) !important;
   width: 100%;
   transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
 }
 
 input:hover, textarea:hover, select:hover {
-  border-color: rgba(255, 255, 255, 0.7);
-}
-
-input::placeholder, textarea::placeholder {
-  color: var(--text-muted);
+  border-color: rgba(255, 255, 255, 0.7) !important;
 }
 
 input:focus, textarea:focus, select:focus {
   outline: none;
-  border-color: var(--brand-primary);
-  box-shadow: 0 0 0 3px rgba(40, 239, 145, 0.18);
+  border-color: var(--brand-primary) !important;
+  box-shadow: 0 0 0 3px rgba(40, 239, 145, 0.18) !important;
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--text-muted) !important;
 }
 
 label {

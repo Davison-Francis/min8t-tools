@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Email Inbox Preview - Gmail, Apple Mail, Outlook | MiN8T</title>
+<meta name="description" content="Paste your HTML email and preview it side-by-side in Gmail, Apple Mail, and a strict-mode Outlook approximation. Free, in-browser, no signup.">
+<link rel="canonical" href="https://min8t.com/tools/inbox-preview/">
+<meta property="og:title" content="Email Inbox Preview - Free | MiN8T">
+<meta property="og:description" content="Paste HTML, preview across Gmail, Apple Mail, Outlook approximation. Free, no signup.">
+<meta property="og:url" content="https://min8t.com/tools/inbox-preview/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#28ef91">
+
+<link rel="icon" href="https://min8t.com/favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="https://min8t.com/favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="https://min8t.com/apple-touch-icon.png">
+
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/roboto/Roboto-Regular.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/roboto/Roboto-Medium.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/roboto/Roboto-Bold.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/pp-neue-montreal/ppneuemontreal-book.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/pp-neue-montreal/ppneuemontreal-bold.woff2" crossorigin>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Email Inbox Preview",
+  "url": "https://min8t.com/tools/inbox-preview/",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "All",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Preview HTML emails side-by-side in Gmail, Apple Mail, and a strict-mode Outlook approximation. In-browser, no signup."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Free Tools", "item": "https://min8t.com/tools/" },
+    { "@type": "ListItem", "position": 2, "name": "Inbox Preview", "item": "https://min8t.com/tools/inbox-preview/" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is this the same as Litmus or Email on Acid?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Litmus and Email on Acid run actual virtual machines with real Outlook, real Gmail, real Apple Mail installed and capture screenshots. We approximate three clients in your browser using iframes plus client-specific CSS transformations. The Gmail and Apple Mail previews are quite close to reality (both are WebView-based and accept modern CSS). The Outlook preview is an approximation - it strips flexbox, grid, @media queries, @font-face, and other CSS that the Word rendering engine ignores - but it can't reproduce every Word-engine quirk. For pixel-perfect Outlook testing, use Litmus or Email on Acid. For free hygiene checking, this works."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why can't you replicate Outlook desktop accurately?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Outlook desktop on Windows uses Microsoft Word's HTML rendering engine - a proprietary, closed-source engine bundled with Word. There's no open-source replication, and the engine itself only runs on Windows with a Word license. The closest a browser-based tool can get is to apply a CSS reset that disables every property the Word engine ignores - which catches the obvious failures (flexbox layouts, custom font loading) but doesn't reproduce subtler quirks (cell-spacing handling, inline-block computation, image scaling)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does the Outlook approximation actually do?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It applies a CSS reset that disables flexbox (display:flex), grid (display:grid), all transforms, all transitions and animations, all CSS custom properties (var()), all @media queries, all @font-face declarations, all pseudo-elements (::before / ::after), and every property starting with -- (custom). It also strips the entire body of any <style> blocks (Outlook ignores them) and processes MSO conditional comments (<!--[if mso]>...<![endif]-->) by including their content in the rendered output. The result: roughly what Outlook desktop on Windows would do with the email."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What about Gmail mobile vs Gmail web?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The Gmail preview here matches Gmail web, which is the more permissive of Gmail's renderers. Gmail Android and iOS are stricter - they don't support @font-face, render at narrower viewports, and can't use external <style> blocks. Mobile Gmail behaves much like Apple Mail iOS, which is approximated in the Apple Mail preview. So if you check both Gmail (web) and Apple Mail (iOS) here, you'll cover most of Gmail mobile's quirks too."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why don't you preview Yahoo, AOL, Outlook web, or other clients?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yahoo and AOL render very similarly to Gmail (modern WebView, strips @font-face, no @media). Outlook on the web is a modern WebView and renders much like Apple Mail or Gmail - very different from Outlook desktop. Adding more preview panels makes the side-by-side layout cramped without adding meaningful new information. The three we've chosen represent the three buckets of email rendering: modern with @font-face (Apple), modern without @font-face (Gmail), and Word-engine (Outlook desktop)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does my HTML get sent anywhere?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Everything happens in your browser - no server call, no upload. The previews render via iframe srcdoc with the email source written into the iframe document directly. DevTools Network tab during preview shows zero outbound requests for your HTML."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What input format does the tool accept?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Full HTML email source - the same content you'd paste into your ESP's HTML view, or copy from a 'View source' menu in your design tool. The tool handles a complete <html><body>...</body></html> document or a body fragment. <style>, <link rel=\"stylesheet\">, and image tags all work as expected, with the caveat that external resources (images, hosted fonts) are loaded in iframes with no special permissions - some CDNs may refuse to serve to iframes, in which case images won't appear in the preview but will work fine in real email clients."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I save the preview as a screenshot?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use your OS screenshot tool (Cmd+Shift+4 on macOS, Win+Shift+S on Windows). The previews are real iframes, not custom-rendered canvases, so any standard screenshot capture works. For automated screenshot collection across many clients, that's a Litmus / Email on Acid use case - they spin up real VMs and snapshot programmatically."
+      }
+    }
+  ]
+}
+</script>
+
+<link rel="preload" href="https://min8t.com/landing/css/main.css?v=combined" as="style">
+<link rel="stylesheet" href="https://min8t.com/landing/css/main.css?v=combined">
+<link rel="stylesheet" href="../_shared/styles.css?v=2">
+<link rel="stylesheet" href="../_shared/tools.css?v=1">
+
+<style>
+  .ip-input-wrap { margin-top: var(--space-lg); }
+  .ip-input-wrap textarea {
+    width: 100%; min-height: 200px;
+    font-family: var(--font-mono); font-size: 0.85rem;
+    padding: var(--space-md); resize: vertical;
+  }
+  .ip-controls { margin-top: var(--space-sm); display: flex; gap: var(--space-sm); flex-wrap: wrap; align-items: center; }
+  .ip-controls .stats { margin-left: auto; font-size: 0.85rem; color: var(--text-muted); font-family: var(--font-mono); align-self: center; }
+
+  .empty-state {
+    margin-top: var(--space-lg);
+    padding: var(--space-2xl);
+    text-align: center;
+    background: var(--bg-alt);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius-md);
+    color: var(--text-muted);
+  }
+
+  .previews {
+    margin-top: var(--space-lg);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+  }
+  @media (max-width: 1100px) { .previews { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 700px)  { .previews { grid-template-columns: 1fr; } }
+
+  .preview-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+
+  .preview-header {
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .preview-header strong {
+    font-size: 0.85rem;
+  }
+  .preview-header .badge {
+    font-size: 0.65rem; padding: 2px 8px; border-radius: 999px;
+    text-transform: uppercase; letter-spacing: 0.05em;
+    font-weight: 600;
+  }
+  .preview-header .badge.approx {
+    background: rgba(245, 165, 36, 0.15); color: var(--warning);
+  }
+  .preview-header .badge.real {
+    background: rgba(46, 194, 126, 0.15); color: var(--success);
+  }
+
+  /* per-client client-chrome above iframe */
+  .client-chrome { padding: 0; flex-shrink: 0; }
+
+  .gmail-chrome {
+    background: #f6f8fc;
+    padding: var(--space-md) var(--space-md) var(--space-sm);
+    border-bottom: 1px solid #dadce0;
+    font-family: 'Google Sans', 'Roboto', -apple-system, sans-serif;
+  }
+  .gmail-chrome .subject {
+    font-size: 1.05rem; font-weight: 500; color: #202124; margin-bottom: 4px;
+  }
+  .gmail-chrome .from {
+    font-size: 0.8rem; color: #5f6368;
+  }
+
+  .apple-chrome {
+    background: #f5f5f7;
+    padding: var(--space-md);
+    border-bottom: 1px solid #d2d2d7;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+  }
+  .apple-chrome .from-row {
+    display: flex; align-items: center; gap: var(--space-sm); margin-bottom: 4px;
+  }
+  .apple-chrome .from-row .from { font-weight: 600; color: #1d1d1f; font-size: 0.95rem; }
+  .apple-chrome .from-row .time { color: #86868b; font-size: 0.8rem; margin-left: auto; }
+  .apple-chrome .subject { color: #1d1d1f; font-size: 0.85rem; }
+
+  .outlook-chrome {
+    background: #0078d4; color: white;
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 1px solid #006cbe;
+    font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+  }
+  .outlook-chrome .subject {
+    font-size: 0.95rem; font-weight: 600;
+  }
+  .outlook-chrome .from {
+    font-size: 0.75rem; opacity: 0.85; margin-top: 2px;
+  }
+
+  .preview-iframe {
+    width: 100%; min-height: 500px;
+    border: 0; background: white;
+    flex: 1;
+  }
+
+  .toast {
+    position: fixed; bottom: var(--space-xl); left: 50%; transform: translateX(-50%);
+    background: var(--text-primary); color: white; padding: var(--space-sm) var(--space-lg);
+    border-radius: var(--radius-md); box-shadow: var(--shadow-md);
+    opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 1000;
+  }
+  .toast.show { opacity: 1; }
+
+  .honesty-banner {
+    margin-top: var(--space-lg);
+    padding: var(--space-md);
+    background: rgba(245, 165, 36, 0.06);
+    border: 1px solid rgba(245, 165, 36, 0.2);
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+  }
+  .honesty-banner strong { color: var(--text-primary); }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-logo" href="https://min8t.com/" aria-label="MiN8T home">
+      <img src="../_shared/brand/min8t-logo.svg" alt="MiN8T" width="120" height="32">
+    </a>
+    <nav class="site-nav">
+      <a href="../">Free Tools</a>
+      <a href="https://app.min8t.com/?ref=tools-inbox-preview" class="cta-editor">Open Editor →</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <h1>Email Inbox Preview</h1>
+  <p>Paste an HTML email and see how it lands in Gmail, Apple Mail, and a strict-mode Outlook approximation, side-by-side. Catches the obvious cross-client failures (flexbox-built layouts that collapse in Outlook, custom fonts that fall back, dark-mode contrast issues) before you send. Free, in-browser, no signup.</p>
+
+  <div class="honesty-banner">
+    <strong>What this is:</strong> a fast browser-based approximation of three email clients. <strong>What it isn't:</strong> Litmus or Email on Acid, which run real Outlook on Windows VMs to capture pixel-perfect screenshots. The Outlook preview here uses a CSS reset that mimics the Word rendering engine's strip-list (flexbox, grid, @font-face, @media queries, etc.) - close enough to catch broad failures, not exact for subtle quirks.
+  </div>
+
+  <div class="ip-input-wrap">
+    <label for="html-input" style="text-transform:uppercase; font-size:0.75rem; letter-spacing:0.05em; color:var(--text-muted); margin-bottom:4px;">Email HTML</label>
+    <textarea id="html-input" placeholder="Paste your HTML email source here…" spellcheck="false" autocomplete="off"></textarea>
+  </div>
+
+  <div class="ip-controls">
+    <button type="button" class="btn btn-secondary" id="sample-btn">Use sample email</button>
+    <button type="button" class="btn btn-secondary" id="clear-btn">Clear</button>
+    <span class="stats" id="stats">0 chars</span>
+  </div>
+
+  <div class="empty-state" id="empty-state">Paste an HTML email above to preview across the three clients.</div>
+
+  <div class="previews" id="previews" hidden>
+    <!-- Gmail web -->
+    <div class="preview-card">
+      <div class="preview-header">
+        <strong>Gmail Web</strong>
+        <span class="badge real">Close to real</span>
+      </div>
+      <div class="client-chrome gmail-chrome">
+        <div class="subject" id="gmail-subject">(no subject set)</div>
+        <div class="from">from sender@example.com  ·  to you@example.com</div>
+      </div>
+      <iframe id="gmail-iframe" class="preview-iframe" title="Gmail preview"></iframe>
+    </div>
+    <!-- Apple Mail iOS -->
+    <div class="preview-card">
+      <div class="preview-header">
+        <strong>Apple Mail (iOS)</strong>
+        <span class="badge real">Close to real</span>
+      </div>
+      <div class="client-chrome apple-chrome">
+        <div class="from-row">
+          <span class="from">Sender</span>
+          <span class="time">Now</span>
+        </div>
+        <div class="subject" id="apple-subject">(no subject set)</div>
+      </div>
+      <iframe id="apple-iframe" class="preview-iframe" title="Apple Mail preview"></iframe>
+    </div>
+    <!-- Outlook desktop approximation -->
+    <div class="preview-card">
+      <div class="preview-header">
+        <strong>Outlook Desktop (Win)</strong>
+        <span class="badge approx">Approximation</span>
+      </div>
+      <div class="client-chrome outlook-chrome">
+        <div class="subject" id="outlook-subject">(no subject set)</div>
+        <div class="from">Sender &lt;sender@example.com&gt;</div>
+      </div>
+      <iframe id="outlook-iframe" class="preview-iframe" title="Outlook preview"></iframe>
+    </div>
+  </div>
+
+  <h2>How to use</h2>
+  <ol>
+    <li>Copy the full HTML source of your email - either from your ESP's "view source" or your design tool's HTML export.</li>
+    <li>Paste into the textarea above. Previews update live (debounced 350 ms).</li>
+    <li>Compare side-by-side. Watch for differences between the Outlook column and the others - that's where most cross-client breakage lives.</li>
+    <li>If a layout collapses in Outlook only: rebuild with tables, not flexbox/grid. If a font falls back in Gmail mobile: provide a web-safe fallback in your <code>font-family</code> stack.</li>
+  </ol>
+
+  <h2>What we strip in the Outlook approximation</h2>
+  <p>The Outlook iframe wraps your HTML in a CSS reset that disables every property the Word rendering engine ignores. Specifically:</p>
+  <ul>
+    <li><code>display: flex</code> and <code>display: grid</code> - reset to <code>block</code></li>
+    <li>All <code>transform</code>, <code>transition</code>, <code>animation</code> properties</li>
+    <li>All <code>@media</code> queries (flatten to no-query rules where possible)</li>
+    <li>All <code>@font-face</code> declarations - replaced with system fallbacks</li>
+    <li><code>::before</code> and <code>::after</code> pseudo-elements</li>
+    <li>CSS custom properties (<code>var(--x)</code> and <code>--x:</code>)</li>
+    <li><code>&lt;style&gt;</code> blocks within <code>&lt;body&gt;</code> (Outlook only honors <code>&lt;style&gt;</code> in <code>&lt;head&gt;</code>, with caveats)</li>
+  </ul>
+  <p>And honors <code>&lt;!--[if mso]&gt;</code> conditional comments by including their content in the rendered output (Outlook does this; other clients ignore it).</p>
+
+  <h2>FAQ</h2>
+  <div class="faq">
+    <details>
+      <summary>Is this the same as Litmus or Email on Acid?</summary>
+      <p>No. Litmus and Email on Acid run actual virtual machines with real Outlook, real Gmail, real Apple Mail installed and capture screenshots. We approximate three clients in your browser using iframes plus client-specific CSS transformations. The Gmail and Apple Mail previews are quite close to reality (both are WebView-based and accept modern CSS). The Outlook preview is an approximation - it strips flexbox, grid, <code>@media</code> queries, <code>@font-face</code>, and other CSS that the Word rendering engine ignores - but it can't reproduce every Word-engine quirk. For pixel-perfect Outlook testing, use Litmus or Email on Acid. For free hygiene checking, this works.</p>
+    </details>
+    <details>
+      <summary>Why can't you replicate Outlook desktop accurately?</summary>
+      <p>Outlook desktop on Windows uses Microsoft Word's HTML rendering engine - a proprietary, closed-source engine bundled with Word. There's no open-source replication, and the engine itself only runs on Windows with a Word license. The closest a browser-based tool can get is to apply a CSS reset that disables every property the Word engine ignores - which catches the obvious failures (flexbox layouts, custom font loading) but doesn't reproduce subtler quirks (cell-spacing handling, inline-block computation, image scaling).</p>
+    </details>
+    <details>
+      <summary>What does the Outlook approximation actually do?</summary>
+      <p>It applies a CSS reset that disables flexbox (<code>display:flex</code>), grid (<code>display:grid</code>), all transforms, all transitions and animations, all CSS custom properties (<code>var()</code>), all <code>@media</code> queries, all <code>@font-face</code> declarations, all pseudo-elements (<code>::before</code> / <code>::after</code>), and every property starting with <code>--</code> (custom). It also strips the entire body of any <code>&lt;style&gt;</code> blocks and processes MSO conditional comments by including their content in the rendered output. The result: roughly what Outlook desktop on Windows would do with the email.</p>
+    </details>
+    <details>
+      <summary>What about Gmail mobile vs Gmail web?</summary>
+      <p>The Gmail preview here matches Gmail web, which is the more permissive of Gmail's renderers. Gmail Android and iOS are stricter - they don't support <code>@font-face</code>, render at narrower viewports, and can't use external <code>&lt;style&gt;</code> blocks. Mobile Gmail behaves much like Apple Mail iOS, which is approximated in the Apple Mail preview. So if you check both Gmail (web) and Apple Mail (iOS) here, you'll cover most of Gmail mobile's quirks too.</p>
+    </details>
+    <details>
+      <summary>Why don't you preview Yahoo, AOL, Outlook web, or other clients?</summary>
+      <p>Yahoo and AOL render very similarly to Gmail (modern WebView, strips <code>@font-face</code>, no <code>@media</code>). Outlook on the web is a modern WebView and renders much like Apple Mail or Gmail - very different from Outlook desktop. Adding more preview panels makes the side-by-side layout cramped without adding meaningful new information. The three we've chosen represent the three buckets of email rendering: modern with <code>@font-face</code> (Apple), modern without <code>@font-face</code> (Gmail), and Word-engine (Outlook desktop).</p>
+    </details>
+    <details>
+      <summary>Does my HTML get sent anywhere?</summary>
+      <p>No. Everything happens in your browser - no server call, no upload. The previews render via iframe <code>srcdoc</code> with the email source written into the iframe document directly. DevTools Network tab during preview shows zero outbound requests for your HTML.</p>
+    </details>
+    <details>
+      <summary>What input format does the tool accept?</summary>
+      <p>Full HTML email source - the same content you'd paste into your ESP's HTML view, or copy from a "View source" menu in your design tool. The tool handles a complete <code>&lt;html&gt;&lt;body&gt;...&lt;/body&gt;&lt;/html&gt;</code> document or a body fragment. <code>&lt;style&gt;</code>, <code>&lt;link rel="stylesheet"&gt;</code>, and image tags all work as expected, with the caveat that external resources (images, hosted fonts) are loaded in iframes with no special permissions - some CDNs may refuse to serve to iframes, in which case images won't appear in the preview but will work fine in real email clients.</p>
+    </details>
+    <details>
+      <summary>Can I save the preview as a screenshot?</summary>
+      <p>Use your OS screenshot tool (Cmd+Shift+4 on macOS, Win+Shift+S on Windows). The previews are real iframes, not custom-rendered canvases, so any standard screenshot capture works. For automated screenshot collection across many clients, that's a Litmus / Email on Acid use case - they spin up real VMs and snapshot programmatically.</p>
+    </details>
+  </div>
+
+  <div class="conversion-cta">
+    <h2>Build the email this preview is for</h2>
+    <p>MiN8T's editor exports table-based, Outlook-safe HTML out of the box. Drop the HTML here to verify, but design where you don't have to fight Outlook in the first place.</p>
+    <a class="btn" id="cta-editor" href="https://app.min8t.com/?ref=tools-inbox-preview">Open MiN8T Editor →</a>
+  </div>
+
+  <h2>More free tools for email marketers</h2>
+  <div class="related-tools">
+    <a class="tool-card" href="../utm-builder/"><h3>UTM Campaign URL Builder</h3><p>Build tracked links for your email campaigns with one click.</p></a>
+    <a class="tool-card" href="../image-compressor/"><h3>Email Image Compressor</h3><p>Compress and resize images so your emails stay under inbox size limits.</p></a>
+    <a class="tool-card" href="../email-signature-generator/"><h3>Email Signature Generator</h3><p>Outlook-safe HTML signatures with one-click copy.</p></a>
+    <a class="tool-card" href="../subject-line-analyzer/"><h3>Subject Line Analyzer</h3><p>Score your subject line on length, spam triggers, sentiment, and more.</p></a>
+    <a class="tool-card" href="../background-remover/"><h3>Background Remover</h3><p>Remove image backgrounds 100% in your browser.</p></a>
+    <a class="tool-card" href="../font-checker/"><h3>Email-Safe Font Checker</h3><p>Will your font render in Outlook? Per-client matrix + fallback stacks.</p></a>
+    <a class="tool-card" href="../spam-checker/"><h3>Spam Score Checker</h3><p>21-rule SpamAssassin-style score for any HTML email body.</p></a>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <p>Made by <a href="https://min8t.com/">MiN8T</a>, the email design platform that respects your time.</p>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script type="module" src="./app.js"></script>
+</body>
+</html>
