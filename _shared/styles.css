@@ -1,4 +1,4 @@
-/* MiN8T Tools — shared styles
+/* MiN8T Tools - shared styles
    Brand tokens deliberately match the marketing site
    (frontend/03_email_editor_module/public/landing/) so that switching
    between min8t.com/* and min8t.com/tools/* feels like one product. */
@@ -66,10 +66,10 @@ html, body {
 }
 
 /* Premium textured background.
-   Layer 1 — soft radial gradient anchored top-right (brand teal at 4% opacity).
-   Layer 2 — soft radial gradient anchored bottom-left (brand blue at 3%).
-   Layer 3 — subtle dotted grain (8x8 SVG, 12% opacity) for tactile depth.
-   Layer 4 — base off-white so the gradients have something to wash over.
+   Layer 1 - soft radial gradient anchored top-right (brand teal at 4% opacity).
+   Layer 2 - soft radial gradient anchored bottom-left (brand blue at 3%).
+   Layer 3 - subtle dotted grain (8x8 SVG, 12% opacity) for tactile depth.
+   Layer 4 - base off-white so the gradients have something to wash over.
    The combined cost is one CSS rule; no images downloaded. */
 body {
   background-color: var(--bg-alt);
@@ -175,7 +175,7 @@ label {
   font-size: 0.875rem;
 }
 
-/* Site header — sticky, semi-transparent with backdrop blur for premium feel */
+/* Site header - sticky, semi-transparent with backdrop blur for premium feel */
 .site-header {
   position: sticky;
   top: 0;

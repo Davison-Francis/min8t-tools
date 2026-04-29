@@ -9,7 +9,7 @@ This repo is **deliberately separated from the main MiN8T product repo** (`Davis
 The canonical implementation spec lives in the main repo at:
 **[`IMPLEMENTATION/specs/FREE_TOOLS_LANDING_PAGES_SPEC.md`](https://github.com/Davison-Francis/min8tEmail/blob/main/IMPLEMENTATION/specs/FREE_TOOLS_LANDING_PAGES_SPEC.md)**
 
-Read that first — it covers architecture, SEO non-negotiables, per-tool functional specs, build order, and acceptance criteria.
+Read that first - it covers architecture, SEO non-negotiables, per-tool functional specs, build order, and acceptance criteria.
 
 ## Layout
 
@@ -17,8 +17,8 @@ Read that first — it covers architecture, SEO non-negotiables, per-tool functi
 min8t-tools/
 ├── _shared/              # Shared chrome (header, footer, CSS, analytics)
 ├── _index.html           # Tools landing page (lists all tools)
-├── utm-builder/          # Tool 1 — UTM Campaign URL Builder
-├── image-compressor/     # Tool 2 — HTML Email Image Compressor
+├── utm-builder/          # Tool 1 - UTM Campaign URL Builder
+├── image-compressor/     # Tool 2 - HTML Email Image Compressor
 ├── email-signature-generator/  # Tool 3
 ├── subject-line-analyzer/      # Tool 4 (frontend; Worker is in workers/)
 ├── background-remover/   # Tool 5
@@ -30,10 +30,10 @@ Each tool is a self-contained `index.html` + `app.js` + `README.md` (SEO copy so
 
 ## Development
 
-No build pipeline by default — vanilla HTML + ES modules served directly. If a specific tool needs a build (Tool 3 ships a Vue fork), it lives in its own subdirectory with its own `package.json` and the build output goes into the same directory under `dist/` which Pages will serve.
+No build pipeline by default - vanilla HTML + ES modules served directly. If a specific tool needs a build (Tool 3 ships a Vue fork), it lives in its own subdirectory with its own `package.json` and the build output goes into the same directory under `dist/` which Pages will serve.
 
 ```bash
-# local dev — any static server works
+# local dev - any static server works
 npx serve .
 # or:
 python3 -m http.server 8000
@@ -51,4 +51,4 @@ git push origin main   # triggers Pages build + deploy
 
 ## License
 
-MIT — see `LICENSE`. Each forked tool retains its upstream license; per-tool licenses are noted in each tool's directory README.
+MIT - see `LICENSE`. Each forked tool retains its upstream license; per-tool licenses are noted in each tool's directory README.

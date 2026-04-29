@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>UTM Builder — Free Campaign Link Generator | MiN8T</title>
+<title>UTM Builder - Free Campaign Link Generator | MiN8T</title>
 <meta name="description" content="Free UTM builder with one-click copy and QR code. Track every email campaign link. No signup, no rate limits, your presets save in your browser.">
 <link rel="canonical" href="https://min8t.com/tools/utm-builder/">
 
 <!-- Open Graph -->
-<meta property="og:title" content="UTM Builder — Free Campaign Link Generator | MiN8T">
+<meta property="og:title" content="UTM Builder - Free Campaign Link Generator | MiN8T">
 <meta property="og:description" content="Build tracked URLs for email campaigns in seconds. With QR codes and saved presets.">
 <meta property="og:url" content="https://min8t.com/tools/utm-builder/">
 <meta property="og:type" content="website">
@@ -41,7 +41,7 @@
 }
 </script>
 
-<!-- JSON-LD: FAQ — keep parity with the FAQ section below -->
+<!-- JSON-LD: FAQ - keep parity with the FAQ section below -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -60,7 +60,7 @@
       "name": "What's the difference between utm_source and utm_medium?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Source is the specific platform or publication the click came from (e.g. newsletter, twitter, partner_blog). Medium is the broader channel category (e.g. email, social, cpc). Source answers \"where exactly?\" — medium answers \"what kind of marketing?\""
+        "text": "Source is the specific platform or publication the click came from (e.g. newsletter, twitter, partner_blog). Medium is the broader channel category (e.g. email, social, cpc). Source answers \"where exactly?\" - medium answers \"what kind of marketing?\""
       }
     },
     {
@@ -76,7 +76,7 @@
       "name": "What's the difference between utm_term and utm_content?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "utm_term was originally for paid-search keywords. utm_content is for differentiating multiple links that point to the same URL — a button vs a text link in the same email, or two creative variants in an A/B test."
+        "text": "utm_term was originally for paid-search keywords. utm_content is for differentiating multiple links that point to the same URL - a button vs a text link in the same email, or two creative variants in an A/B test."
       }
     },
     {
@@ -108,7 +108,7 @@
       "name": "Will UTM links break in email clients?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. UTM parameters are standard query strings — Gmail, Outlook, Apple Mail, and every other client treat them as part of the URL. The only thing to watch for is link tracking rewrites (some ESPs wrap URLs); generate the UTM link first, then let your ESP wrap the wrapped URL."
+        "text": "No. UTM parameters are standard query strings - Gmail, Outlook, Apple Mail, and every other client treat them as part of the URL. The only thing to watch for is link tracking rewrites (some ESPs wrap URLs); generate the UTM link first, then let your ESP wrap the wrapped URL."
       }
     }
   ]
@@ -117,7 +117,7 @@
 
 <link rel="stylesheet" href="../_shared/styles.css">
 <style>
-  /* Tool-specific styles — keep small, share via _shared/styles.css when reusable. */
+  /* Tool-specific styles - keep small, share via _shared/styles.css when reusable. */
   .utm-form { display: grid; gap: var(--space-md); margin-top: var(--space-lg); }
   .utm-row  { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md); }
   .utm-row .field { display: flex; flex-direction: column; }
@@ -254,15 +254,15 @@
   <!-- HOW TO USE -->
   <h2>How to use the UTM builder</h2>
   <ol>
-    <li>Paste the destination URL — the page you want analytics to attribute clicks to.</li>
+    <li>Paste the destination URL - the page you want analytics to attribute clicks to.</li>
     <li>Fill in the three required fields: <strong>source</strong> (where), <strong>medium</strong> (what kind of marketing), and <strong>campaign</strong> (which initiative).</li>
     <li>Add <strong>term</strong> or <strong>content</strong> if you need finer-grained differentiation. Both are optional.</li>
     <li>Copy the generated URL or scan the QR. Paste the URL into your email's button or link block.</li>
   </ol>
 
   <h2>Why UTM tracking matters for email marketing</h2>
-  <p>Without UTM parameters, every click from your email lands in Google Analytics labelled <em>direct</em> — indistinguishable from someone who typed your URL by hand. You lose the ability to compare campaign performance, attribute revenue to a specific newsletter, or A/B test creative. UTM parameters cost nothing to add and unlock the entire analytics stack.</p>
-  <p>Email is also the channel where attribution gets messiest: clicks are forwarded, opened in different devices, and sometimes routed through ESP link-tracking services that can strip your parameters. A consistent UTM convention — same casing, same structure across every send — is the only way to keep reporting clean over months and years.</p>
+  <p>Without UTM parameters, every click from your email lands in Google Analytics labelled <em>direct</em> - indistinguishable from someone who typed your URL by hand. You lose the ability to compare campaign performance, attribute revenue to a specific newsletter, or A/B test creative. UTM parameters cost nothing to add and unlock the entire analytics stack.</p>
+  <p>Email is also the channel where attribution gets messiest: clicks are forwarded, opened in different devices, and sometimes routed through ESP link-tracking services that can strip your parameters. A consistent UTM convention - same casing, same structure across every send - is the only way to keep reporting clean over months and years.</p>
 
   <h2>FAQ</h2>
   <div class="faq">
@@ -272,7 +272,7 @@
     </details>
     <details>
       <summary>What's the difference between utm_source and utm_medium?</summary>
-      <p><strong>Source</strong> is the specific platform or publication the click came from (e.g. <code>newsletter</code>, <code>twitter</code>, <code>partner_blog</code>). <strong>Medium</strong> is the broader channel category (e.g. <code>email</code>, <code>social</code>, <code>cpc</code>). Source answers "where exactly?" — medium answers "what kind of marketing?"</p>
+      <p><strong>Source</strong> is the specific platform or publication the click came from (e.g. <code>newsletter</code>, <code>twitter</code>, <code>partner_blog</code>). <strong>Medium</strong> is the broader channel category (e.g. <code>email</code>, <code>social</code>, <code>cpc</code>). Source answers "where exactly?" - medium answers "what kind of marketing?"</p>
     </details>
     <details>
       <summary>Are UTM parameters case-sensitive?</summary>
@@ -280,7 +280,7 @@
     </details>
     <details>
       <summary>What's the difference between utm_term and utm_content?</summary>
-      <p><code>utm_term</code> was originally for paid-search keywords. <code>utm_content</code> is for differentiating multiple links that point to the same URL — a button vs a text link in the same email, or two creative variants in an A/B test.</p>
+      <p><code>utm_term</code> was originally for paid-search keywords. <code>utm_content</code> is for differentiating multiple links that point to the same URL - a button vs a text link in the same email, or two creative variants in an A/B test.</p>
     </details>
     <details>
       <summary>Should I use UTM parameters on internal links?</summary>
@@ -296,7 +296,7 @@
     </details>
     <details>
       <summary>Will UTM links break in email clients?</summary>
-      <p>No. UTM parameters are standard query strings — Gmail, Outlook, Apple Mail, and every other client treat them as part of the URL. The only thing to watch for is link-tracking rewrites; some ESPs wrap your URLs. Generate the UTM link first, then let your ESP wrap the wrapped URL.</p>
+      <p>No. UTM parameters are standard query strings - Gmail, Outlook, Apple Mail, and every other client treat them as part of the URL. The only thing to watch for is link-tracking rewrites; some ESPs wrap your URLs. Generate the UTM link first, then let your ESP wrap the wrapped URL.</p>
     </details>
   </div>
 

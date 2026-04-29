@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Email Subject Line Analyzer — Free Score in Real Time | MiN8T</title>
+<title>Email Subject Line Analyzer - Free Score in Real Time | MiN8T</title>
 <meta name="description" content="Score your email subject line on length, spam triggers, sentiment, and 5 more signals. Free, no signup, instant. Built for marketers and copywriters.">
 <link rel="canonical" href="https://min8t.com/tools/subject-line-analyzer/">
-<meta property="og:title" content="Email Subject Line Analyzer — Free | MiN8T">
+<meta property="og:title" content="Email Subject Line Analyzer - Free | MiN8T">
 <meta property="og:description" content="Live 0-100 score for any email subject line. Length, spam triggers, sentiment, emoji, caps ratio, power words.">
 <meta property="og:url" content="https://min8t.com/tools/subject-line-analyzer/">
 <meta property="og:type" content="website">
@@ -61,7 +61,7 @@
       "name": "Which words trigger spam filters?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Money words (free, $$$, cash, save), urgency words (act now, last chance, urgent), guarantee words (100%, no risk, money back), and hype (amazing, incredible, miracle). Spam filters use weighted scoring across thousands of signals — one trigger word usually doesn't tank delivery, but combinations do. The analyzer here uses a curated list of ~150 highest-impact triggers distilled from SpamAssassin and mailmeteor."
+        "text": "Money words (free, $$$, cash, save), urgency words (act now, last chance, urgent), guarantee words (100%, no risk, money back), and hype (amazing, incredible, miracle). Spam filters use weighted scoring across thousands of signals - one trigger word usually doesn't tank delivery, but combinations do. The analyzer here uses a curated list of ~150 highest-impact triggers distilled from SpamAssassin and mailmeteor."
       }
     },
     {
@@ -77,7 +77,7 @@
       "name": "Does the score predict open rates?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Loosely. The score is a sum of well-known deliverability and copywriting signals — high scores correlate with better delivery and click-through, but actual open rates depend on your sender reputation, list quality, send time, and the audience's existing relationship with you. Treat the score as a hygiene check, not a prediction."
+        "text": "Loosely. The score is a sum of well-known deliverability and copywriting signals - high scores correlate with better delivery and click-through, but actual open rates depend on your sender reputation, list quality, send time, and the audience's existing relationship with you. Treat the score as a hygiene check, not a prediction."
       }
     },
     {
@@ -85,7 +85,7 @@
       "name": "What are personalization tokens?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Placeholders that your ESP swaps for subscriber data at send time — [FirstName], {{name}}, %FNAME%, *|FNAME|* (Mailchimp), and similar. Subject lines with the recipient's first name see 10-20% higher open rates on average. The analyzer detects all common token formats and gives a bonus when one is present."
+        "text": "Placeholders that your ESP swaps for subscriber data at send time - [FirstName], {{name}}, %FNAME%, *|FNAME|* (Mailchimp), and similar. Subject lines with the recipient's first name see 10-20% higher open rates on average. The analyzer detects all common token formats and gives a bonus when one is present."
       }
     },
     {
@@ -93,7 +93,7 @@
       "name": "Does the analyzer work for non-English subject lines?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Partially. Length, word count, emoji count, CAPS ratio, and personalization-token detection work in any language. Spam triggers and sentiment scoring are English-only — the wordlists are English. Non-English subjects will get inflated scores in those two categories. We'll expand language support as we grow."
+        "text": "Partially. Length, word count, emoji count, CAPS ratio, and personalization-token detection work in any language. Spam triggers and sentiment scoring are English-only - the wordlists are English. Non-English subjects will get inflated scores in those two categories. We'll expand language support as we grow."
       }
     },
     {
@@ -101,7 +101,7 @@
       "name": "Is the score saved or shared?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. Each analysis hits a Cloudflare Worker that scores your subject line and returns the result — nothing is logged, stored, or correlated. You can use the tool unlimited times without an account."
+        "text": "No. Each analysis hits a Cloudflare Worker that scores your subject line and returns the result - nothing is logged, stored, or correlated. You can use the tool unlimited times without an account."
       }
     }
   ]
@@ -228,7 +228,7 @@
   <div id="results" hidden>
     <div class="score-block">
       <div class="score-circle" id="score-circle">
-        <span class="num" id="score-num">—</span>
+        <span class="num" id="score-num">-</span>
       </div>
       <div class="score-meta">
         <div class="label">Overall score</div>
@@ -247,20 +247,20 @@
   <h2>How to use the analyzer</h2>
   <ol>
     <li>Type or paste your subject line in the input above. The score updates live as you type (300ms debounce).</li>
-    <li>Read the breakdown — green dots are good, amber are borderline, red need fixing.</li>
-    <li>Apply the advice — usually 1-2 changes lift the score 10-20 points.</li>
+    <li>Read the breakdown - green dots are good, amber are borderline, red need fixing.</li>
+    <li>Apply the advice - usually 1-2 changes lift the score 10-20 points.</li>
     <li>Re-type and ship.</li>
   </ol>
 
   <h2>What each signal measures</h2>
-  <p><strong>Length</strong> — character count. Sweet spot 30-50 chars. Mobile clients truncate around 30-40, desktop Gmail shows ~70.</p>
-  <p><strong>Word count</strong> — concise reads as confident; verbose reads as unsure. 5-9 words is the open-rate sweet spot across multiple research datasets.</p>
-  <p><strong>Spam triggers</strong> — match against ~150 high-impact words distilled from SpamAssassin's URI/SUBJECT rules and the mailmeteor/spam-words list. One match is borderline; two or more is high risk.</p>
-  <p><strong>Sentiment</strong> — AFINN-style scoring across positive/negative words. Marketing emails skew positive; subjects with mildly positive language outperform neutral ones, and outperform overtly hyped ones.</p>
-  <p><strong>Emoji</strong> — one is fine, two borderline, three or more triggers spam heuristics in Gmail and Outlook.</p>
-  <p><strong>CAPS ratio</strong> — anything over 50% reads as shouting. Below 20% is natural.</p>
-  <p><strong>Personalization</strong> — bonus when a token like <code>[FirstName]</code>, <code>{{name}}</code>, <code>%FNAME%</code>, or <code>*|FNAME|*</code> is detected. Personalized subjects open 10-20% better on average.</p>
-  <p><strong>Power words</strong> — bonus for verbs and adjectives that lift CTR without triggering spam filters: <em>discover</em>, <em>introducing</em>, <em>unlock</em>, <em>finally</em>, <em>announcing</em>.</p>
+  <p><strong>Length</strong> - character count. Sweet spot 30-50 chars. Mobile clients truncate around 30-40, desktop Gmail shows ~70.</p>
+  <p><strong>Word count</strong> - concise reads as confident; verbose reads as unsure. 5-9 words is the open-rate sweet spot across multiple research datasets.</p>
+  <p><strong>Spam triggers</strong> - match against ~150 high-impact words distilled from SpamAssassin's URI/SUBJECT rules and the mailmeteor/spam-words list. One match is borderline; two or more is high risk.</p>
+  <p><strong>Sentiment</strong> - AFINN-style scoring across positive/negative words. Marketing emails skew positive; subjects with mildly positive language outperform neutral ones, and outperform overtly hyped ones.</p>
+  <p><strong>Emoji</strong> - one is fine, two borderline, three or more triggers spam heuristics in Gmail and Outlook.</p>
+  <p><strong>CAPS ratio</strong> - anything over 50% reads as shouting. Below 20% is natural.</p>
+  <p><strong>Personalization</strong> - bonus when a token like <code>[FirstName]</code>, <code>{{name}}</code>, <code>%FNAME%</code>, or <code>*|FNAME|*</code> is detected. Personalized subjects open 10-20% better on average.</p>
+  <p><strong>Power words</strong> - bonus for verbs and adjectives that lift CTR without triggering spam filters: <em>discover</em>, <em>introducing</em>, <em>unlock</em>, <em>finally</em>, <em>announcing</em>.</p>
 
   <h2>FAQ</h2>
   <div class="faq">
@@ -274,7 +274,7 @@
     </details>
     <details>
       <summary>Which words trigger spam filters?</summary>
-      <p>Money words (free, $$$, cash, save), urgency words (act now, last chance, urgent), guarantee words (100%, no risk, money back), and hype (amazing, incredible, miracle). Spam filters use weighted scoring across thousands of signals — one trigger word usually doesn't tank delivery, but combinations do. The analyzer here uses a curated list of ~150 highest-impact triggers distilled from SpamAssassin and mailmeteor.</p>
+      <p>Money words (free, $$$, cash, save), urgency words (act now, last chance, urgent), guarantee words (100%, no risk, money back), and hype (amazing, incredible, miracle). Spam filters use weighted scoring across thousands of signals - one trigger word usually doesn't tank delivery, but combinations do. The analyzer here uses a curated list of ~150 highest-impact triggers distilled from SpamAssassin and mailmeteor.</p>
     </details>
     <details>
       <summary>Should I use emoji in email subject lines?</summary>
@@ -282,25 +282,25 @@
     </details>
     <details>
       <summary>Does the score predict open rates?</summary>
-      <p>Loosely. The score is a sum of well-known deliverability and copywriting signals — high scores correlate with better delivery and click-through, but actual open rates depend on your sender reputation, list quality, send time, and the audience's existing relationship with you. Treat the score as a hygiene check, not a prediction.</p>
+      <p>Loosely. The score is a sum of well-known deliverability and copywriting signals - high scores correlate with better delivery and click-through, but actual open rates depend on your sender reputation, list quality, send time, and the audience's existing relationship with you. Treat the score as a hygiene check, not a prediction.</p>
     </details>
     <details>
       <summary>What are personalization tokens?</summary>
-      <p>Placeholders that your ESP swaps for subscriber data at send time — <code>[FirstName]</code>, <code>{{name}}</code>, <code>%FNAME%</code>, <code>*|FNAME|*</code> (Mailchimp), and similar. Subject lines with the recipient's first name see 10-20% higher open rates on average. The analyzer detects all common token formats and gives a bonus when one is present.</p>
+      <p>Placeholders that your ESP swaps for subscriber data at send time - <code>[FirstName]</code>, <code>{{name}}</code>, <code>%FNAME%</code>, <code>*|FNAME|*</code> (Mailchimp), and similar. Subject lines with the recipient's first name see 10-20% higher open rates on average. The analyzer detects all common token formats and gives a bonus when one is present.</p>
     </details>
     <details>
       <summary>Does the analyzer work for non-English subject lines?</summary>
-      <p>Partially. Length, word count, emoji count, CAPS ratio, and personalization-token detection work in any language. Spam triggers and sentiment scoring are English-only — the wordlists are English. Non-English subjects will get inflated scores in those two categories.</p>
+      <p>Partially. Length, word count, emoji count, CAPS ratio, and personalization-token detection work in any language. Spam triggers and sentiment scoring are English-only - the wordlists are English. Non-English subjects will get inflated scores in those two categories.</p>
     </details>
     <details>
       <summary>Is the score saved or shared?</summary>
-      <p>No. Each analysis hits a Cloudflare Worker that scores your subject line and returns the result — nothing is logged, stored, or correlated. You can use the tool unlimited times without an account.</p>
+      <p>No. Each analysis hits a Cloudflare Worker that scores your subject line and returns the result - nothing is logged, stored, or correlated. You can use the tool unlimited times without an account.</p>
     </details>
   </div>
 
   <div class="conversion-cta">
     <h2>Build the email this subject line goes into</h2>
-    <p>MiN8T's editor is the natural next step — paste your subject in, design the body, ship to any ESP. No tab-juggling.</p>
+    <p>MiN8T's editor is the natural next step - paste your subject in, design the body, ship to any ESP. No tab-juggling.</p>
     <a class="btn" id="cta-editor" href="https://app.min8t.com/?ref=tools-subject-line-analyzer">Open MiN8T Editor →</a>
   </div>
 

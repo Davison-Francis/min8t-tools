@@ -1,11 +1,11 @@
 /**
- * Subject Line Analyzer — vanilla ES module.
+ * Subject Line Analyzer - vanilla ES module.
  *
  * Debounces input by 300ms then POSTs to the min8t-tools-api Worker at
  * /api/tools/subject-analyze. Renders the 0-100 score plus 8-signal
  * breakdown and any matched spam triggers.
  *
- * On Worker error or offline, falls back to a text message — keeps the
+ * On Worker error or offline, falls back to a text message - keeps the
  * tool usable for at least the basic length/charcount feedback.
  */
 import { trackToolUsed, trackCtaClicked } from '../_shared/analytics.js';
@@ -113,7 +113,7 @@ function render(data) {
 function renderError(msg) {
   emptyState.hidden = true;
   results.hidden = false;
-  scoreNum.textContent = '—';
+  scoreNum.textContent = '-';
   scoreCircle.className = 'score-circle';
   scoreAdvice.textContent = msg;
   breakdown.innerHTML = '';

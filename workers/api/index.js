@@ -13,7 +13,7 @@
  * Bound on the zone via Worker route: `min8t.com/api/tools/*` → this script.
  *
  * CORS: only `https://min8t.com` is allowed. Localhost dev for the frontend
- * uses the deployed Worker too — set REQUIRE_ORIGIN=false during dev if
+ * uses the deployed Worker too - set REQUIRE_ORIGIN=false during dev if
  * you fork this for testing.
  */
 import { SPAM_TRIGGERS } from './spam-words.js';
@@ -108,10 +108,10 @@ function analyze(subject) {
   const len = s.length;
   let lengthScore, lengthStatus, lengthNote;
   if (len === 0) { lengthScore = 0; lengthStatus = 'bad'; lengthNote = 'Empty.'; }
-  else if (len < 20)  { lengthScore = 50; lengthStatus = 'warn'; lengthNote = `${len} chars — too short, missing context.`; }
-  else if (len <= 50) { lengthScore = 100; lengthStatus = 'good'; lengthNote = `${len} chars — ideal mobile + desktop fit.`; }
-  else if (len <= 70) { lengthScore = 75; lengthStatus = 'warn'; lengthNote = `${len} chars — fits desktop, may truncate on mobile (~30 char cap).`; }
-  else                { lengthScore = 40; lengthStatus = 'bad';  lengthNote = `${len} chars — will truncate in most clients.`; }
+  else if (len < 20)  { lengthScore = 50; lengthStatus = 'warn'; lengthNote = `${len} chars - too short, missing context.`; }
+  else if (len <= 50) { lengthScore = 100; lengthStatus = 'good'; lengthNote = `${len} chars - ideal mobile + desktop fit.`; }
+  else if (len <= 70) { lengthScore = 75; lengthStatus = 'warn'; lengthNote = `${len} chars - fits desktop, may truncate on mobile (~30 char cap).`; }
+  else                { lengthScore = 40; lengthStatus = 'bad';  lengthNote = `${len} chars - will truncate in most clients.`; }
   breakdown.push({ name: 'Length', status: lengthStatus, score: lengthScore, note: lengthNote });
 
   // 2. Word count. 5-9 words ideal.
@@ -119,10 +119,10 @@ function analyze(subject) {
   const wc = words.length;
   let wcScore, wcStatus, wcNote;
   if (wc === 0)     { wcScore = 0; wcStatus = 'bad'; wcNote = 'No words.'; }
-  else if (wc < 3)  { wcScore = 50; wcStatus = 'warn'; wcNote = `${wc} word${wc === 1 ? '' : 's'} — too sparse.`; }
-  else if (wc <= 9) { wcScore = 100; wcStatus = 'good'; wcNote = `${wc} words — concise.`; }
-  else if (wc <= 14) { wcScore = 60; wcStatus = 'warn'; wcNote = `${wc} words — verbose.`; }
-  else              { wcScore = 30; wcStatus = 'bad';  wcNote = `${wc} words — too long.`; }
+  else if (wc < 3)  { wcScore = 50; wcStatus = 'warn'; wcNote = `${wc} word${wc === 1 ? '' : 's'} - too sparse.`; }
+  else if (wc <= 9) { wcScore = 100; wcStatus = 'good'; wcNote = `${wc} words - concise.`; }
+  else if (wc <= 14) { wcScore = 60; wcStatus = 'warn'; wcNote = `${wc} words - verbose.`; }
+  else              { wcScore = 30; wcStatus = 'bad';  wcNote = `${wc} words - too long.`; }
   breakdown.push({ name: 'Word count', status: wcStatus, score: wcScore, note: wcNote });
 
   // 3. Spam triggers. Each matched trigger costs ~15 points. Capped at 0.
@@ -141,7 +141,7 @@ function analyze(subject) {
     ? 'No common spam triggers detected.'
     : matched.length === 1
       ? `1 trigger word: "${matched[0].word}".`
-      : `${matched.length} trigger words detected — high spam risk.`;
+      : `${matched.length} trigger words detected - high spam risk.`;
   breakdown.push({ name: 'Spam triggers', status: spamStatus, score: spamScore, note: spamNote });
 
   // 4. Sentiment (-5..+5 per word, summed, normalized to 0-100).
@@ -172,10 +172,10 @@ function analyze(subject) {
   const emojis = s.match(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{1F900}-\u{1F9FF}]/gu) || [];
   const emojiCount = emojis.length;
   let emojiScore, emojiStatus, emojiNote;
-  if (emojiCount === 0)      { emojiScore = 90; emojiStatus = 'good'; emojiNote = 'No emoji — clean.'; }
-  else if (emojiCount === 1) { emojiScore = 100; emojiStatus = 'good'; emojiNote = '1 emoji — adds personality.'; }
-  else if (emojiCount === 2) { emojiScore = 70; emojiStatus = 'warn'; emojiNote = '2 emoji — borderline.'; }
-  else                       { emojiScore = 30; emojiStatus = 'bad'; emojiNote = `${emojiCount} emoji — reads as spam.`; }
+  if (emojiCount === 0)      { emojiScore = 90; emojiStatus = 'good'; emojiNote = 'No emoji - clean.'; }
+  else if (emojiCount === 1) { emojiScore = 100; emojiStatus = 'good'; emojiNote = '1 emoji - adds personality.'; }
+  else if (emojiCount === 2) { emojiScore = 70; emojiStatus = 'warn'; emojiNote = '2 emoji - borderline.'; }
+  else                       { emojiScore = 30; emojiStatus = 'bad'; emojiNote = `${emojiCount} emoji - reads as spam.`; }
   breakdown.push({ name: 'Emoji', status: emojiStatus, score: emojiScore, note: emojiNote });
 
   // 6. CAPS ratio (excluding non-letters).
@@ -184,12 +184,12 @@ function analyze(subject) {
   const capsRatio = letters.length > 0 ? caps / letters.length : 0;
   let capsScore, capsStatus, capsNote;
   if (letters.length < 3)       { capsScore = 100; capsStatus = 'good'; capsNote = 'Too short to evaluate caps.'; }
-  else if (capsRatio < 0.2)     { capsScore = 100; capsStatus = 'good'; capsNote = `${Math.round(capsRatio * 100)}% caps — natural.`; }
-  else if (capsRatio < 0.5)     { capsScore = 70; capsStatus = 'warn'; capsNote = `${Math.round(capsRatio * 100)}% caps — heavy.`; }
-  else                          { capsScore = 30; capsStatus = 'bad'; capsNote = `${Math.round(capsRatio * 100)}% CAPS — reads as shouting.`; }
+  else if (capsRatio < 0.2)     { capsScore = 100; capsStatus = 'good'; capsNote = `${Math.round(capsRatio * 100)}% caps - natural.`; }
+  else if (capsRatio < 0.5)     { capsScore = 70; capsStatus = 'warn'; capsNote = `${Math.round(capsRatio * 100)}% caps - heavy.`; }
+  else                          { capsScore = 30; capsStatus = 'bad'; capsNote = `${Math.round(capsRatio * 100)}% CAPS - reads as shouting.`; }
   breakdown.push({ name: 'CAPS ratio', status: capsStatus, score: capsScore, note: capsNote });
 
-  // 7. Personalization tokens — bonus signal.
+  // 7. Personalization tokens - bonus signal.
   const tokens = [
     /\[\s*FirstName\s*\]/i,
     /\[\s*FNAME\s*\]/i,
@@ -201,14 +201,14 @@ function analyze(subject) {
     /\$\{first_name\}/i,
   ];
   const hasToken = tokens.some((re) => re.test(s));
-  const personalScore = hasToken ? 100 : 70; // not a penalty if missing — just a bonus if present
+  const personalScore = hasToken ? 100 : 70; // not a penalty if missing - just a bonus if present
   const personalStatus = hasToken ? 'good' : 'warn';
   const personalNote = hasToken
-    ? 'Personalization token present — boosts open rate.'
-    : 'No personalization token — consider adding [FirstName] or {{name}}.';
+    ? 'Personalization token present - boosts open rate.'
+    : 'No personalization token - consider adding [FirstName] or {{name}}.';
   breakdown.push({ name: 'Personalization', status: personalStatus, score: personalScore, note: personalNote });
 
-  // 8. Power words — bonus.
+  // 8. Power words - bonus.
   const POWER = ['announcing', 'introducing', 'now', 'breakthrough', 'exclusive',
     'limited', 'last chance', 'discover', 'introducing', 'unlock', 'reveal',
     'secret', 'why', 'how', 'because', 'finally', 'ready'];
@@ -217,7 +217,7 @@ function analyze(subject) {
   const powerStatus = powerHits.length > 0 ? 'good' : 'warn';
   const powerNote = powerHits.length > 0
     ? `Power words: ${powerHits.slice(0, 3).map((w) => `"${w}"`).join(', ')}.`
-    : 'No high-CTR power words — consider verbs like "discover", "introducing", "unlock".';
+    : 'No high-CTR power words - consider verbs like "discover", "introducing", "unlock".';
   breakdown.push({ name: 'Power words', status: powerStatus, score: powerScore, note: powerNote });
 
   // ===== overall score (weighted) =====
@@ -240,9 +240,9 @@ function analyze(subject) {
   const issues = breakdown.filter((b) => b.status !== 'good');
   let advice;
   if (score >= 85) advice = 'Strong subject line. Ship it.';
-  else if (score >= 70) advice = `Decent — ${issues.length} thing${issues.length === 1 ? '' : 's'} to tighten: ${issues.map((i) => i.name.toLowerCase()).join(', ')}.`;
+  else if (score >= 70) advice = `Decent - ${issues.length} thing${issues.length === 1 ? '' : 's'} to tighten: ${issues.map((i) => i.name.toLowerCase()).join(', ')}.`;
   else if (score >= 50) advice = `Needs work. Focus on: ${issues.slice(0, 3).map((i) => i.name.toLowerCase()).join(', ')}.`;
-  else advice = `High spam-filter risk. Rewrite — too many issues across ${issues.length} categor${issues.length === 1 ? 'y' : 'ies'}.`;
+  else advice = `High spam-filter risk. Rewrite - too many issues across ${issues.length} categor${issues.length === 1 ? 'y' : 'ies'}.`;
 
   return {
     score,

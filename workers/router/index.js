@@ -4,7 +4,7 @@
  * Path-routes `min8t.com/tools/*` to the `min8t-tools.pages.dev` Pages project,
  * keeping the public URL on the apex domain so Google sees one canonical
  * surface for SEO purposes. The marketing site at `min8t.com/` is unaffected
- * — anything not matching `/tools/*` never hits this Worker.
+ * - anything not matching `/tools/*` never hits this Worker.
  *
  * Bound on the zone via Worker route: `min8t.com/tools/*` → this script.
  */
@@ -12,7 +12,7 @@ export default {
   async fetch(request) {
     const url = new URL(request.url);
 
-    // /tools (no trailing slash) → /tools/  (redirect, keeps SEO clean — one canonical URL)
+    // /tools (no trailing slash) → /tools/  (redirect, keeps SEO clean - one canonical URL)
     if (url.pathname === '/tools') {
       return Response.redirect(`${url.origin}/tools/`, 301);
     }
@@ -25,7 +25,7 @@ export default {
     const target = new URL(stripped + url.search, 'https://min8t-tools.pages.dev');
 
     // Forward the original request to Pages with the rewritten URL. We pass
-    // through method, headers, body — Pages handles caching and edge response
+    // through method, headers, body - Pages handles caching and edge response
     // from there.
     const proxyRequest = new Request(target, {
       method: request.method,

@@ -2,7 +2,7 @@
  * AFINN-style sentiment scoring word list, trimmed to ~200 highest-impact
  * positive/negative words for marketing copy. Each entry has a score from
  * -5 to +5. Subset of the public-domain AFINN-165 lexicon by Finn Årup
- * Nielsen. We don't need the full 3000+ words — subject lines are short
+ * Nielsen. We don't need the full 3000+ words - subject lines are short
  * and heavy-tailed, this covers >90% of what shows up in real marketing.
  */
 export const SENTIMENT_WORDS = {

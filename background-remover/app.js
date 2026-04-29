@@ -1,5 +1,5 @@
 /**
- * Background Remover — vanilla ES module.
+ * Background Remover - vanilla ES module.
  *
  * Loads Transformers.js + an ONNX salient-object segmentation model in the
  * browser. Runs inference 100% on-device via WebGPU (preferred) or WASM
@@ -13,7 +13,7 @@
  * IndexedDB by Transformers.js for subsequent runs.
  */
 import { trackToolUsed, trackCtaClicked } from '../_shared/analytics.js';
-// Pinned to a recent stable version. Bumping is deliberate — later versions
+// Pinned to a recent stable version. Bumping is deliberate - later versions
 // may change the segmentation pipeline API surface.
 import {
   AutoModel,
@@ -27,7 +27,7 @@ env.allowLocalModels = false;
 env.useBrowserCache = true;
 
 const MODEL_ID = 'Xenova/u2net';
-const MAX_DIMENSION = 4096; // refuse images bigger than this — memory protection
+const MAX_DIMENSION = 4096; // refuse images bigger than this - memory protection
 
 const dropzone = document.getElementById('dropzone');
 const fileInput = document.getElementById('file-input');

@@ -1,5 +1,5 @@
 /**
- * UTM Builder — vanilla ES module.
+ * UTM Builder - vanilla ES module.
  *
  * Live-updates the output URL + QR as the user types. Persists last-used
  * source/medium/campaign combos to localStorage so the user can re-apply a
@@ -32,7 +32,7 @@ function buildUrl() {
 
   let u;
   try { u = new URL(dest); }
-  catch { setOutput('Invalid URL — include https://', false); return null; }
+  catch { setOutput('Invalid URL - include https://', false); return null; }
 
   // Required fields
   const required = ['source', 'medium', 'campaign'];
@@ -55,7 +55,7 @@ function setOutput(text, isUrl) {
   if (isUrl) {
     lastValidUrl = text;
     QRCode.toCanvas(qrCanvas, text, { width: 160, margin: 1 }).catch(() => {
-      // QR failures are non-fatal — clear the canvas
+      // QR failures are non-fatal - clear the canvas
       const ctx = qrCanvas.getContext('2d');
       ctx.clearRect(0, 0, qrCanvas.width, qrCanvas.height);
     });
@@ -141,7 +141,7 @@ function persistRecent() {
   const updated = [entry, ...existing].slice(0, MAX_RECENTS);
 
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(updated)); }
-  catch { /* quota — ignore */ }
+  catch { /* quota - ignore */ }
   renderRecents();
 }
 

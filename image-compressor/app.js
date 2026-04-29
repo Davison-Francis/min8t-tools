@@ -1,5 +1,5 @@
 /**
- * Email Image Compressor — vanilla ES module.
+ * Email Image Compressor - vanilla ES module.
  *
  * Drag-drop upload, in-browser compression via browser-image-compression,
  * per-image preview with reduction stats, bulk ZIP download, and a running
@@ -62,7 +62,7 @@ function addFiles(fileList) {
   for (const file of Array.from(fileList)) {
     if (!file.type.startsWith('image/')) continue;
     if (file.size > MAX_FILE_BYTES) {
-      showToast(`${file.name} is over 25MB — skipping`);
+      showToast(`${file.name} is over 25MB - skipping`);
       continue;
     }
     items.push({
@@ -103,7 +103,7 @@ async function compressAll() {
     item.busy = true;
   }
   render();
-  // sequential to keep memory bounded — Web Worker handles each
+  // sequential to keep memory bounded - Web Worker handles each
   for (const item of items) {
     try {
       const compressed = await imageCompression(item.file, opts);

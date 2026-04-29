@@ -12,9 +12,9 @@
 
 ## Files
 
-- `index.html` — markup, SEO meta, JSON-LD schemas (WebApplication / BreadcrumbList / FAQPage), tool UI, FAQ, conversion CTA, related-tools cards
-- `app.js` — form-to-URL logic, QR generation, localStorage recents (last 5), copy-to-clipboard, GA4 events
-- `README.md` — this file
+- `index.html` - markup, SEO meta, JSON-LD schemas (WebApplication / BreadcrumbList / FAQPage), tool UI, FAQ, conversion CTA, related-tools cards
+- `app.js` - form-to-URL logic, QR generation, localStorage recents (last 5), copy-to-clipboard, GA4 events
+- `README.md` - this file
 
 ## SEO targets
 
@@ -33,8 +33,8 @@
 - [x] WebApplication + BreadcrumbList JSON-LD schemas present
 - [x] CTA click fires `cta_clicked` GA4 event with `tool: utm-builder, target: editor`
 - [x] Tool usage fires `tool_used` GA4 event (deduped to one per session)
-- [ ] Lighthouse on mobile: Performance ≥ 95, SEO = 100, Accessibility ≥ 95 — **verify after deploy**
-- [ ] FAQ schema validates on https://validator.schema.org — **verify after deploy**
+- [ ] Lighthouse on mobile: Performance ≥ 95, SEO = 100, Accessibility ≥ 95 - **verify after deploy**
+- [ ] FAQ schema validates on https://validator.schema.org - **verify after deploy**
 
 ## Local development
 

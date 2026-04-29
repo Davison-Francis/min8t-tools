@@ -1,4 +1,4 @@
-// MiN8T Tools — shared analytics helper
+// MiN8T Tools - shared analytics helper
 // Each tool calls trackToolUsed() once per successful action and trackCtaClicked()
 // when the user follows a conversion link.
 // GA4 measurement ID is injected by Pages env var GA_MEASUREMENT_ID at build time

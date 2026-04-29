@@ -7,8 +7,8 @@
 ## Stack
 
 - Vanilla HTML + ES module JS
-- [`@huggingface/transformers`](https://github.com/huggingface/transformers.js) v3.0.2 — runs ONNX models in the browser via WebGPU (preferred) or WASM (fallback)
-- Model: **`Xenova/u2net`** — U2Net salient-object segmentation, **Apache-2.0 weights** (commercial-safe)
+- [`@huggingface/transformers`](https://github.com/huggingface/transformers.js) v3.0.2 - runs ONNX models in the browser via WebGPU (preferred) or WASM (fallback)
+- Model: **`Xenova/u2net`** - U2Net salient-object segmentation, **Apache-2.0 weights** (commercial-safe)
 
 ## Why U2Net (not a "better" model)
 
@@ -17,7 +17,7 @@ The spec called out three license traps that disqualify the more popular options
 | Model | License | Why we skip |
 |---|---|---|
 | BRIA RMBG-1.4 / RMBG-2.0 | Non-commercial only | Cannot ship to a tool we monetize indirectly |
-| MODNet (pretrained weights) | CC BY-NC-SA | Same — non-commercial |
+| MODNet (pretrained weights) | CC BY-NC-SA | Same - non-commercial |
 | imgly/background-removal-js | AGPL-3.0 + commercial dual | AGPL would force-license consumer code |
 | **U2Net (Apache-2.0)** | **Apache-2.0** | **Commercial-safe, this is what we use** |
 
@@ -33,7 +33,7 @@ Output quality is slightly less polished than BRIA on hair edges, but the licens
 6. Apply the segmentation mask as an alpha channel on a canvas
 7. Offer download as transparent PNG, or composite onto a solid color first
 
-**Privacy:** zero outbound requests for the image data. Open DevTools → Network during processing — only the model files (one-time) and HF CDN connection show up. The image itself stays in the browser.
+**Privacy:** zero outbound requests for the image data. Open DevTools → Network during processing - only the model files (one-time) and HF CDN connection show up. The image itself stays in the browser.
 
 ## Performance expectations
 
@@ -44,15 +44,15 @@ Output quality is slightly less polished than BRIA on hair edges, but the licens
 
 ## Files
 
-- `index.html` — markup, SEO, JSON-LD schemas, FAQ, CTA, related-tools cards. Includes a privacy callout above the dropzone.
-- `app.js` — drag-drop upload, model lifecycle, inference, before/after compare, download PNG, optional solid-bg composite. Tracks `tool_used` (remove / download / download-with-bg) and `cta_clicked`.
-- `README.md` — this file
+- `index.html` - markup, SEO, JSON-LD schemas, FAQ, CTA, related-tools cards. Includes a privacy callout above the dropzone.
+- `app.js` - drag-drop upload, model lifecycle, inference, before/after compare, download PNG, optional solid-bg composite. Tracks `tool_used` (remove / download / download-with-bg) and `cta_clicked`.
+- `README.md` - this file
 
 ## SEO targets
 
 - **Primary keywords:** "background remover free", "remove background no signup", "free transparent png maker"
-- **Search volume:** ~200 K/month — extremely competitive (remove.bg, Canva, Photoroom dominate paid offerings)
-- **Differentiator:** "100% in-browser, your image never leaves your device" — privacy is real and verifiable in DevTools, not marketing copy. Crawlers and AI Overviews reward this kind of substantive differentiator.
+- **Search volume:** ~200 K/month - extremely competitive (remove.bg, Canva, Photoroom dominate paid offerings)
+- **Differentiator:** "100% in-browser, your image never leaves your device" - privacy is real and verifiable in DevTools, not marketing copy. Crawlers and AI Overviews reward this kind of substantive differentiator.
 
 ## Acceptance checklist (from spec §6.6)
 
@@ -65,16 +65,16 @@ Output quality is slightly less polished than BRIA on hair edges, but the licens
 - [x] No network calls during inference (verifiable in DevTools)
 - [x] FAQPage + WebApplication + BreadcrumbList JSON-LD
 - [x] GA4 events
-- [ ] Lighthouse on mobile: SEO 100, Performance ≥ 80 (model load is heavy by design) — verify after deploy
-- [ ] Real-image tests: portrait, product, soft edges, hair, transparent object — manual
+- [ ] Lighthouse on mobile: SEO 100, Performance ≥ 80 (model load is heavy by design) - verify after deploy
+- [ ] Real-image tests: portrait, product, soft edges, hair, transparent object - manual
 
 ## Future v2 ideas
 
-- **Self-host the ONNX model on `cdn.min8t.com`** — avoids HF rate limits + faster delivery (CF edge already serves cdn.min8t.com).
-- **WebGPU detection UI** — show "GPU acceleration: enabled" when WebGPU is available.
-- **Batch mode** — upload multiple images, process sequentially.
-- **Model variants** — let users pick between u2net, u2netp (lighter, faster), and isnet (optional).
+- **Self-host the ONNX model on `cdn.min8t.com`** - avoids HF rate limits + faster delivery (CF edge already serves cdn.min8t.com).
+- **WebGPU detection UI** - show "GPU acceleration: enabled" when WebGPU is available.
+- **Batch mode** - upload multiple images, process sequentially.
+- **Model variants** - let users pick between u2net, u2netp (lighter, faster), and isnet (optional).
 
 ## Deploy
 
-Push to `main` — auto-deploys via the GH Actions workflow.
+Push to `main` - auto-deploys via the GH Actions workflow.

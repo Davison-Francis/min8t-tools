@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Email Image Compressor — Free, Email-Optimized | MiN8T</title>
-<meta name="description" content="Compress images for email — enforces email-safe widths and sub-1MB payloads. Free, in your browser, drag-and-drop. Bulk download as ZIP.">
+<title>Email Image Compressor - Free, Email-Optimized | MiN8T</title>
+<meta name="description" content="Compress images for email - enforces email-safe widths and sub-1MB payloads. Free, in your browser, drag-and-drop. Bulk download as ZIP.">
 <link rel="canonical" href="https://min8t.com/tools/image-compressor/">
-<meta property="og:title" content="Email Image Compressor — Free, Email-Optimized | MiN8T">
+<meta property="og:title" content="Email Image Compressor - Free, Email-Optimized | MiN8T">
 <meta property="og:description" content="Compress + resize images so your emails stay under inbox size limits. Drag-drop, in-browser, no signup.">
 <meta property="og:url" content="https://min8t.com/tools/image-compressor/">
 <meta property="og:type" content="website">
@@ -22,7 +22,7 @@
   "applicationCategory": "MultimediaApplication",
   "operatingSystem": "All",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-  "description": "In-browser image compressor optimized for email — enforces 600px width and sub-1MB total payload. Free, no signup."
+  "description": "In-browser image compressor optimized for email - enforces 600px width and sub-1MB total payload. Free, no signup."
 }
 </script>
 <script type="application/ld+json">
@@ -45,15 +45,15 @@
       "name": "What's the maximum size for an email?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Gmail clips messages over 102KB of HTML/text content (images don't count toward this limit, but the entire email becomes a 'view entire message' link). Outlook desktop has no hard cap but penalizes deliverability above 100KB of HTML. Total email payload — HTML plus images — should stay under 1MB to render well across all clients without triggering size warnings."
+        "text": "Gmail clips messages over 102KB of HTML/text content (images don't count toward this limit, but the entire email becomes a 'view entire message' link). Outlook desktop has no hard cap but penalizes deliverability above 100KB of HTML. Total email payload - HTML plus images - should stay under 1MB to render well across all clients without triggering size warnings."
       }
     },
     {
       "@type": "Question",
-      "name": "JPEG, PNG, or WebP — which format should I use in email?",
+      "name": "JPEG, PNG, or WebP - which format should I use in email?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "JPEG is the safest universal choice for photographs — supported in 100% of email clients. PNG is good for images with transparency (logos, icons). Avoid WebP: Outlook 2016/2019 do not render it. If you must use modern formats, ship a JPEG fallback via the picture element or just use JPEG."
+        "text": "JPEG is the safest universal choice for photographs - supported in 100% of email clients. PNG is good for images with transparency (logos, icons). Avoid WebP: Outlook 2016/2019 do not render it. If you must use modern formats, ship a JPEG fallback via the picture element or just use JPEG."
       }
     },
     {
@@ -61,7 +61,7 @@
       "name": "What width should email images be?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Standard email content width is 600px. Images that fill the body should be exported at 600px or 1200px (for retina display) — never larger. Wider images don't render any bigger in most clients and just bloat the email. For 2x retina, export at 1200px and constrain to width=600 in HTML so high-DPI displays look sharp."
+        "text": "Standard email content width is 600px. Images that fill the body should be exported at 600px or 1200px (for retina display) - never larger. Wider images don't render any bigger in most clients and just bloat the email. For 2x retina, export at 1200px and constrain to width=600 in HTML so high-DPI displays look sharp."
       }
     },
     {
@@ -77,7 +77,7 @@
       "name": "Does compression hurt image quality?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Aggressive compression does. JPEG at quality 0.7 is visually indistinguishable from the original for 95% of email use cases — product shots, lifestyle photos, headshots. Below 0.5 you'll see artifacts (blocky gradients, blurry edges). For images with text overlays or hard edges, use PNG or keep JPEG quality at 0.85+."
+        "text": "Aggressive compression does. JPEG at quality 0.7 is visually indistinguishable from the original for 95% of email use cases - product shots, lifestyle photos, headshots. Below 0.5 you'll see artifacts (blocky gradients, blurry edges). For images with text overlays or hard edges, use PNG or keep JPEG quality at 0.85+."
       }
     },
     {
@@ -93,7 +93,7 @@
       "name": "Should I use background images in emails?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Use them sparingly. Outlook desktop strips most CSS background-image declarations — you need MSO conditional comments with VML fallbacks for them to render. For hero areas, an inline foreground img is more reliable than a background image with text overlaid. If you must use a background, always provide a solid-color fallback for the foreground text."
+        "text": "Use them sparingly. Outlook desktop strips most CSS background-image declarations - you need MSO conditional comments with VML fallbacks for them to render. For hero areas, an inline foreground img is more reliable than a background image with text overlaid. If you must use a background, always provide a solid-color fallback for the foreground text."
       }
     },
     {
@@ -101,7 +101,7 @@
       "name": "Why are images from Photoshop or Figma so large?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Default 'Save for Web' settings in Photoshop produce JPEGs at quality 80-90 — overkill for email. Figma exports at full source resolution unless you set a scale. Run any export through this compressor with quality 0.7 and width 600px (or 1200px for retina) — typical reduction is 70-85% of file size with no visible quality loss."
+        "text": "Default 'Save for Web' settings in Photoshop produce JPEGs at quality 80-90 - overkill for email. Figma exports at full source resolution unless you set a scale. Run any export through this compressor with quality 0.7 and width 600px (or 1200px for retina) - typical reduction is 70-85% of file size with no visible quality loss."
       }
     }
   ]
@@ -251,7 +251,7 @@
   <!-- DROPZONE -->
   <label class="dropzone" id="dropzone">
     <strong>Drop images here, or click to browse</strong>
-    <span class="hint">JPEG, PNG, WebP — multiple files at once. Max 25MB per file.</span>
+    <span class="hint">JPEG, PNG, WebP - multiple files at once. Max 25MB per file.</span>
     <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp" multiple>
   </label>
 
@@ -294,9 +294,9 @@
   <h2>How to use the email image compressor</h2>
   <ol>
     <li>Drop your images onto the upload zone (or click to browse).</li>
-    <li>Adjust the max width (default <strong>600px</strong> — standard email content width) and quality (default <strong>0.7</strong> — visually lossless for most email use).</li>
-    <li>Each image gets recompressed live as you change settings. Watch the "total payload" — keep it under <strong>1MB</strong> to render cleanly across all email clients.</li>
-    <li>Download images individually or as a ZIP. The originals stay on your device — nothing uploads to any server.</li>
+    <li>Adjust the max width (default <strong>600px</strong> - standard email content width) and quality (default <strong>0.7</strong> - visually lossless for most email use).</li>
+    <li>Each image gets recompressed live as you change settings. Watch the "total payload" - keep it under <strong>1MB</strong> to render cleanly across all email clients.</li>
+    <li>Download images individually or as a ZIP. The originals stay on your device - nothing uploads to any server.</li>
   </ol>
 
   <h2>Why image size matters in email marketing</h2>
@@ -307,15 +307,15 @@
   <div class="faq">
     <details>
       <summary>What's the maximum size for an email?</summary>
-      <p>Gmail clips messages over 102KB of HTML/text content (images don't count toward this limit, but the entire email becomes a "view entire message" link). Outlook desktop has no hard cap but penalizes deliverability above 100KB of HTML. Total email payload — HTML plus images — should stay under <strong>1MB</strong> to render well across all clients without triggering size warnings.</p>
+      <p>Gmail clips messages over 102KB of HTML/text content (images don't count toward this limit, but the entire email becomes a "view entire message" link). Outlook desktop has no hard cap but penalizes deliverability above 100KB of HTML. Total email payload - HTML plus images - should stay under <strong>1MB</strong> to render well across all clients without triggering size warnings.</p>
     </details>
     <details>
-      <summary>JPEG, PNG, or WebP — which format should I use in email?</summary>
-      <p>JPEG is the safest universal choice for photographs — supported in 100% of email clients. PNG is good for images with transparency (logos, icons). Avoid WebP: Outlook 2016/2019 do not render it. If you must use modern formats, ship a JPEG fallback via the <code>&lt;picture&gt;</code> element or just use JPEG.</p>
+      <summary>JPEG, PNG, or WebP - which format should I use in email?</summary>
+      <p>JPEG is the safest universal choice for photographs - supported in 100% of email clients. PNG is good for images with transparency (logos, icons). Avoid WebP: Outlook 2016/2019 do not render it. If you must use modern formats, ship a JPEG fallback via the <code>&lt;picture&gt;</code> element or just use JPEG.</p>
     </details>
     <details>
       <summary>What width should email images be?</summary>
-      <p>Standard email content width is <strong>600px</strong>. Images that fill the body should be exported at 600px or 1200px (for retina display) — never larger. Wider images don't render any bigger in most clients and just bloat the email. For 2x retina, export at 1200px and constrain to <code>width=600</code> in HTML so high-DPI displays look sharp.</p>
+      <p>Standard email content width is <strong>600px</strong>. Images that fill the body should be exported at 600px or 1200px (for retina display) - never larger. Wider images don't render any bigger in most clients and just bloat the email. For 2x retina, export at 1200px and constrain to <code>width=600</code> in HTML so high-DPI displays look sharp.</p>
     </details>
     <details>
       <summary>Why does Gmail show my email as "View entire message"?</summary>
@@ -323,7 +323,7 @@
     </details>
     <details>
       <summary>Does compression hurt image quality?</summary>
-      <p>Aggressive compression does. JPEG at quality 0.7 is visually indistinguishable from the original for 95% of email use cases — product shots, lifestyle photos, headshots. Below 0.5 you'll see artifacts (blocky gradients, blurry edges). For images with text overlays or hard edges, use PNG or keep JPEG quality at 0.85+.</p>
+      <p>Aggressive compression does. JPEG at quality 0.7 is visually indistinguishable from the original for 95% of email use cases - product shots, lifestyle photos, headshots. Below 0.5 you'll see artifacts (blocky gradients, blurry edges). For images with text overlays or hard edges, use PNG or keep JPEG quality at 0.85+.</p>
     </details>
     <details>
       <summary>How do I make retina-quality images for email?</summary>
@@ -331,18 +331,18 @@
     </details>
     <details>
       <summary>Should I use background images in emails?</summary>
-      <p>Use them sparingly. Outlook desktop strips most CSS <code>background-image</code> declarations — you need MSO conditional comments with VML fallbacks for them to render. For hero areas, an inline foreground <code>img</code> is more reliable than a background image with text overlaid. If you must use a background, always provide a solid-color fallback for the foreground text.</p>
+      <p>Use them sparingly. Outlook desktop strips most CSS <code>background-image</code> declarations - you need MSO conditional comments with VML fallbacks for them to render. For hero areas, an inline foreground <code>img</code> is more reliable than a background image with text overlaid. If you must use a background, always provide a solid-color fallback for the foreground text.</p>
     </details>
     <details>
       <summary>Why are images from Photoshop or Figma so large?</summary>
-      <p>Default "Save for Web" settings in Photoshop produce JPEGs at quality 80-90 — overkill for email. Figma exports at full source resolution unless you set a scale. Run any export through this compressor with quality 0.7 and width 600px (or 1200px for retina) — typical reduction is 70-85% of file size with no visible quality loss.</p>
+      <p>Default "Save for Web" settings in Photoshop produce JPEGs at quality 80-90 - overkill for email. Figma exports at full source resolution unless you set a scale. Run any export through this compressor with quality 0.7 and width 600px (or 1200px for retina) - typical reduction is 70-85% of file size with no visible quality loss.</p>
     </details>
   </div>
 
   <!-- CONVERSION -->
   <div class="conversion-cta">
     <h2>Build the email these images go into</h2>
-    <p>MiN8T's editor uploads, resizes, and inlines images automatically — and exports clean HTML to any ESP. Skip the manual workflow.</p>
+    <p>MiN8T's editor uploads, resizes, and inlines images automatically - and exports clean HTML to any ESP. Skip the manual workflow.</p>
     <a class="btn" id="cta-editor" href="https://app.min8t.com/?ref=tools-image-compressor">Open MiN8T Editor →</a>
   </div>
 

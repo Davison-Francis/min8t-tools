@@ -1,12 +1,12 @@
 /**
- * Email Signature Generator — vanilla ES module.
+ * Email Signature Generator - vanilla ES module.
  *
  * Three Outlook-safe templates rendered as table-based HTML strings. Live
  * preview in a sandboxed iframe (so MiN8T's CSS doesn't bleed in). Two copy
  * modes: rich content (paste into Gmail/Apple Mail/Outlook signature
  * editors) and HTML source (paste into HTM files or other raw editors).
  *
- * Output is intentionally NOT MiN8T-branded — the user owns their signature.
+ * Output is intentionally NOT MiN8T-branded - the user owns their signature.
  */
 import { trackToolUsed, trackCtaClicked } from '../_shared/analytics.js';
 
@@ -138,7 +138,7 @@ function stripProto(url) {
 function regenerate() {
   const d = readForm();
   const html = renderers[currentTemplate](d);
-  // Write into iframe srcdoc — fully isolated from page CSS
+  // Write into iframe srcdoc - fully isolated from page CSS
   previewIframe.srcdoc = `<!doctype html><html><body style="margin:0;padding:16px;font-family:Arial,Helvetica,sans-serif;">${html}</body></html>`;
   sourcePre.textContent = html;
   if (!trackedThisSession) {
@@ -181,7 +181,7 @@ copyRichBtn.addEventListener('click', async () => {
       const blob = new Blob([html], { type: 'text/html' });
       const textBlob = new Blob([sourceToPlainText(html)], { type: 'text/plain' });
       await navigator.clipboard.write([new ClipboardItem({ 'text/html': blob, 'text/plain': textBlob })]);
-      showToast('Copied — paste into Gmail / Apple Mail / Outlook signature settings');
+      showToast('Copied - paste into Gmail / Apple Mail / Outlook signature settings');
     } else {
       // Fallback: range-select hidden div, execCommand copy
       legacyCopyRich(html);
@@ -190,7 +190,7 @@ copyRichBtn.addEventListener('click', async () => {
     trackToolUsed('email-signature-generator', 'copy-rich');
   } catch (err) {
     console.error(err);
-    showToast('Copy failed — try the HTML source instead');
+    showToast('Copy failed - try the HTML source instead');
   }
 });
 
@@ -200,7 +200,7 @@ copySourceBtn.addEventListener('click', async () => {
     showToast('HTML source copied');
     trackToolUsed('email-signature-generator', 'copy-source');
   } catch {
-    showToast('Copy failed — select the HTML below and copy manually');
+    showToast('Copy failed - select the HTML below and copy manually');
   }
 });
 
