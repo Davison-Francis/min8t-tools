@@ -346,7 +346,7 @@
                             <h3 class="text-lg lg:text-xl roboto-medium w-full lg:w-8/12 xl:w-9/12 2xl:w-10/12 p-4 pb-28 xl:py-4">Stay up to date - the latest on email design and deliverability.</h3>
                             <div class="xl:flex-grow"></div>
                             <div class="form newsletter px-4 pb-4">
-                                <form id="tools-newsletter-form" action="https://min8t.com/api/newsletter" method="post">
+                                <form id="tools-newsletter-form" action="https://min8t.com/public/newsletter/subscribe" method="post">
                                     <div style="display:flex;gap:8px;">
                                         <input type="email" name="email" autocomplete="email" placeholder="your@email.com" required
                                             style="flex:1;padding:12px 16px;border:1px solid #ddd;border-radius:9999px;font-size:14px;font-family:inherit;outline:none;color:#1a1a1a;background:#fff;" />
@@ -454,5 +454,6 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script type="module" src="./app.js"></script>
+<script type="module" src="../_shared/newsletter-subscribe.js"></script>
 </body>
 </html>
