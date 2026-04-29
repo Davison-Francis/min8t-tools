@@ -1,0 +1,15 @@
+name = "min8t-tools-router"
+main = "min8t-tools-router.js"
+compatibility_date = "2026-04-29"
+account_id = "626e6ac44d135aa0f72c82e6ed5761af"
+
+# Path-routes min8t.com/tools/* → min8t-tools.pages.dev (the Pages project of
+# the same name). The slash-less pattern catches /tools (no trailing slash) so
+# the Worker can issue a 301 to the canonical /tools/.
+[[routes]]
+pattern = "min8t.com/tools/*"
+zone_name = "min8t.com"
+
+[[routes]]
+pattern = "min8t.com/tools"
+zone_name = "min8t.com"
