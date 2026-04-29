@@ -120,6 +120,46 @@
   ]
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to compress an animated GIF for email",
+  "totalTime": "PT2M",
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "MiN8T Gif Compressor"
+    }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Drop one or more GIFs (max 25 MB each).",
+      "text": "Drop one or more GIFs (max 25 MB each)."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Pick a preset, or fine-tune width / lossy / colors / loops…",
+      "text": "Pick a preset, or fine-tune width / lossy / colors / loops manually. Settings re-apply live to all uploads."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Each GIF compresses in your browser (gifsicle WASM, ~600 KB…",
+      "text": "Each GIF compresses in your browser (gifsicle WASM, ~600 KB on first load, cached afterward). Inference is 2-15 s per GIF depending on size."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "Download individually or grab a ZIP",
+      "text": "Download individually or grab a ZIP. Total payload counter turns red over 1 MB - the email-deliverability danger zone."
+    }
+  ]
+}
+</script>
 
 <link rel="preload" href="https://min8t.com/landing/css/main.css?v=combined" as="style">
 <link rel="stylesheet" href="https://min8t.com/landing/css/main.css?v=combined">

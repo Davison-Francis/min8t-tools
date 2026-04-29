@@ -128,6 +128,40 @@
   ]
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to install an Outlook-safe HTML email signature",
+  "totalTime": "PT2M",
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "MiN8T Email Signature Generator"
+    }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Gmail / Apple Mail / Outlook on the web",
+      "text": "Gmail / Apple Mail / Outlook on the web: click \"Copy for Gmail / Apple Mail\" - pastes as rich content into the signature editor."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Outlook desktop (2016/2019/365)",
+      "text": "Outlook desktop (2016/2019/365): File → Options → Mail → Signatures → New, then paste the rich-content version. If formatting breaks, use \"Copy HTML source\" and replace the contents of your .htm file in %APPDATA%\\Microsoft\\Signatures\\."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Other clients",
+      "text": "Other clients: most signature editors accept rich-content paste. If they don't, \"Copy HTML source\" gives you the raw markup to paste anywhere."
+    }
+  ]
+}
+</script>
 
 <link rel="preload" href="https://min8t.com/landing/css/main.css?v=combined" as="style">
 <link rel="stylesheet" href="https://min8t.com/landing/css/main.css?v=combined">

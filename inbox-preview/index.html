@@ -118,6 +118,46 @@
   ]
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to preview an HTML email across Gmail, Apple Mail, and Outlook",
+  "totalTime": "PT2M",
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "MiN8T Inbox Preview"
+    }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Copy the full HTML source of your email",
+      "text": "Copy the full HTML source of your email - either from your ESP's \"view source\" or your design tool's HTML export."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Paste into the textarea above",
+      "text": "Paste into the textarea above. Previews update live (debounced 350 ms)."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Compare side-by-side",
+      "text": "Compare side-by-side. Watch for differences between the Outlook column and the others - that's where most cross-client breakage lives."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "If a layout collapses in Outlook only",
+      "text": "If a layout collapses in Outlook only: rebuild with tables, not flexbox/grid. If a font falls back in Gmail mobile: provide a web-safe fallback in your font-family stack."
+    }
+  ]
+}
+</script>
 
 <link rel="preload" href="https://min8t.com/landing/css/main.css?v=combined" as="style">
 <link rel="stylesheet" href="https://min8t.com/landing/css/main.css?v=combined">

@@ -118,6 +118,46 @@
   ]
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to find raw email headers in any mail client",
+  "totalTime": "PT2M",
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "MiN8T Header Analyzer"
+    }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Gmail",
+      "text": "Gmail: open the message, three-dot menu, \"Show original\" - the new tab shows the raw RFC-5322 message. Copy from the top down to the blank line before the body."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Outlook (desktop / web)",
+      "text": "Outlook (desktop / web): open the message, File menu, Properties (Outlook desktop) or three-dot menu, \"View message source\" (Outlook web). Headers are in the \"Internet headers\" textarea or as the top of the source."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Apple Mail",
+      "text": "Apple Mail: View menu, Message submenu, All Headers (Cmd+Shift+H). Or \"Raw Source\" for the full message."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "Yahoo",
+      "text": "Yahoo: open the message, More menu, \"View Raw Message\"."
+    }
+  ]
+}
+</script>
 
 <link rel="preload" href="https://min8t.com/landing/css/main.css?v=combined" as="style">
 <link rel="stylesheet" href="https://min8t.com/landing/css/main.css?v=combined">
