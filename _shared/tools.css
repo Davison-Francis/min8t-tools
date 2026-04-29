@@ -1,0 +1,242 @@
+/* MiN8T Tools - tool-specific primitives.
+   These don't belong in the landing's main.css (they're only used by tools)
+   and they don't belong in _shared/styles.css (which is the design-system
+   foundation). Layered on top of both.
+
+   Spec: IMPLEMENTATION/specs/FREE_TOOLS_BRAND_HARMONIZATION_SPEC.md §2.2
+*/
+
+/* ---------- Glass pill (mirrors landing inline <style>) ----------
+   Provided here in case a tool ships without linking landing/main.css.
+   When main.css IS linked, both definitions render identically. */
+.glass-pill {
+  display: inline-block;
+  background-color: rgba(43, 49, 44, 0.52);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+  padding: 0.18em 0.75em;
+  color: rgba(255, 255, 255, 0.95);
+  font-size: inherit;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+/* ---------- Drop zone (image-compressor, signature-generator, bg-remover) ---------- */
+.dropzone {
+  border: 2px dashed rgba(255, 255, 255, 0.18);
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  text-align: center;
+  background: rgba(43, 49, 44, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+  color: rgba(255, 255, 255, 0.85);
+}
+.dropzone--hover {
+  border-color: #28ef91;
+  background: rgba(40, 239, 145, 0.08);
+}
+
+/* ---------- Glass-style form inputs (overrides the base input styling
+              from _shared/styles.css for tool forms that want the
+              landing nav's pill aesthetic) ---------- */
+.tools-input,
+.tools-textarea,
+.tools-select {
+  background: rgba(43, 49, 44, 0.52);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+  padding: 0.75rem 1.25rem;
+  color: #fff;
+  font-family: inherit;
+  font-size: 1rem;
+  width: 100%;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.tools-input:focus,
+.tools-textarea:focus,
+.tools-select:focus {
+  outline: none;
+  border-color: #28ef91;
+  box-shadow: 0 0 0 3px rgba(40, 239, 145, 0.18);
+}
+.tools-textarea {
+  border-radius: 16px;
+  min-height: 6rem;
+  resize: vertical;
+}
+
+/* ---------- Score pills (subject-line-analyzer) ---------- */
+.score-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  background: rgba(43, 49, 44, 0.52);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.score-pill--good { color: #28ef91; border-color: rgba(40, 239, 145, 0.4); }
+.score-pill--warn { color: #FFA94D; border-color: rgba(255, 169, 77, 0.4); }
+.score-pill--bad  { color: #ff6b6b; border-color: rgba(255, 107, 107, 0.4); }
+
+/* ---------- Tool-page hero (smaller than landing's mega-hero) ---------- */
+.tools-hero {
+  padding: 6rem 0 3rem;
+  text-align: center;
+}
+.tools-hero h1 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  line-height: 1.1;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 1rem;
+  font-family: var(--font-display, 'PP Neue Montreal', 'Roboto', sans-serif);
+}
+.tools-hero p.subtitle {
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  color: rgba(255, 255, 255, 0.7);
+  max-width: 60ch;
+  margin: 0 auto;
+}
+
+/* ---------- "Built with MiN8T" CTA block (used at end of every tool) ---------- */
+.tools-cta-block {
+  background: rgba(40, 239, 145, 0.05);
+  border: 1px solid rgba(40, 239, 145, 0.2);
+  border-radius: 24px;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  margin: 4rem 0;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.tools-cta-block h2 {
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  margin-bottom: 1rem;
+  color: #fff;
+  font-family: var(--font-display, 'PP Neue Montreal', 'Roboto', sans-serif);
+}
+.tools-cta-block p {
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 1.5rem;
+}
+.tools-cta-block a.btn-primary {
+  display: inline-block;
+  background: #28ef91;
+  color: #2b312c;
+  font-weight: 700;
+  padding: 0.75rem 1.75rem;
+  border-radius: 9999px;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.tools-cta-block a.btn-primary:hover {
+  background: #1ec97a;
+  text-decoration: none;
+}
+
+/* ---------- FAQ accordion (overrides the .faq summary marker) ---------- */
+.faq-item {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1.25rem 0;
+}
+.faq-item summary {
+  cursor: pointer;
+  list-style: none;
+  font-weight: 600;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item[open] summary { color: #28ef91; }
+.faq-item p {
+  margin-top: 0.75rem;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.6;
+}
+
+/* ---------- Related-tools card grid (glass cards) ---------- */
+.tools-related {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+.tools-related__card {
+  display: block;
+  padding: 1.5rem;
+  border-radius: 16px;
+  background: rgba(43, 49, 44, 0.52);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #fff;
+  text-decoration: none;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+.tools-related__card:hover {
+  border-color: rgba(40, 239, 145, 0.4);
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+.tools-related__card h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  color: #fff;
+}
+.tools-related__card p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ---------- Copy-button overlay (sits inside a tools-input) ---------- */
+.tools-copy-btn {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #28ef91;
+  color: #2b312c;
+  border: none;
+  border-radius: 9999px;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.tools-copy-btn:hover { background: #1ec97a; }
+.tools-copy-btn--copied {
+  background: rgba(40, 239, 145, 0.2);
+  color: #28ef91;
+}
+
+/* ---------- Hero scroll-fade-blur (mirrors landing inline <style>) ----------
+   Tools that want the same scroll fade-out on their hero h1 should add
+   id="hero" to the wrapping section. Falls back to no animation pre-Chrome 115. */
+@supports (animation-timeline: scroll()) {
+  #hero h1,
+  #hero p,
+  #hero a[data-btn-arrow] {
+    animation: heroScrollFade linear forwards;
+    animation-timeline: scroll(root);
+    animation-range: 0 80vh;
+    will-change: opacity, filter;
+  }
+  @keyframes heroScrollFade {
+    0%   { opacity: 1; filter: blur(0); }
+    60%  { opacity: 1; filter: blur(0); }
+    100% { opacity: 0; filter: blur(8px); }
+  }
+}

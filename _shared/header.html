@@ -1,0 +1,35 @@
+<!--
+  MiN8T Tools - shared header partial.
+  Mirrors the landing nav (https://min8t.com/landing/) but trims it to the
+  essentials: logo + "All Tools" + back-to-home + "Try MiN8T free" CTA.
+  No mega-menus, no language switcher.
+
+  Uses these classes from landing/css/main.css when imported alongside this:
+    .bg-black, .bg-menu-main, .bg-green, .button_circle, .anim-btn, .btn,
+    [data-btn-arrow]
+  Also falls back gracefully via _shared/styles.css .site-header rules.
+
+  Inclusion: tools currently inline this partial verbatim into <body>. A
+  build-step substitution is documented in the harmonization spec §2.4 as
+  a future improvement, but inline-paste keeps Lighthouse + SEO crawlers
+  happy without a JS injection step.
+-->
+<header class="site-header bg-black" style="position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 1.5rem;">
+  <div class="site-header-inner container mx-auto" style="max-width:1280px;display:flex;align-items:center;justify-content:space-between;">
+    <a href="https://min8t.com/" aria-label="MiN8T home" class="site-logo" style="display:inline-flex;align-items:center;gap:0.5rem;text-decoration:none;color:#fff;">
+      <img src="https://min8t.com/landing/assets/min8t/min8t-logo-circled-white.svg" alt="MiN8T" width="32" height="32" loading="eager" style="height:32px;width:auto;">
+      <span style="color:#fff;font-weight:700;font-size:1.25rem;font-family:'PP Neue Montreal','Roboto',sans-serif;">MiN8T</span>
+      <span style="color:rgba(255,255,255,0.5);font-size:0.625rem;letter-spacing:0.1em;text-transform:uppercase;">Powered by ABLA</span>
+    </a>
+    <nav class="site-nav bg-menu-main" style="border-radius:9999px;padding:0.5rem 1rem;display:flex;gap:1.25rem;align-items:center;background:rgba(43,49,44,0.78);backdrop-filter:saturate(180%) blur(12px);-webkit-backdrop-filter:saturate(180%) blur(12px);border:1px solid rgba(255,255,255,0.08);">
+      <a href="https://min8t.com/tools/" style="color:#fff;text-decoration:none;font-size:0.95rem;font-weight:500;">All Tools</a>
+      <a href="https://min8t.com/" style="color:#fff;text-decoration:none;font-size:0.95rem;font-weight:500;">Home</a>
+      <a data-btn-arrow href="https://app.min8t.com/signup?ref=tools-header" class="btn inline-flex items-center" title="Try MiN8T free" style="display:inline-flex;align-items:center;height:40px;text-decoration:none;gap:0;">
+        <span class="button_circle bg-green" style="background:#28ef91;border-radius:9999px;height:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;transition:all 0.3s;">
+          <img src="https://min8t.com/landing/assets/img/arrow-right.svg" alt="" loading="lazy" width="16" height="16" style="height:60%;width:40%;object-fit:contain;">
+        </span>
+        <span class="anim-btn bg-green" style="background:#28ef91;color:#2b312c;border-radius:9999px;padding:0.5rem 1rem;display:flex;align-items:center;font-weight:700;font-size:1rem;">Try MiN8T free</span>
+      </a>
+    </nav>
+  </div>
+</header>

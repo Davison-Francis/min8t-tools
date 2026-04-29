@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brand Color Extractor - Free Palette Generator from Logo | MiN8T</title>
+<meta name="description" content="Upload a logo or image, get a 5-color brand palette with 9 tints each, copy-paste CSS variables and Tailwind config, WCAG contrast checks. Free, in-browser.">
+<link rel="canonical" href="https://min8t.com/tools/palette-extractor/">
+<meta property="og:title" content="Brand Color Extractor - Free Palette Generator | MiN8T">
+<meta property="og:description" content="Extract brand colors from any image. Get CSS variables, Tailwind config, and accessibility-checked tints in seconds.">
+<meta property="og:url" content="https://min8t.com/tools/palette-extractor/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0066ff">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Brand Color Extractor",
+  "url": "https://min8t.com/tools/palette-extractor/",
+  "applicationCategory": "DesignApplication",
+  "operatingSystem": "All",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Extract a 5-color brand palette from any uploaded image, generate tints and shades, and output CSS variables + Tailwind config + JSON. Includes WCAG contrast checks. Free, in-browser, no signup."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Free Tools", "item": "https://min8t.com/tools/" },
+    { "@type": "ListItem", "position": 2, "name": "Brand Color Extractor", "item": "https://min8t.com/tools/palette-extractor/" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How does color extraction work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The tool downsamples your image to a small thumbnail in a hidden canvas, then runs a color-quantization algorithm (Modified Median Cut) to find the most representative colors. The 5 dominant colors are returned in approximate order of prevalence. The whole process takes under a second and runs entirely in your browser."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why generate 9 tints per color?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A single brand color isn't enough to design with. You need light versions for backgrounds (50-200 range), the base color for accents (500), and dark versions for text or hover states (700-900). The 50-900 scale matches Tailwind CSS and Material Design conventions, so the output drops directly into a Tailwind theme or CSS custom-property system."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does the contrast indicator mean?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Each color shade is checked against white and black backgrounds for WCAG 2.1 contrast compliance. AA passes 4.5:1 for normal text and 3:1 for large text. AAA passes 7:1 / 4.5:1. The badges tell you which combinations are accessibility-safe for body text - critical if these colors will appear in email or app UI."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What images work best?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Logos with 2-5 distinct colors are ideal - the algorithm cleanly separates them. Hero photos with one dominant subject work too. Avoid: super-busy images with hundreds of colors (you'll get a muddy mid-grey palette), monochrome images (you'll get five shades of one color), and images dominated by white or transparent backgrounds (white gets weighted heavily and squeezes out the actual brand colors)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does the image leave my device?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. The image is loaded into a browser canvas, processed in-memory, then discarded when you close the tab. Open DevTools Network while uploading - you will see zero outbound requests for the image."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I use this in MiN8T's Brand Guidelines?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "MiN8T's Brand Guidelines module accepts a JSON palette format identical to the JSON download from this tool. Click 'Use in MiN8T' to deep-link into the editor with the palette pre-populated, or download the JSON and import it manually from the Brand Guidelines panel."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I edit the extracted colors?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Each base color shows a hex value below it - tap to edit. Tints and shades regenerate live as you adjust the base. Useful when the algorithm picks a near-miss color and you want to nudge it to your exact brand spec."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is one of my brand colors missing from the palette?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Color extraction is sensitive to area coverage. A small accent color that occupies under 5% of the image will likely be excluded in favor of larger background or main-subject colors. Workaround: crop the image to the region containing the missing color, then run extraction on the crop."
+      }
+    }
+  ]
+}
+</script>
+
+<link rel="stylesheet" href="../_shared/styles.css">
+<style>
+  .pe-dropzone {
+    border: 2px dashed var(--border-strong);
+    border-radius: var(--radius-lg);
+    padding: var(--space-2xl);
+    text-align: center;
+    background: var(--bg-alt);
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    margin-top: var(--space-lg);
+  }
+  .pe-dropzone:hover, .pe-dropzone.dragging {
+    border-color: var(--brand-primary);
+    background: rgba(0, 102, 255, 0.04);
+  }
+  .pe-dropzone strong { display: block; font-size: 1.1rem; margin-bottom: var(--space-xs); }
+  .pe-dropzone .hint { color: var(--text-muted); font-size: 0.9rem; }
+  .pe-dropzone input[type=file] { display: none; }
+
+  .pe-preview {
+    margin-top: var(--space-lg);
+    padding: var(--space-md);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    display: flex; gap: var(--space-md); align-items: center;
+  }
+  .pe-preview img { max-height: 100px; max-width: 200px; border-radius: var(--radius-sm); }
+  .pe-preview .meta { color: var(--text-muted); font-size: 0.85rem; }
+
+  .palette { margin-top: var(--space-lg); display: flex; flex-direction: column; gap: var(--space-md); }
+  .color-row {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: var(--space-md);
+    align-items: stretch;
+    padding: var(--space-sm);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+  }
+  .color-row .base {
+    display: flex; flex-direction: column; gap: 4px;
+    padding: var(--space-xs);
+    border-radius: var(--radius-sm);
+  }
+  .color-row .base .swatch {
+    flex: 1; min-height: 60px;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(0,0,0,0.08);
+    cursor: pointer;
+  }
+  .color-row .base input[type=text] {
+    font-family: var(--font-mono); font-size: 0.75rem;
+    padding: 4px; text-align: center;
+    border-color: transparent;
+  }
+
+  .color-row .scale {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 2px;
+    align-items: stretch;
+  }
+  .color-row .scale .step {
+    display: flex; flex-direction: column; align-items: stretch;
+  }
+  .color-row .scale .step .swatch {
+    flex: 1; min-height: 50px;
+    border-top-left-radius: 4px; border-top-right-radius: 4px;
+    cursor: pointer;
+    position: relative;
+  }
+  .color-row .scale .step .swatch:hover::after {
+    content: attr(data-hex);
+    position: absolute; top: -28px; left: 50%; transform: translateX(-50%);
+    padding: 2px 6px; background: var(--text-primary); color: white;
+    font-size: 0.7rem; font-family: var(--font-mono);
+    border-radius: 3px; white-space: nowrap;
+  }
+  .color-row .scale .step .label {
+    font-size: 0.65rem; text-align: center; padding: 2px 0;
+    color: var(--text-muted); font-family: var(--font-mono);
+  }
+  .color-row .scale .step .a11y {
+    font-size: 0.55rem; text-align: center;
+    padding-bottom: 2px;
+    font-family: var(--font-mono); letter-spacing: 0.05em;
+  }
+  .a11y .pass { color: var(--success); }
+  .a11y .fail { color: var(--text-muted); }
+
+  .output-tabs {
+    margin-top: var(--space-lg);
+    display: flex; gap: 2px;
+    border-bottom: 1px solid var(--border);
+  }
+  .output-tabs button {
+    background: none; border: none;
+    padding: var(--space-sm) var(--space-md);
+    color: var(--text-secondary); cursor: pointer;
+    border-bottom: 2px solid transparent;
+    font-weight: 500;
+    border-radius: 0;
+  }
+  .output-tabs button.active {
+    color: var(--brand-primary); border-bottom-color: var(--brand-primary);
+  }
+
+  .output-content {
+    background: #0a1628; color: #c8d3e3;
+    padding: var(--space-md);
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    font-family: var(--font-mono); font-size: 0.8rem;
+    overflow-x: auto;
+    max-height: 400px; overflow-y: auto;
+    margin-top: -1px;
+  }
+  .output-content pre { margin: 0; white-space: pre; }
+
+  .output-actions { margin-top: var(--space-md); display: flex; gap: var(--space-sm); flex-wrap: wrap; }
+
+  .toast {
+    position: fixed; bottom: var(--space-xl); left: 50%; transform: translateX(-50%);
+    background: var(--text-primary); color: white; padding: var(--space-sm) var(--space-lg);
+    border-radius: var(--radius-md); box-shadow: var(--shadow-md);
+    opacity: 0; transition: opacity 0.2s;
+    pointer-events: none; z-index: 1000;
+  }
+  .toast.show { opacity: 1; }
+
+  @media (max-width: 700px) {
+    .color-row { grid-template-columns: 60px 1fr; }
+    .color-row .scale { grid-template-columns: repeat(9, 1fr); }
+    .color-row .scale .step .a11y { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="site-logo" href="https://min8t.com/" aria-label="MiN8T home">
+      <img src="../_shared/brand/min8t-logo.svg" alt="MiN8T" width="120" height="32">
+    </a>
+    <nav class="site-nav">
+      <a href="../">Free Tools</a>
+      <a href="https://app.min8t.com/?ref=tools-palette-extractor" class="cta-editor">Open Editor →</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <h1>Brand Color Extractor</h1>
+  <p>Upload a logo or photo. Get a 5-color brand palette with 9 tints each, ready to drop into a CSS variable system or Tailwind config. Includes WCAG contrast checks so you know which shades are safe for body text. 100% in-browser, no signup, no upload.</p>
+
+  <label class="pe-dropzone" id="dropzone">
+    <strong>Drop an image, or click to browse</strong>
+    <span class="hint">JPEG, PNG, WebP, SVG. Max 10 MB.</span>
+    <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp,image/svg+xml">
+  </label>
+
+  <div class="pe-preview" id="preview" hidden>
+    <img id="preview-img" alt="Uploaded">
+    <div class="meta">
+      <strong id="preview-name"></strong>
+      <div id="preview-size"></div>
+    </div>
+  </div>
+
+  <div class="palette" id="palette"></div>
+
+  <div id="output-section" hidden>
+    <h2 style="margin-top:var(--space-2xl);">Export</h2>
+    <div class="output-tabs">
+      <button type="button" data-tab="css" class="active">CSS variables</button>
+      <button type="button" data-tab="tailwind">Tailwind config</button>
+      <button type="button" data-tab="json">JSON</button>
+      <button type="button" data-tab="scss">SCSS</button>
+    </div>
+    <div class="output-content"><pre id="output-pre"></pre></div>
+    <div class="output-actions">
+      <button type="button" class="btn btn-primary" id="copy-btn">Copy</button>
+      <button type="button" class="btn btn-secondary" id="download-btn">Download as file</button>
+      <a class="btn btn-secondary" id="brand-guidelines-link" href="https://app.min8t.com/brand-guidelines/?ref=tools-palette-extractor" hidden>Use in MiN8T Brand Guidelines →</a>
+    </div>
+  </div>
+
+  <h2>How to use</h2>
+  <ol>
+    <li>Drop your logo or a brand image (JPEG, PNG, WebP, or SVG).</li>
+    <li>The tool extracts 5 dominant colors and generates a 9-step tint scale (50-900) for each.</li>
+    <li>Hover any swatch to see the hex value. Click any base color to edit it - the scale regenerates instantly.</li>
+    <li>Switch to the CSS / Tailwind / JSON / SCSS export tab. Copy or download. The JSON format imports directly into MiN8T's Brand Guidelines module.</li>
+    <li>The "AA" / "AAA" badges on each tint show WCAG contrast results vs white and black - pick body-text colors from the passing rows.</li>
+  </ol>
+
+  <h2>Why a 50-900 scale?</h2>
+  <p>A single brand color isn't enough to design with. You need light versions for backgrounds (50-200), the base for accents (500), and dark versions for text or hover states (700-900). The 50-900 scale matches <strong>Tailwind CSS</strong> and <strong>Material Design</strong> conventions, so the output drops into a Tailwind theme or CSS custom-property system without translation. The mid-step (500) is your detected base color; lighter and darker steps are generated by interpolating to white and to a near-black.</p>
+
+  <h2>FAQ</h2>
+  <div class="faq">
+    <details>
+      <summary>How does color extraction work?</summary>
+      <p>The tool downsamples your image to a small thumbnail in a hidden canvas, then runs a color-quantization algorithm (Modified Median Cut, the same one used by <a href="https://github.com/lokesh/color-thief" rel="noopener">color-thief</a>) to find the most representative colors. The 5 dominant colors are returned in approximate order of prevalence. Whole process takes under a second, runs entirely in your browser.</p>
+    </details>
+    <details>
+      <summary>Why generate 9 tints per color?</summary>
+      <p>A single brand color isn't enough to design with. You need light versions for backgrounds (50-200 range), the base color for accents (500), and dark versions for text or hover states (700-900). The 50-900 scale matches Tailwind CSS and Material Design conventions, so the output drops directly into a Tailwind theme or CSS custom-property system.</p>
+    </details>
+    <details>
+      <summary>What does the contrast indicator mean?</summary>
+      <p>Each color shade is checked against white and black backgrounds for WCAG 2.1 contrast compliance. <strong>AA</strong> passes 4.5:1 for normal text and 3:1 for large text. <strong>AAA</strong> passes 7:1 / 4.5:1. The badges tell you which combinations are accessibility-safe for body text - critical if these colors will appear in email or app UI.</p>
+    </details>
+    <details>
+      <summary>What images work best?</summary>
+      <p>Logos with 2-5 distinct colors are ideal. Hero photos with one dominant subject work too. <strong>Avoid:</strong> super-busy images with hundreds of colors (you'll get a muddy mid-grey palette), monochrome images (you'll get five shades of one color), and images dominated by white or transparent backgrounds (white gets weighted heavily and squeezes out the actual brand colors).</p>
+    </details>
+    <details>
+      <summary>Does the image leave my device?</summary>
+      <p>No. The image is loaded into a browser canvas, processed in-memory, then discarded when you close the tab. Open DevTools Network while uploading - you'll see zero outbound requests for the image.</p>
+    </details>
+    <details>
+      <summary>How do I use this in MiN8T's Brand Guidelines?</summary>
+      <p>MiN8T's Brand Guidelines module accepts a JSON palette format identical to the JSON download from this tool. Click <strong>"Use in MiN8T Brand Guidelines"</strong> to deep-link into the editor with the palette pre-populated, or download the JSON and import it manually from the Brand Guidelines panel.</p>
+    </details>
+    <details>
+      <summary>Can I edit the extracted colors?</summary>
+      <p>Yes. Each base color shows a hex value below it - tap to edit. Tints and shades regenerate live as you adjust the base. Useful when the algorithm picks a near-miss color and you want to nudge it to your exact brand spec.</p>
+    </details>
+    <details>
+      <summary>Why is one of my brand colors missing from the palette?</summary>
+      <p>Color extraction is sensitive to area coverage. A small accent color that occupies under 5% of the image will likely be excluded in favor of larger background or main-subject colors. <strong>Workaround:</strong> crop the image to the region containing the missing color, then run extraction on the crop.</p>
+    </details>
+  </div>
+
+  <div class="conversion-cta">
+    <h2>Use this palette in your emails</h2>
+    <p>MiN8T's Brand Guidelines module stores your palette once and applies it to every email you design. Stop hand-pasting hex codes.</p>
+    <a class="btn" id="cta-editor" href="https://app.min8t.com/brand-guidelines/?ref=tools-palette-extractor">Open Brand Guidelines →</a>
+  </div>
+
+  <h2>More free tools for email marketers</h2>
+  <div class="related-tools">
+    <a class="tool-card" href="../utm-builder/"><h3>UTM Campaign URL Builder</h3><p>Build tracked links for your email campaigns with one click.</p></a>
+    <a class="tool-card" href="../image-compressor/"><h3>Email Image Compressor</h3><p>Compress and resize images so your emails stay under inbox size limits.</p></a>
+    <a class="tool-card" href="../email-signature-generator/"><h3>Email Signature Generator</h3><p>Outlook-safe HTML signatures with one-click copy.</p></a>
+    <a class="tool-card" href="../subject-line-analyzer/"><h3>Subject Line Analyzer</h3><p>Score your subject line on length, spam triggers, sentiment, and more.</p></a>
+    <a class="tool-card" href="../background-remover/"><h3>Background Remover</h3><p>Remove image backgrounds 100% in your browser.</p></a>
+    <a class="tool-card" href="../font-checker/"><h3>Email-Safe Font Checker</h3><p>Will your font render in Outlook? Per-client matrix + fallback stacks.</p></a>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <p>Made by <a href="https://min8t.com/">MiN8T</a>, the email design platform that respects your time.</p>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script type="module" src="./app.js"></script>
+</body>
+</html>

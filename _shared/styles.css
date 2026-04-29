@@ -1,33 +1,41 @@
 /* MiN8T Tools - shared styles
    Brand tokens deliberately match the marketing site
-   (frontend/03_email_editor_module/public/landing/) so that switching
-   between min8t.com/* and min8t.com/tools/* feels like one product. */
+   (https://min8t.com/landing/) so that switching between
+   min8t.com/* and min8t.com/tools/* feels like one product.
+
+   v2 - 2026-04-28: token rewrite to dark / mint-green theme.
+   See IMPLEMENTATION/specs/FREE_TOOLS_BRAND_HARMONIZATION_SPEC.md §2.1
+   in the Min8T monorepo for the rationale. */
 
 :root {
   /* Brand palette */
-  --brand-primary: #0066ff;
-  --brand-primary-dark: #0050cc;
-  --brand-accent: #00c4a7;
+  --brand-primary: #28ef91;            /* MiN8T mint green */
+  --brand-primary-dark: #1ec97a;
+  --brand-accent: #FFA94D;             /* warm amber */
 
-  /* Neutrals */
-  --bg: #ffffff;
-  --bg-alt: #f8f9fb;
-  --bg-muted: #eef1f5;
-  --border: #e1e5eb;
-  --border-strong: #c8cfd9;
+  /* Neutrals - dark theme, glass surfaces above the wave background */
+  --bg: #2b312c;                       /* MiN8T dark gray */
+  --bg-alt: rgba(43, 49, 44, 0.52);    /* glass-pill bg */
+  --bg-muted: rgba(255, 255, 255, 0.04);
+  --border: rgba(255, 255, 255, 0.12);
+  --border-strong: rgba(255, 255, 255, 0.24);
 
   /* Text */
-  --text-primary: #0a1628;
-  --text-secondary: #4a5567;
-  --text-muted: #7a8494;
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.75);
+  --text-muted: rgba(255, 255, 255, 0.55);
 
   /* Semantic */
-  --success: #2ec27e;
-  --warning: #f5a524;
-  --danger: #e53935;
+  --success: #28ef91;
+  --warning: #FFA94D;
+  --danger: #ff6b6b;
 
-  /* Type scale */
-  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  /* Type scale - matches landing fonts. The actual @font-face declarations
+     live in landing/css/main.css, which tools also link in <head>. If a tool
+     fails to link main.css for any reason, font-family gracefully falls back
+     to Roboto then system sans. */
+  --font-sans: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --font-display: 'PP Neue Montreal', 'Roboto', sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Monaco, Consolas, monospace;
 
   /* Spacing */
@@ -40,13 +48,14 @@
 
   /* Radius */
   --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-pill: 9999px;
 
-  /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(10, 22, 40, 0.06);
-  --shadow-md: 0 4px 12px rgba(10, 22, 40, 0.08);
-  --shadow-lg: 0 12px 32px rgba(10, 22, 40, 0.12);
+  /* Shadows - softened against dark bg */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.4);
 
   /* Layout */
   --container-max: 960px;
@@ -65,39 +74,56 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Premium textured background.
-   Layer 1 - soft radial gradient anchored top-right (brand teal at 4% opacity).
-   Layer 2 - soft radial gradient anchored bottom-left (brand blue at 3%).
-   Layer 3 - subtle dotted grain (8x8 SVG, 12% opacity) for tactile depth.
-   Layer 4 - base off-white so the gradients have something to wash over.
-   The combined cost is one CSS rule; no images downloaded. */
+/* The body itself is transparent so the <img id="hero-bg"> wave
+   (added in each tool's <body>, per spec §2.5) shows through.
+   Fall-back background-color is the brand dark, so a tool that
+   ships without the wave img still reads as a MiN8T page. */
 body {
-  background-color: var(--bg-alt);
-  background-image:
-    radial-gradient(circle at 90% -10%,  rgba(0, 196, 167, 0.08), transparent 55%),
-    radial-gradient(circle at -10% 110%, rgba(0, 102, 255, 0.06), transparent 55%),
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='8' height='8'><circle cx='1' cy='1' r='0.6' fill='%230a1628' fill-opacity='0.04'/></svg>");
-  background-attachment: fixed, fixed, fixed;
-  background-size: auto, auto, 8px 8px;
-  background-repeat: no-repeat, no-repeat, repeat;
-}
-
-body {
+  background-color: var(--bg);
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  position: relative;
 }
 
+/* Wave background - inserted as the first child of <body> in each tool's
+   index.html (Phase 2). Pinned to the viewport, behind everything. */
+#hero-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: 0;
+  pointer-events: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Page chrome sits above the wave */
+.site-header,
+main,
+.site-footer,
+footer {
+  position: relative;
+  z-index: 1;
+}
+
+/* Tool body card - was solid white in v1, now glass to read on the wave */
 main {
   flex: 1;
   width: 100%;
   max-width: var(--container-max);
   margin: var(--space-xl) auto;
   padding: var(--space-2xl);
-  background: var(--bg);
+  background: rgba(43, 49, 44, 0.52);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
+  color: var(--text-primary);
 }
 @media (max-width: 600px) {
   main {
@@ -111,6 +137,7 @@ h1, h2, h3 {
   line-height: 1.2;
   margin: 0 0 var(--space-md);
   color: var(--text-primary);
+  font-family: var(--font-display);
 }
 
 h1 { font-size: 2.5rem; font-weight: 700; }
@@ -127,15 +154,16 @@ button, .btn {
   font-size: 1rem;
   font-weight: 500;
   border: 1px solid transparent;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-pill);
   padding: var(--space-sm) var(--space-lg);
   cursor: pointer;
-  transition: background 0.15s, border-color 0.15s, transform 0.05s;
+  transition: background 0.15s, border-color 0.15s, transform 0.05s, color 0.15s;
 }
 
 .btn-primary {
   background: var(--brand-primary);
-  color: white;
+  color: #2b312c;
+  font-weight: 700;
 }
 .btn-primary:hover {
   background: var(--brand-primary-dark);
@@ -143,11 +171,14 @@ button, .btn {
 .btn-primary:active { transform: translateY(1px); }
 
 .btn-secondary {
-  background: var(--bg-muted);
+  background: var(--bg-alt);
   color: var(--text-primary);
+  border-color: var(--border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 .btn-secondary:hover {
-  background: var(--border);
+  border-color: var(--border-strong);
 }
 
 input, textarea, select {
@@ -156,15 +187,20 @@ input, textarea, select {
   padding: var(--space-sm) var(--space-md);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  background: var(--bg);
+  background: rgba(43, 49, 44, 0.6);
+  color: var(--text-primary);
   width: 100%;
-  transition: border-color 0.15s;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--text-muted);
 }
 
 input:focus, textarea:focus, select:focus {
   outline: none;
   border-color: var(--brand-primary);
-  box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.15);
+  box-shadow: 0 0 0 3px rgba(40, 239, 145, 0.18);
 }
 
 label {
@@ -175,14 +211,17 @@ label {
   font-size: 0.875rem;
 }
 
-/* Site header - sticky, semi-transparent with backdrop blur for premium feel */
+/* Site header - glass on dark, matching landing's nav aesthetic.
+   The header.html partial uses .bg-black + .bg-menu-main from the landing
+   main.css when imported alongside this file. These rules are the fallback
+   styling for tools that don't (yet) link main.css. */
 .site-header {
   position: sticky;
   top: 0;
   z-index: 100;
-  border-bottom: 1px solid rgba(225, 229, 235, 0.6);
+  border-bottom: 1px solid var(--border);
   padding: var(--space-md) 0;
-  background: rgba(255, 255, 255, 0.78);
+  background: rgba(26, 30, 27, 0.78);
   backdrop-filter: saturate(180%) blur(12px);
   -webkit-backdrop-filter: saturate(180%) blur(12px);
 }
@@ -198,6 +237,8 @@ label {
   display: inline-flex;
   align-items: center;
   text-decoration: none;
+  gap: var(--space-sm);
+  color: var(--text-primary);
 }
 .site-logo img { height: 32px; width: auto; display: block; }
 .site-logo:hover { text-decoration: none; opacity: 0.85; }
@@ -206,49 +247,56 @@ label {
 .site-nav a:hover { color: var(--brand-primary); text-decoration: none; }
 .site-nav .cta-editor {
   background: var(--brand-primary);
-  color: white !important;
+  color: #2b312c !important;
   padding: 6px 14px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-pill);
   font-size: 0.875rem;
+  font-weight: 700;
   transition: background 0.15s, transform 0.05s;
 }
 .site-nav .cta-editor:hover { background: var(--brand-primary-dark); }
 .site-nav .cta-editor:active { transform: translateY(1px); }
 
-/* Footer */
+/* Footer - the canonical 4-column footer from the landing is included via
+   _shared/footer.html and inherits the landing's main.css. These rules are
+   only the legacy single-line footer fallback. */
 .site-footer {
   border-top: 1px solid var(--border);
   padding: var(--space-xl) 0;
   margin-top: var(--space-2xl);
-  background: var(--bg-alt);
+  background: rgba(0, 0, 0, 0.3);
   text-align: center;
   color: var(--text-muted);
   font-size: 0.875rem;
 }
 
-/* Conversion CTA block (used at the bottom of each tool) */
+/* Conversion CTA block - was a flat blue gradient; now a brand-green tinted
+   glass card so it reads as MiN8T-branded but doesn't shout over the page. */
 .conversion-cta {
-  background: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-dark));
-  color: white;
+  background: linear-gradient(135deg, rgba(40, 239, 145, 0.12), rgba(40, 239, 145, 0.04));
+  border: 1px solid rgba(40, 239, 145, 0.3);
+  color: var(--text-primary);
   padding: var(--space-2xl);
   border-radius: var(--radius-lg);
   text-align: center;
   margin: var(--space-2xl) 0;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
-.conversion-cta h2 { color: white; margin-top: 0; }
-.conversion-cta p { color: rgba(255, 255, 255, 0.9); }
+.conversion-cta h2 { color: var(--text-primary); margin-top: 0; }
+.conversion-cta p { color: var(--text-secondary); }
 .conversion-cta .btn {
-  background: white;
-  color: var(--brand-primary);
-  font-weight: 600;
+  background: var(--brand-primary);
+  color: #2b312c;
+  font-weight: 700;
   padding: var(--space-md) var(--space-xl);
   margin-top: var(--space-md);
 }
 .conversion-cta .btn:hover {
-  background: var(--bg-alt);
+  background: var(--brand-primary-dark);
 }
 
-/* Related-tools grid */
+/* Related-tools grid - glass cards instead of white cards */
 .related-tools {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -259,17 +307,28 @@ label {
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   padding: var(--space-md);
-  background: var(--bg);
+  background: rgba(43, 49, 44, 0.52);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   text-decoration: none;
+  color: var(--text-primary);
   transition: border-color 0.15s, transform 0.05s;
 }
 .related-tools .tool-card:hover {
-  border-color: var(--brand-primary);
+  border-color: rgba(40, 239, 145, 0.4);
   text-decoration: none;
   transform: translateY(-2px);
 }
-.related-tools .tool-card h3 { margin: 0 0 var(--space-xs); font-size: 1rem; }
-.related-tools .tool-card p { margin: 0; font-size: 0.875rem; }
+.related-tools .tool-card h3 {
+  margin: 0 0 var(--space-xs);
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+.related-tools .tool-card p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
 
 /* FAQ */
 .faq {
@@ -281,12 +340,17 @@ label {
 }
 .faq summary {
   cursor: pointer;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 1.05rem;
   color: var(--text-primary);
+  list-style: none;
 }
+.faq summary::-webkit-details-marker { display: none; }
 .faq summary:hover { color: var(--brand-primary); }
-.faq details[open] summary { color: var(--brand-primary); margin-bottom: var(--space-sm); }
+.faq details[open] summary {
+  color: var(--brand-primary);
+  margin-bottom: var(--space-sm);
+}
 .faq details > *:not(summary) { color: var(--text-secondary); }
 
 @media (max-width: 600px) {
