@@ -241,6 +241,46 @@
   body { padding-top: 80px; }
   @media (max-width: 600px) { body.has-fixed-header-mobile { padding-top: 72px; } }
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to check whether a webfont renders in email clients",
+  "totalTime": "PT1M",
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "MiN8T Email-Safe Font Checker"
+    }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Enter the font family name",
+      "text": "Type the font you are considering (Inter, Manrope, Roboto, Lora, etc.). The checker recognises Google Fonts, Adobe Fonts, and common system fonts."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Read the per-client support matrix",
+      "text": "The tool reports support per email client - Apple Mail, Gmail web, Gmail mobile, Outlook desktop, Outlook web, Yahoo, AOL. Outlook desktop is the most restrictive; many webfonts fall back there."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Pick a fallback stack",
+      "text": "Use the suggested fallbacks for clients that do not support the primary font. The fallback should match the metrics of your primary font as closely as possible to avoid layout shift."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "Test in a real preview",
+      "text": "Run the email through Inbox Preview or Litmus before broadcast to confirm what subscribers actually see. The matrix is a planning tool, not a substitute for a real render."
+    }
+  ]
+}
+</script>
 </head>
 <body>
 

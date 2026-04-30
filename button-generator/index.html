@@ -242,6 +242,46 @@
   }
   .toast.show { opacity: 1; }
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to generate a bulletproof email button that survives Outlook",
+  "totalTime": "PT1M",
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "MiN8T Bulletproof Button Generator"
+    }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Pick a preset or set the colors",
+      "text": "Choose a Stripe-style, dark, or custom preset, then tune the background colour, text colour, and corner radius. Brand colours go in the colour pickers."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Set the button label and destination URL",
+      "text": "Enter the call-to-action label (under five words) and the destination URL. Use a UTM-tagged URL for campaign attribution; the UTM Builder tool can produce one."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Copy the bulletproof HTML",
+      "text": "The output includes the modern HTML for everything except Outlook desktop and a VML conditional-comments block that gives Outlook the same rounded button. Copy the whole snippet."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "Paste into your email source",
+      "text": "Drop the HTML directly into your ESP's source view, or into the relevant <td> in a hand-coded template. Then run the result through Inbox Preview to verify rendering."
+    }
+  ]
+}
+</script>
 </head>
 <body>
 

@@ -183,6 +183,46 @@
   body { padding-top: 80px; }
   @media (max-width: 600px) { body.has-fixed-header-mobile { padding-top: 72px; } }
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to generate a plain-text alternative for an HTML email",
+  "totalTime": "PT1M",
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "MiN8T HTML to Plain-Text Email Converter"
+    }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Paste your HTML email source",
+      "text": "Drop in the same HTML body you ship in the multipart/alternative MIME envelope. The converter accepts a full document or a fragment."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Click Convert",
+      "text": "The tool strips the markup, preserves link URLs in parentheses, and formats text for the plain-text alternative. Headings become wrapped lines, lists become bullet characters."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Review the output",
+      "text": "Check that link URLs, headings, and lists are readable. Some elements (like image hero blocks) collapse to nothing - replace those with a short text fallback if they carried meaning."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "Add to your ESP send",
+      "text": "Paste the result into the plain-text alternative slot in your ESP so subscribers whose clients block HTML still get a readable email. A clean plain-text alternative also improves deliverability scoring."
+    }
+  ]
+}
+</script>
 </head>
 <body>
 
