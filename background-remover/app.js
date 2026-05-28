@@ -26,7 +26,7 @@ import {
 env.allowLocalModels = false;
 env.useBrowserCache = true;
 
-const MODEL_ID = 'Xenova/u2net';
+const MODEL_ID = 'Xenova/modnet';
 const MAX_DIMENSION = 4096; // refuse images bigger than this - memory protection
 
 const dropzone = document.getElementById('dropzone');
