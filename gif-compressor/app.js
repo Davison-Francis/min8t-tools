@@ -94,22 +94,12 @@ function addFiles(fileList) {
 }
 
 // ---- compression ----
-function buildCommand(filename) {
+function buildCommand() {
   const w = parseInt(widthInput.value, 10);
   const l = parseInt(lossyInput.value, 10);
   const c = parseInt(colorsInput.value, 10);
   const loops = parseInt(loopsInput.value, 10);
-  // gifsicle args: optimize, lossy, colors, resize, loopcount, in/out paths
-  // The library uses /in/ and /out/ virtual filesystems
-  return [
-    `-O3`,
-    `--lossy=${l}`,
-    `--colors=${c}`,
-    `--resize-fit-width ${w}`,
-    `--loopcount=${loops}`,
-    `-o /out/${filename}`,
-    `/in/${filename}`,
-  ].join(' ');
+  return `-O3 --lossy=${l} --colors=${c} --resize-fit-width ${w} --loopcount=${loops} -o /out/out.gif /in/in.gif`;
 }
 
 async function compressAll() {
@@ -117,14 +107,12 @@ async function compressAll() {
   render();
   for (const item of items) {
     try {
-      const cmd = buildCommand(item.file.name);
-      const buf = await item.file.arrayBuffer();
+      const cmd = buildCommand();
       const result = await gifsicle.run({
-        input: [{ file: new Uint8Array(buf), name: item.file.name }],
+        input: [{ file: item.file, name: 'in.gif' }],
         command: [cmd],
       });
-      const outFile = result[0];
-      const outBlob = new Blob([outFile], { type: 'image/gif' });
+      const outBlob = (result[0] instanceof Blob) ? result[0] : new Blob([result[0]], { type: 'image/gif' });
       if (item.compressedUrl) URL.revokeObjectURL(item.compressedUrl);
       item.compressed = outBlob;
       item.compressedUrl = URL.createObjectURL(outBlob);
