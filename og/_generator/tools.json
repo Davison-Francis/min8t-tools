@@ -14,5 +14,13 @@
   { "slug": "mjml-converter",              "title": "MJML to HTML",                 "subtitle": "Compile MJML in your browser. Live preview." },
   { "slug": "header-analyzer",             "title": "Email Header Analyzer",        "subtitle": "Trace SMTP hops, decode SPF/DKIM/DMARC." },
   { "slug": "button-generator",            "title": "Bulletproof Button Generator", "subtitle": "Email-safe CTAs with VML fallback for Outlook." },
-  { "slug": "ab-test-calculator",          "title": "A/B Test Sample Size",         "subtitle": "Plan email A/B tests. Power, confidence, lift." }
+  { "slug": "ab-test-calculator",          "title": "A/B Test Sample Size",         "subtitle": "Plan email A/B tests. Power, confidence, lift." },
+  { "slug": "_landing-tools",              "title": "Free Email Tools",             "subtitle": "UTM builder, image compression, CSS inliner, inbox preview, and more." },
+  { "slug": "_landing-free-tools",         "title": "Free Deliverability Tools",    "subtitle": "Email verifier, SPF/DKIM/DMARC checks, blacklist scanner. No signup." },
+  { "slug": "email-verifier",              "title": "Free Email Verifier",          "subtitle": "Validate any address. Syntax + MX + SMTP + catch-all detection." },
+  { "slug": "domain-health-check",         "title": "Domain Health Check",          "subtitle": "Full SPF, DKIM, DMARC, MTA-STS, BIMI, TLS-RPT audit." },
+  { "slug": "blacklist-checker",           "title": "Blacklist Scanner",            "subtitle": "Scan 50+ DNSBL zones in parallel. Spamhaus, Barracuda, SORBS." },
+  { "slug": "domain-intelligence",         "title": "Domain Intelligence",          "subtitle": "Trust score + reputation report. Combines DNS, age, blacklists, ISP." },
+  { "slug": "dmarc-analyzer",              "title": "DMARC Analyzer",               "subtitle": "Parse and validate your DMARC record with fix recommendations." },
+  { "slug": "dmarc-generator",             "title": "DMARC Generator",              "subtitle": "Build a valid DMARC TXT record. Monitor, quarantine, or reject." }
 ]
