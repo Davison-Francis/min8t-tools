@@ -109,8 +109,7 @@
       "name": "What input format does the tool accept?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Full HTML email source - the same content you'd paste into your ESP's HTML view, or copy from a 'View source' menu in your design tool. The tool handles a complete <html><body>...<script type="module" src="../_shared/newsletter-subscribe.js"></script>
-</body></html> document or a body fragment. <style>, <link rel=\"stylesheet\">, and image tags all work as expected, with the caveat that external resources (images, hosted fonts) are loaded in iframes with no special permissions - some CDNs may refuse to serve to iframes, in which case images won't appear in the preview but will work fine in real email clients."
+        "text": "Full HTML email source - the same content you'd paste into your ESP's HTML view, or copy from a 'View source' menu in your design tool. The tool handles a complete \\u003chtml\\u003e\\u003cbody\\u003e...\\u003c/body\\u003e\\u003c/html\\u003e document or a body fragment. \\u003cstyle\\u003e, \\u003clink rel=\"stylesheet\"\\u003e, and image tags all work as expected, with the caveat that external resources (images, hosted fonts) are loaded in iframes with no special permissions - some CDNs may refuse to serve to iframes, in which case images won't appear in the preview but will work fine in real email clients."
       }
     },
     {
@@ -602,5 +601,6 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script type="module" src="./app.js"></script>
+<script type="module" src="../_shared/newsletter-subscribe.js"></script>
 </body>
 </html>
