@@ -100,6 +100,20 @@ PAGE_TEMPLATE = """<!doctype html>
   .cta-block {{ background: #f0f6ff; border-left: 4px solid #0066cc; padding: 20px 24px; margin: 32px 0; border-radius: 4px; }}
   .cta-block strong {{ display: block; font-size: 1.05rem; margin-bottom: 8px; }}
   .cta-btn {{ display: inline-block; padding: 12px 24px; background: #0066cc; color: #fff !important; border-radius: 999px; font-weight: 600; text-decoration: none; margin-top: 12px; }}
+  .cta-btn-hero {{
+    display: inline-block;
+    padding: 16px 32px;
+    font-size: 1.0625rem;
+    font-weight: 700;
+    margin: 8px 0 6px;
+    background: #0d0d0d;
+    color: #28ef91 !important;
+    border-radius: 999px;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 14px rgba(13, 13, 13, 0.18);
+  }}
+  .cta-btn-hero:hover {{ transform: translateY(-1px); box-shadow: 0 8px 22px rgba(13, 13, 13, 0.28); }}
+  .cta-sub {{ font-size: 0.875rem; color: #666; margin: 0 0 16px; }}
   .key-facts {{ margin: 24px 0; padding: 18px 24px; background: rgba(40, 239, 145, 0.08); border-left: 3px solid #28ef91; border-radius: 6px; }}
   .key-facts h3 {{ margin: 0 0 10px; font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }}
   .key-facts ul {{ list-style: none; margin: 0; padding: 0; }}
@@ -190,19 +204,17 @@ PAGE_TEMPLATE = """<!doctype html>
 <main>
   <span class="esp-badge"><img src="/tools/programmatic/esp-logos/{esp_slug}.svg" alt="{esp_name} logo" loading="lazy"> Works with {esp_name}</span>
   <h1>{h1}</h1>
-  <p class="tool-meta">Built by the MiN8T Engineering Team · <time datetime="{date_modified}">Updated 28 May 2026</time></p>
 
-  <p class="lead">{lead}</p>
+  <a href="{tool_url}" class="cta-btn cta-btn-hero">→ Open the free {tool_name}</a>
+  <p class="cta-sub">Browser-only, no signup, no upload. Output works with any {esp_name} campaign.</p>
+
+  <p class="tool-meta">Built by the MiN8T Engineering Team · <time datetime="{date_modified}">Updated 28 May 2026</time></p>
 
   <figure class="tool-hero">
     <img src="https://min8t.com/tools/og/{tool_slug}.png" alt="MiN8T {tool_name} interface preview" width="1200" height="630" loading="eager">
   </figure>
 
-  <div class="cta-block">
-    <strong>Try the free {tool_lc} now →</strong>
-    Browser-only, no signup, no upload. The output works with any {esp_name} campaign.
-    <a href="{tool_url}" class="cta-btn">Open the {tool_name}</a>
-  </div>
+  <p class="lead">{lead}</p>
 
   <aside class="key-facts">
     <h3>Key facts: {tool_name} for {esp_name}</h3>

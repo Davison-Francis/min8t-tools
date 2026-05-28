@@ -83,6 +83,20 @@
   .cta-block { background: #f0f6ff; border-left: 4px solid #0066cc; padding: 20px 24px; margin: 32px 0; border-radius: 4px; }
   .cta-block strong { display: block; font-size: 1.05rem; margin-bottom: 8px; }
   .cta-btn { display: inline-block; padding: 12px 24px; background: #0066cc; color: #fff !important; border-radius: 999px; font-weight: 600; text-decoration: none; margin-top: 12px; }
+  .cta-btn-hero {
+    display: inline-block;
+    padding: 16px 32px;
+    font-size: 1.0625rem;
+    font-weight: 700;
+    margin: 8px 0 6px;
+    background: #0d0d0d;
+    color: #28ef91 !important;
+    border-radius: 999px;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 14px rgba(13, 13, 13, 0.18);
+  }
+  .cta-btn-hero:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(13, 13, 13, 0.28); }
+  .cta-sub { font-size: 0.875rem; color: #666; margin: 0 0 16px; }
   .key-facts { margin: 24px 0; padding: 18px 24px; background: rgba(40, 239, 145, 0.08); border-left: 3px solid #28ef91; border-radius: 6px; }
   .key-facts h3 { margin: 0 0 10px; font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
   .key-facts ul { list-style: none; margin: 0; padding: 0; }
@@ -173,19 +187,17 @@
 <main>
   <span class="esp-badge"><img src="/tools/programmatic/esp-logos/campaignmonitor.svg" alt="Campaign Monitor logo" loading="lazy"> Works with Campaign Monitor</span>
   <h1>GIF Compressor for Campaign Monitor: Free Browser-Based Tool</h1>
-  <p class="tool-meta">Built by the MiN8T Engineering Team · <time datetime="2026-05-28">Updated 28 May 2026</time></p>
 
-  <p class="lead">Campaign Monitor's built-in tools cover the basics, but the GIF compressor workflow often benefits from a dedicated, browser-only preprocessor before uploading. Animated GIFs are deliverability-fragile — large GIFs trigger spam filters and slow render times. Pre-compression with gifsicle's lossy presets cuts GIF weight 40-70% without visible quality loss.</p>
+  <a href="/tools/gif-compressor/" class="cta-btn cta-btn-hero">→ Open the free GIF Compressor</a>
+  <p class="cta-sub">Browser-only, no signup, no upload. Output works with any Campaign Monitor campaign.</p>
+
+  <p class="tool-meta">Built by the MiN8T Engineering Team · <time datetime="2026-05-28">Updated 28 May 2026</time></p>
 
   <figure class="tool-hero">
     <img src="https://min8t.com/tools/og/gif-compressor.png" alt="MiN8T GIF Compressor interface preview" width="1200" height="630" loading="eager">
   </figure>
 
-  <div class="cta-block">
-    <strong>Try the free GIF compressor now →</strong>
-    Browser-only, no signup, no upload. The output works with any Campaign Monitor campaign.
-    <a href="/tools/gif-compressor/" class="cta-btn">Open the GIF Compressor</a>
-  </div>
+  <p class="lead">Campaign Monitor's built-in tools cover the basics, but the GIF compressor workflow often benefits from a dedicated, browser-only preprocessor before uploading. Animated GIFs are deliverability-fragile — large GIFs trigger spam filters and slow render times. Pre-compression with gifsicle's lossy presets cuts GIF weight 40-70% without visible quality loss.</p>
 
   <aside class="key-facts">
     <h3>Key facts: GIF Compressor for Campaign Monitor</h3>
