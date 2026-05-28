@@ -13,7 +13,7 @@
  * Files NEVER leave the browser. WASM binary loaded from jsdelivr on first
  * use (~600 KB), cached after.
  */
-import gifsicle from 'https://cdn.jsdelivr.net/npm/gifsicle-wasm-browser@1.5.0/+esm';
+import gifsicle from 'https://cdn.jsdelivr.net/npm/gifsicle-wasm-browser@1.5.19/+esm';
 import JSZip from 'https://cdn.jsdelivr.net/npm/jszip@3.10.1/+esm';
 import { trackToolUsed, trackCtaClicked } from '../_shared/analytics.js';
 
