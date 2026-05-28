@@ -8,39 +8,115 @@
  *
  * Bound on the zone via Worker route: `min8t.com/tools/*` → this script.
  */
+const SPAMCIPHER_ORIGIN = 'https://spamcipher.com';
+const MIN8T_CANONICAL = 'https://min8t.com/tools/spam-checker/';
+
 export default {
   async fetch(request) {
     const url = new URL(request.url);
 
-    // /tools (no trailing slash) → /tools/  (redirect, keeps SEO clean - one canonical URL)
+    // /tools (no trailing slash) → /tools/  (redirect, keeps SEO clean)
     if (url.pathname === '/tools') {
       return Response.redirect(`${url.origin}/tools/`, 301);
     }
 
-    // Strip the /tools prefix before forwarding to Pages.
-    // /tools/        → /
-    // /tools/foo/    → /foo/
-    // /tools/a/b.css → /a/b.css
+    // ── SpamCipher reverse proxy ──
+    // /tools/spam-checker(/)  → proxy spamcipher.com/check (HTML rewritten)
+    // /tools/spam-checker/... → proxy spamcipher.com/... for sub-assets
+    if (url.pathname.match(/^\/tools\/spam-checker(\/|$)/)) {
+      return handleSpamChecker(request, url);
+    }
+
+    // ── Default: forward to Pages ──
     const stripped = url.pathname.replace(/^\/tools\/?/, '/');
     const target = new URL(stripped + url.search, 'https://min8t-tools.pages.dev');
 
-    // Forward the original request to Pages with the rewritten URL. We pass
-    // through method, headers, body - Pages handles caching and edge response
-    // from there.
     const proxyRequest = new Request(target, {
       method: request.method,
       headers: request.headers,
       body: request.body,
       redirect: 'manual',
     });
-    // The Host header on the outgoing fetch must point at Pages so the right
-    // project's content is returned.
     proxyRequest.headers.set('Host', 'min8t-tools.pages.dev');
 
-    const response = await fetch(proxyRequest);
-
-    // Pass the response straight through. Pages already serves the right
-    // headers (content-type, caching, etc.) for static assets.
-    return response;
+    return fetch(proxyRequest);
   },
 };
+
+async function handleSpamChecker(request, url) {
+  const subPath = url.pathname.replace(/^\/tools\/spam-checker\/?/, '');
+
+  // The main page request (empty subpath) → fetch /check from SpamCipher
+  // Asset requests (images, css, js, fonts) → fetch from SpamCipher origin
+  const targetPath = subPath ? '/' + subPath : '/check';
+  const target = new URL(targetPath + url.search, SPAMCIPHER_ORIGIN);
+
+  const proxyReq = new Request(target, {
+    method: request.method,
+    headers: request.headers,
+    body: request.body,
+    redirect: 'manual',
+  });
+  proxyReq.headers.set('Host', 'spamcipher.com');
+
+  const resp = await fetch(proxyReq);
+  const contentType = resp.headers.get('content-type') || '';
+
+  // Only rewrite HTML responses (the main page)
+  if (!contentType.includes('text/html')) {
+    return resp;
+  }
+
+  let html = await resp.text();
+
+  // Rewrite canonical + OG URLs to min8t.com
+  html = html.replace(
+    /<link rel="canonical"[^>]*>/i,
+    `<link rel="canonical" href="${MIN8T_CANONICAL}">`
+  );
+  html = html.replace(
+    /<meta property="og:url"[^>]*>/i,
+    `<meta property="og:url" content="${MIN8T_CANONICAL}">`
+  );
+
+  // Rewrite title to include Min8T
+  html = html.replace(
+    /<title>[^<]*<\/title>/i,
+    '<title>Free Email Spam Score Checker - Min8T Tools</title>'
+  );
+  html = html.replace(
+    /<meta name="description"[^>]*>/i,
+    '<meta name="description" content="Paste your email HTML and get instant deliverability analysis with 60+ rules and AI classification. Free tool by Min8T, powered by SpamCipher.">'
+  );
+
+  // Rewrite relative asset paths so they resolve through spamcipher.com
+  // /images/... → https://spamcipher.com/images/...
+  // /styles/... → https://spamcipher.com/styles/...
+  // /scripts/.. → https://spamcipher.com/scripts/...
+  html = html.replace(/(?:href|src)="\/(?!\/)(images|styles|scripts|fonts)([^"]*)"/g,
+    (match, dir, rest) => match.replace(`/${dir}${rest}`, `${SPAMCIPHER_ORIGIN}/${dir}${rest}`)
+  );
+
+  // Rewrite the "Powered by Min8T" link to just "Part of Min8T Tools"
+  html = html.replace(
+    /Powered by <a[^>]*>Min8T<\/a>/i,
+    'Part of <a href="https://min8t.com/tools/" style="color:var(--brand);font-weight:600;">Min8T Tools</a>'
+  );
+
+  // Rewrite the Home nav link to point back to min8t.com/tools/
+  html = html.replace(
+    /<a[^>]*href="[^"]*"[^>]*>Home<\/a>/i,
+    '<a href="/tools/" class="nav-center-link">Min8T Tools</a>'
+  );
+
+  const headers = new Headers(resp.headers);
+  headers.set('content-type', 'text/html; charset=utf-8');
+  headers.delete('content-length');
+  // Cache the proxied page at the edge for 5 min
+  headers.set('cache-control', 'public, s-maxage=300, max-age=60');
+
+  return new Response(html, {
+    status: resp.status,
+    headers,
+  });
+}
