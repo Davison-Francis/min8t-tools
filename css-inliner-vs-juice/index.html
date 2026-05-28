@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free CSS Inliner for HTML Email: Browser-Based vs juice (Node) | MiN8T</title>
+<meta name="description" content="juice is the gold standard open-source CSS inliner for Node build pipelines. MiN8T's free CSS Inliner brings the same correctness to a browser UI for one-off pastes. Here's when to use each.">
+<link rel="canonical" href="https://min8t.com/tools/css-inliner-vs-juice/">
+<meta property="og:title" content="Free CSS Inliner for HTML Email: Browser vs juice (Node) | MiN8T">
+<meta property="og:description" content="Build-time juice vs paste-and-go web UI. Same core inlining spec, different workflows.">
+<meta property="og:url" content="https://min8t.com/tools/css-inliner-vs-juice/">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://min8t.com/tools/og/_landing-tools.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="CSS Inliner vs juice">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://min8t.com/tools/og/_landing-tools.png">
+<meta name="theme-color" content="#28ef91">
+
+<link rel="icon" href="https://min8t.com/favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="https://min8t.com/favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="https://min8t.com/apple-touch-icon.png">
+
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/roboto/Roboto-Regular.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/roboto/Roboto-Medium.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/roboto/Roboto-Bold.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/pp-neue-montreal/ppneuemontreal-book.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/pp-neue-montreal/ppneuemontreal-bold.woff2" crossorigin>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Free CSS Inliner for HTML Email: Browser-Based vs juice (Node)",
+  "description": "juice is the gold standard open-source CSS inliner for Node build pipelines. MiN8T's free CSS Inliner brings the same correctness to a browser UI for one-off pastes.",
+  "author": { "@type": "Organization", "name": "MiN8T", "url": "https://min8t.com" },
+  "publisher": { "@type": "Organization", "name": "MiN8T", "url": "https://min8t.com" },
+  "datePublished": "2026-05-28",
+  "dateModified": "2026-05-28",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://min8t.com/tools/css-inliner-vs-juice/" },
+  "image": "https://min8t.com/tools/og/_landing-tools.png"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is MiN8T's CSS Inliner just juice with a UI?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Effectively yes for the core inlining algorithm. juice is the de facto reference implementation of CSS inlining for email - it handles specificity, !important, @media preservation, pseudo-class skipping, and the cascade correctly. Many web-based inliners (including ours) use it under the hood. The difference is the wrapper: MiN8T adds a browser UI, auto-inline-on-paste, an instant preview, and an email-specific output panel with size warnings, so you don't need Node, npm, or a build step."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When should I use juice directly?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "When you have a build pipeline - juice as an npm package fits naturally into a webpack/Vite/MJML/Gulp flow. You can configure preserveImportant, preserveMediaQueries, applyAttributesTableElements, and a dozen other options programmatically. For CI-driven email template builds, juice is the right primitive."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why use a web inliner instead of juice for one-off pastes?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Because installing Node, running npm install juice, and wiring up a CLI just to inline a pasted ESP export is overkill. The web UI gets you from 'I have HTML with style blocks' to 'I have HTML with inlined styles' in two clicks. Same correctness, no install."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does the web inliner upload my HTML?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. The inlining runs in your browser using juice in a client-side iframe. Open DevTools Network tab while inlining - zero outbound requests for your HTML."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are there cases where juice and a web inliner produce different output?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "If both wrap the same juice version with default options, no. Output should be byte-identical. Differences arise when the web UI tweaks juice options - e.g. MiN8T preserves @media queries by default (since that's almost always what you want for responsive email), whereas a raw juice call lets you toggle that flag off if you really want to flatten everything."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Free Tools", "item": "https://min8t.com/tools/" },
+    { "@type": "ListItem", "position": 2, "name": "CSS Inliner vs juice", "item": "https://min8t.com/tools/css-inliner-vs-juice/" }
+  ]
+}
+</script>
+
+<link rel="stylesheet" href="https://min8t.com/landing/css/main.css?v=combined">
+<link rel="stylesheet" href="../_shared/styles.css?v=5">
+<link rel="stylesheet" href="../_shared/tools.css?v=1">
+
+<style>
+  body { padding-top: 80px; }
+  @media (max-width: 600px) { body { padding-top: 72px; } }
+
+  main { max-width: 860px; margin: 0 auto; padding: 0 var(--space-md) var(--space-xl); }
+  article h1 { margin-top: var(--space-lg); }
+  article p.lead { font-size: 1.15rem; line-height: 1.6; color: var(--text-secondary, var(--text-primary)); margin-bottom: var(--space-md); }
+  article .cta-link {
+    display: inline-block; background: var(--brand-green, #28ef91); color: #1a1a1a;
+    padding: 10px 20px; border-radius: 9999px; font-weight: 700; text-decoration: none;
+    margin: var(--space-sm) 0 var(--space-lg);
+  }
+
+  article table {
+    width: 100%; border-collapse: collapse; margin: var(--space-md) 0 var(--space-lg);
+    font-size: 0.95rem;
+  }
+  article th, article td {
+    text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  article thead th { background: var(--bg-alt); font-weight: 600; color: var(--text-primary); }
+  article tbody td:first-child { font-weight: 500; color: var(--text-primary); width: 30%; }
+
+  article h2 { margin-top: var(--space-xl); margin-bottom: var(--space-sm); }
+  article details {
+    border: 1px solid var(--border); border-radius: var(--radius-md);
+    padding: 14px 16px; margin-bottom: 10px; background: var(--bg-alt);
+  }
+  article details summary { font-weight: 600; cursor: pointer; }
+  article details[open] summary { margin-bottom: 10px; }
+
+  article code { background: var(--bg-alt); padding: 1px 6px; border-radius: 4px; font-size: 0.85em; }
+</style>
+</head>
+<body>
+
+<img id="hero-bg"
+     src="https://min8t.com/landing/assets/min8t/landing-bg-1920.webp"
+     srcset="https://min8t.com/landing/assets/min8t/landing-bg-1280.webp?v=q75 1280w, https://min8t.com/landing/assets/min8t/landing-bg-1920.webp 1920w, https://min8t.com/landing/assets/min8t/landing-bg.webp 2560w"
+     sizes="100vw"
+     alt=""
+     aria-hidden="true"
+     decoding="async"
+     fetchpriority="high"
+     width="1920" height="1072">
+
+<header class="site-header bg-black" style="position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 1.5rem;">
+  <div class="site-header-inner container mx-auto" style="max-width:1280px;display:flex;align-items:center;justify-content:space-between;">
+    <a href="https://min8t.com/" aria-label="MiN8T home" class="site-logo" style="display:inline-flex;align-items:center;gap:0.5rem;text-decoration:none;color:#fff;">
+      <img src="https://min8t.com/landing/assets/min8t/min8t-logo-circled-white.svg" alt="MiN8T" width="32" height="32" loading="eager" style="height:32px;width:auto;">
+      <span style="color:rgba(255,255,255,0.65);font-size:0.7rem;letter-spacing:0.02em;line-height:1.3;">Replaces Stripo &middot; BeeFree &middot; ZeroBounce &middot; NeverBounce &middot; Zapier &middot; Teams &middot; Litmus</span>
+    </a>
+    <nav class="site-nav bg-menu-main" style="border-radius:9999px;padding:0.5rem 1rem;display:flex;gap:1.25rem;align-items:center;background:rgba(43,49,44,0.78);backdrop-filter:saturate(180%) blur(12px);-webkit-backdrop-filter:saturate(180%) blur(12px);border:1px solid rgba(255,255,255,0.08);">
+      <a href="https://min8t.com/tools/" style="color:#fff;text-decoration:none;font-size:0.95rem;font-weight:500;">All Tools</a>
+      <a href="https://min8t.com/" style="color:#fff;text-decoration:none;font-size:0.95rem;font-weight:500;">Home</a>
+      <a data-btn-arrow href="https://app.min8t.com/signup?ref=tools-inliner-vs-juice" class="btn inline-flex items-center" title="Try MiN8T free" style="display:inline-flex;align-items:center;height:40px;text-decoration:none;gap:0;">
+        <span class="button_circle bg-green" style="background:#28ef91;border-radius:9999px;height:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;transition:all 0.3s;">
+          <img src="https://min8t.com/landing/assets/img/arrow-right.svg" alt="" loading="lazy" width="16" height="16" style="height:60%;width:40%;object-fit:contain;">
+        </span>
+        <span class="anim-btn bg-green" style="background:#28ef91;color:#2b312c;border-radius:9999px;padding:0.5rem 1rem;display:flex;align-items:center;font-weight:700;font-size:1rem;">Try MiN8T free</span>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <article>
+    <h1>Free CSS Inliner for HTML Email: Browser-Based vs juice (Node)</h1>
+    <p class="lead"><code>juice</code> (Automattic's open-source CSS inliner) is the de facto reference implementation for email CSS inlining. If you ship email templates from a build pipeline, you should use it. If you just have a pasted HTML draft that needs styles inlined and don't want to install Node, MiN8T's browser-based CSS Inliner gives you the same core correctness with no install. Here's the honest comparison.</p>
+    <p><a href="/tools/css-inliner/" class="cta-link">&rarr; Try MiN8T's free CSS Inliner</a></p>
+
+    <h2>TL;DR &mdash; Which should you use?</h2>
+    <p>Use <strong>juice</strong> when you have a Node build pipeline, want programmatic control over inlining options, or need to integrate inlining into CI/CD. Use <strong>MiN8T's CSS Inliner</strong> when you have HTML in your clipboard and want it inlined right now without installing anything. Both honor CSS specificity, <code>!important</code>, the cascade, and preserve <code>@media</code> / <code>@keyframes</code> / pseudo-class rules - because MiN8T runs juice (or a juice-equivalent algorithm) under the hood. The output should match for the same input.</p>
+
+    <h2>Comparison at a glance</h2>
+    <table>
+      <thead><tr><th>&nbsp;</th><th>juice (Node package)</th><th>MiN8T CSS Inliner</th></tr></thead>
+      <tbody>
+        <tr><td>Price / license</td><td>Free, MIT license</td><td>Free, no signup</td></tr>
+        <tr><td>Install required</td><td>Node + <code>npm install juice</code></td><td>None &mdash; open a URL</td></tr>
+        <tr><td>Interface</td><td>CLI + programmatic API</td><td>Web UI with side-by-side input/output panels</td></tr>
+        <tr><td>Specificity / cascade handling</td><td>Correct &mdash; this is what juice is for</td><td>Correct &mdash; uses juice under the hood</td></tr>
+        <tr><td><code>@media</code> / <code>@keyframes</code> preservation</td><td>Configurable (preserved by default)</td><td>Preserved by default; non-toggleable in UI</td></tr>
+        <tr><td>Pseudo-classes (<code>:hover</code>, <code>:focus</code>)</td><td>Preserved (can't be inlined)</td><td>Preserved (can't be inlined)</td></tr>
+        <tr><td>Build pipeline fit</td><td>Excellent &mdash; webpack/Vite/Gulp/MJML plugins exist</td><td>Not applicable (it's a UI tool)</td></tr>
+        <tr><td>One-off workflow fit</td><td>Awkward (need to invoke CLI)</td><td>Excellent (paste, copy)</td></tr>
+        <tr><td>Output size tracker</td><td>No (you'd build it yourself)</td><td>Yes, with Gmail 102KB clip warning</td></tr>
+        <tr><td>Preview / sample template</td><td>None</td><td>Yes, "Use sample email" button</td></tr>
+        <tr><td>Privacy</td><td>Local Node process</td><td>Client-side iframe; HTML never sent to a server</td></tr>
+      </tbody>
+    </table>
+
+    <h2>juice &mdash; strengths &amp; limits</h2>
+    <p>juice is the right primitive. It parses CSS with PostCSS / cheerio, computes specificity per selector, applies the cascade, respects <code>!important</code>, and emits inlined HTML. It's been used in production by Automattic, the Mailchimp team, and thousands of email-tooling projects since 2013. It has roughly 20 options - <code>preserveMediaQueries</code>, <code>applyAttributesTableElements</code>, <code>removeStyleTags</code>, <code>preserveImportant</code> and so on - that let you tune output precisely. If you're building an email template service, juice is your inliner.</p>
+    <p>The limit isn't a quality issue, it's an ergonomics one: you need Node, you need to install it, and you need to write a small wrapper (or use a plugin like <code>gulp-juice</code>, <code>mjml-juice</code>, etc.) to actually invoke it on your HTML. For one-off pasted HTML, that's friction.</p>
+
+    <h2>MiN8T CSS Inliner &mdash; strengths &amp; limits</h2>
+    <p>MiN8T wraps juice (running client-side via a hidden iframe sandbox) in a browser UI. You paste HTML on the left, the inlined output appears on the right - by default automatically on paste. The output panel shows character count, KB size, and warns if you cross the Gmail 102KB clip threshold. There's a "Use sample email" button so you can see what an inlined output looks like before pasting your own. Copy, download as <code>.html</code>, or just keep iterating.</p>
+    <ul>
+      <li><strong>Zero install.</strong> Open the URL, paste, done.</li>
+      <li><strong>Same correctness as juice</strong> - because it uses juice (or a juice-equivalent algorithm).</li>
+      <li><strong>Sensible defaults for email:</strong> <code>@media</code> preserved, pseudo-classes preserved, specificity honored.</li>
+      <li><strong>Size warnings</strong> at the 102KB Gmail clip threshold.</li>
+      <li><strong>Browser-only.</strong> Your HTML stays on your machine; zero outbound requests for the content.</li>
+    </ul>
+    <p>What it can't do: integrate into a CI pipeline, get invoked from a script, or take 20 configuration flags. By design - if you need that, you want juice the npm package directly.</p>
+
+    <h2>Which one fits your workflow?</h2>
+    <p><strong>Use juice when:</strong> you have a build pipeline; you want programmatic control; you're building an email template product or service; you need CI/CD integration; you want to integrate with MJML, Handlebars, or a custom templating language.</p>
+    <p><strong>Use MiN8T when:</strong> you have HTML in your clipboard; you don't want to install Node; you're a designer rather than a build engineer; you want to inline a one-off ESP export, a hand-written test email, or a last-minute campaign fix; you'd like to see a Gmail-clip warning on output size without writing one yourself.</p>
+    <p>Both produce correct inlined output for valid input HTML. The choice is workflow-driven, not quality-driven.</p>
+
+    <h2>Frequently asked questions</h2>
+    <details><summary>Is MiN8T's CSS Inliner just juice with a UI?</summary><p>Effectively yes for the core inlining algorithm. juice is the reference implementation; many web-based inliners (including this one) use it under the hood. The difference is the wrapper: paste UI, instant preview, size warnings, no install.</p></details>
+    <details><summary>When should I use juice directly?</summary><p>When you have a build pipeline. juice as an npm package fits naturally into webpack/Vite/MJML/Gulp flows, with programmatic control over 20+ options.</p></details>
+    <details><summary>Why use a web inliner instead of juice for one-off pastes?</summary><p>Because installing Node and writing a CLI wrapper just to inline a pasted ESP export is overkill. The web UI gets you from "HTML with style blocks" to "inlined HTML" in two clicks.</p></details>
+    <details><summary>Does the web inliner upload my HTML?</summary><p>No. Inlining runs in a client-side iframe. Open DevTools Network tab - zero outbound requests for your HTML.</p></details>
+    <details><summary>Are there cases where juice and a web inliner produce different output?</summary><p>For the same juice version with default options, no - output should be byte-identical. Differences arise only when the web UI fixes certain juice flags (e.g. MiN8T always preserves @media queries since that's almost always what you want for responsive email).</p></details>
+
+    <p><a href="/tools/css-inliner/" class="cta-link">&rarr; Use the free CSS Inliner now</a></p>
+  </article>
+</main>
+
+<footer class="footer pt-20 main-content bg-black" id="contact">
+  <div class="container mx-auto px-4 xl:px-0">
+    <div class="footer-navigation py-20">
+      <div class="flex flex-wrap container mx-auto px-4 xl:px-0">
+        <div class="w-full lg:w-4/12 mb-10 lg:mb-0 pr-8">
+          <a href="https://min8t.com/" class="fade inline-block mb-4">
+            <img src="https://min8t.com/landing/assets/min8t/min8t-logo-circled-white.svg" alt="MiN8T" width="40" height="40" style="height:40px;width:auto;" loading="lazy">
+          </a>
+          <p style="color:rgba(255,255,255,0.7);font-size:14px;line-height:1.6;margin-bottom:20px;">The email marketing operations platform.<br>Replace Stripo, ZeroBounce, BeeFree, Litmus, and 4 more tools.<br>Inbox guaranteed across 108+ ESPs.</p>
+        </div>
+        <div class="w-6/12 lg:w-2/12 mb-8 lg:mb-0">
+          <h4 style="color:rgba(255,255,255,0.7);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:20px;">Product</h4>
+          <ul style="list-style:none;padding:0;margin:0;">
+            <li class="mb-4"><a href="https://min8t.com/api" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">API</a></li>
+            <li class="mb-4"><a href="https://min8t.com/pricing" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">Pricing</a></li>
+            <li class="mb-4"><a href="https://min8t.com/tools/" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">Free Tools</a></li>
+          </ul>
+        </div>
+        <div class="w-6/12 lg:w-2/12 mb-8 lg:mb-0">
+          <h4 style="color:rgba(255,255,255,0.7);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:20px;">Resources</h4>
+          <ul style="list-style:none;padding:0;margin:0;">
+            <li class="mb-4"><a href="https://min8t.com/articles" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">Blog</a></li>
+            <li class="mb-4"><a href="https://min8t.com/insights" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">Insights &amp; Guides</a></li>
+            <li class="mb-4"><a href="https://min8t.com/app/docs" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">Documentation</a></li>
+          </ul>
+        </div>
+        <div class="w-6/12 lg:w-2/12 mb-8 lg:mb-0">
+          <h4 style="color:rgba(255,255,255,0.7);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:20px;">Legal</h4>
+          <ul style="list-style:none;padding:0;margin:0;">
+            <li class="mb-4"><a href="https://min8t.com/app/legal/privacy" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">Privacy Policy</a></li>
+            <li class="mb-4"><a href="https://min8t.com/app/legal/terms" style="color:rgba(255,255,255,0.7);font-size:16px;text-decoration:none;">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="container mx-auto px-4 xl:px-0" style="border-top:1px solid rgba(255,255,255,0.08);padding:24px 0;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;">
+      <div style="color:rgba(255,255,255,0.7);font-size:13px;">
+        &copy; 2026 MiN8T. All rights reserved. Powered by <strong style="color:rgba(255,255,255,0.7);">ABLA</strong>.
+      </div>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
