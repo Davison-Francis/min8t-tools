@@ -1,0 +1,77 @@
+{
+  "image-compressor": {
+    "name": "Image Compressor",
+    "lc_name": "image compressor",
+    "tool_url": "/tools/image-compressor/",
+    "topic": "image compression",
+    "esp_field": "image_block_note",
+    "intro_focus": "Reducing image weight before uploading keeps your email render-time fast and prevents Gmail clipping at 102 KB of HTML.",
+    "workflow": ["Compress your image with the free in-browser tool below (uses MozJPEG + Squoosh-style optimization, no upload)", "Download the compressed file (typically 60-80% smaller than the original)", "Upload to {ESP_NAME}'s image library or media manager", "Insert into your campaign — render speed and total email weight both improve"],
+    "key_facts_template": [
+      "{ESP_NAME}'s practical image-size budget per email: under {limit} KB total to avoid Gmail's 102 KB HTML clipping",
+      "Recommended max image width: {width}px (matches the standard email body width)",
+      "JPEG at quality 80 typically reduces size 60-80% vs the original lossless format",
+      "{ESP_NAME} supported image formats: {formats}"
+    ]
+  },
+  "gif-compressor": {
+    "name": "GIF Compressor",
+    "lc_name": "GIF compressor",
+    "tool_url": "/tools/gif-compressor/",
+    "topic": "animated GIF compression",
+    "esp_field": "gif_note",
+    "intro_focus": "Animated GIFs are deliverability-fragile — large GIFs trigger spam filters and slow render times. Pre-compression with gifsicle's lossy presets cuts GIF weight 40-70% without visible quality loss.",
+    "workflow": ["Upload your GIF to the free browser-based gifsicle compressor below (runs entirely client-side via WebAssembly)", "Choose a preset: Outlook-safe (sub-500 KB), mobile-friendly (sub-300 KB), or maximum compression", "Download the optimized GIF", "Upload to {ESP_NAME} — the result animates in Apple Mail, Gmail, Yahoo, and Outlook web, with a static first frame in Outlook desktop"],
+    "key_facts_template": [
+      "{ESP_NAME}'s GIF guidance: keep total animated GIF weight under 1 MB for cross-client compatibility",
+      "Outlook desktop (Windows 2007–2019) renders only the FIRST frame of animated GIFs",
+      "gifsicle's lossy compression at level 80 typically reduces GIF size 40-70% with minimal perceptual loss",
+      "Recommended max GIF size for email: 500 KB to stay under the 1 MB combined payload budget"
+    ]
+  },
+  "css-inliner": {
+    "name": "CSS Inliner",
+    "lc_name": "CSS inliner",
+    "tool_url": "/tools/css-inliner/",
+    "topic": "CSS inlining",
+    "esp_field": "css_inlining",
+    "intro_focus": "Outlook desktop (Word rendering engine) ignores <style> blocks entirely. Inlining CSS as style attributes is required for cross-client compatibility, and the free browser-based inliner below does it instantly.",
+    "workflow": ["Paste your HTML email source with <style> blocks into the free CSS inliner below", "The tool walks the CSS AST, computes effective styles per element including specificity and !important, and emits style attributes", "@media queries, @keyframes, and pseudo-class rules remain in the head <style> block (they cannot be inlined)", "Copy the inlined output and paste into {ESP_NAME}'s custom-HTML editor"],
+    "key_facts_template": [
+      "Outlook desktop ignores <style> blocks 100% of the time — every critical style must be inlined",
+      "CSS specificity is preserved: inline (1000) wins over class (10) wins over element (1)",
+      "@media queries cannot be inlined and must remain in <style> blocks for responsive emails",
+      "Gmail strips classes that match certain ad-detection patterns, making external CSS unreliable"
+    ]
+  },
+  "inbox-preview": {
+    "name": "Inbox Preview",
+    "lc_name": "inbox preview",
+    "tool_url": "/tools/inbox-preview/",
+    "topic": "cross-client email preview",
+    "esp_field": "spam_check",
+    "intro_focus": "{ESP_NAME}'s built-in preview shows one rendering — usually their own webmail. Real cross-client testing means simulating Gmail Web, Apple Mail iOS, and Outlook desktop side-by-side before you send.",
+    "workflow": ["Paste your HTML email source into the free inbox preview tool below", "See three side-by-side renderings: Gmail Web, Apple Mail iOS, and a strict-mode Outlook approximation", "Identify cross-client failures (flexbox layouts that collapse in Outlook, custom fonts that fall back, dark-mode contrast issues)", "Iterate before sending through {ESP_NAME}"],
+    "key_facts_template": [
+      "Apple Mail (iOS + macOS) handles ~52% of all email opens globally",
+      "Outlook desktop on Windows accounts for ~6% globally but >20% in B2B",
+      "Gmail caches images on Google's CDN for 7 days, breaking open-tracking pixels",
+      "47% of email opens occur on mobile (Litmus 2024 State of Email)"
+    ]
+  },
+  "spam-checker": {
+    "name": "Spam Score Checker",
+    "lc_name": "spam score checker",
+    "tool_url": "/tools/spam-checker/",
+    "topic": "spam-trigger analysis",
+    "esp_field": "spam_check",
+    "intro_focus": "Pre-send spam-trigger analysis catches issues before they impact your sender reputation. Free rule-based scoring combined with a Naive Bayes classifier identifies precisely which content triggers fire.",
+    "workflow": ["Paste your campaign HTML into the free spam score checker below", "60+ rules evaluate subject patterns, body keywords, header completeness, link density, HTML structure, image-to-text ratio, and authentication signals", "A Naive Bayes classifier trained on 50,000+ labeled messages provides a complementary spam-probability score", "Review the rule-by-rule breakdown and fix triggers before sending via {ESP_NAME}"],
+    "key_facts_template": [
+      "SpamAssassin's default spam threshold is 5.0 — scores above this typically land in spam folders",
+      "Naive Bayes classifiers achieve 95-98% accuracy on labeled spam corpora",
+      "Subject lines using all caps trigger a +2.0 score penalty in SpamAssassin",
+      "Missing List-Unsubscribe header correlates with Gmail spam folder placement"
+    ]
+  }
+}

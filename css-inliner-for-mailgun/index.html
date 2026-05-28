@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<!-- GA4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q9EPSM2L1F"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-Q9EPSM2L1F');</script>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free CSS Inliner for Mailgun Campaigns | MiN8T</title>
+<meta name="description" content="Free in-browser CSS inliner optimized for Mailgun email campaigns. Outlook desktop (Word rendering engine) ignores &lt;style&gt; blocks entirely. Inlinin">
+<link rel="canonical" href="https://min8t.com/tools/css-inliner-for-mailgun/">
+<meta property="og:title" content="CSS Inliner for Mailgun: Free Browser-Based">
+<meta property="og:description" content="Free in-browser CSS inliner optimized for Mailgun email campaigns. Outlook desktop (Word rendering engine) ignores &lt;style&gt; blocks entirely. Inlinin">
+<meta property="og:url" content="https://min8t.com/tools/css-inliner-for-mailgun/">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://min8t.com/tools/og/css-inliner.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://min8t.com/tools/og/css-inliner.png">
+
+<link rel="icon" href="https://min8t.com/favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="https://min8t.com/favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="https://min8t.com/apple-touch-icon.png">
+
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/roboto/Roboto-Regular.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="https://min8t.com/landing/fonts/roboto/Roboto-Bold.woff2" crossorigin>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "CSS Inliner for Mailgun: Free Browser-Based Tool",
+  "description": "Free in-browser CSS inliner optimized for Mailgun email campaigns. Outlook desktop (Word rendering engine) ignores &lt;style&gt; blocks entirely. Inlinin",
+  "author": { "@type": "Organization", "name": "MiN8T", "url": "https://min8t.com" },
+  "publisher": { "@type": "Organization", "name": "MiN8T", "url": "https://min8t.com", "logo": { "@type": "ImageObject", "url": "https://min8t.com/landing/assets/min8t/min8t-logo-circled-white.svg" } },
+  "datePublished": "2026-05-28",
+  "dateModified": "2026-05-28",
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://min8t.com/tools/css-inliner-for-mailgun/" },
+  "image": "https://min8t.com/tools/og/css-inliner.png"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Does Mailgun include a built-in CSS inliner?", "acceptedAnswer": { "@type": "Answer", "text": "Mailgun provides basic functionality but lacks granular control. Mailgun requires you to inline CSS yourself. Their templating engine does not auto-inline." } },
+    { "@type": "Question", "name": "Is there a free way to CSS inlining for Mailgun campaigns?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. The MiN8T CSS Inliner below runs entirely in your browser — no signup, no upload, and the output works with any Mailgun workflow." } },
+    { "@type": "Question", "name": "What image size limit does Mailgun enforce?", "acceptedAnswer": { "@type": "Answer", "text": "Mailgun accepts uploads up to 5000 KB per image and recommends a max width of 600px for email body width. Supported formats: JPG, PNG, GIF, WebP." } }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Free Tools", "item": "https://min8t.com/tools/" },
+    { "@type": "ListItem", "position": 2, "name": "CSS Inliner", "item": "https://min8t.com/tools/css-inliner/" },
+    { "@type": "ListItem", "position": 3, "name": "for Mailgun", "item": "https://min8t.com/tools/css-inliner-for-mailgun/" }
+  ]
+}
+</script>
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #1a1a1a; background: #fafafa; padding-top: 80px; }
+  .site-header { position: fixed; top: 0; left: 0; right: 0; padding: 14px 28px; background: rgba(13, 13, 13, 0.95); backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: space-between; z-index: 100; }
+  .site-logo { color: #fff; font-weight: 700; text-decoration: none; }
+  .site-nav { display: flex; gap: 18px; align-items: center; }
+  .site-nav a { color: rgba(255,255,255,0.85); font-size: 14px; text-decoration: none; }
+  main { max-width: 760px; margin: 0 auto; padding: 32px 24px 80px; }
+  h1 { font-size: 2.25rem; line-height: 1.15; margin-bottom: 16px; color: #0d0d0d; }
+  h2 { font-size: 1.5rem; margin: 40px 0 16px; color: #0d0d0d; }
+  h3 { font-size: 1.125rem; margin: 24px 0 12px; }
+  p { margin: 0 0 16px; }
+  ul, ol { margin: 0 0 16px 24px; }
+  li { margin-bottom: 8px; }
+  a { color: #0066cc; }
+  .lead { font-size: 1.125rem; color: #444; margin-bottom: 24px; }
+  .cta-block { background: #f0f6ff; border-left: 4px solid #0066cc; padding: 20px 24px; margin: 32px 0; border-radius: 4px; }
+  .cta-block strong { display: block; font-size: 1.05rem; margin-bottom: 8px; }
+  .cta-btn { display: inline-block; padding: 12px 24px; background: #0066cc; color: #fff !important; border-radius: 999px; font-weight: 600; text-decoration: none; margin-top: 12px; }
+  .key-facts { margin: 24px 0; padding: 18px 24px; background: rgba(40, 239, 145, 0.08); border-left: 3px solid #28ef91; border-radius: 6px; }
+  .key-facts h3 { margin: 0 0 10px; font-size: 0.875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+  .key-facts ul { list-style: none; margin: 0; padding: 0; }
+  .key-facts li { padding: 4px 0; }
+  .key-facts li::before { content: "▪ "; color: #28ef91; font-weight: bold; }
+  .tool-meta { font-size: 0.875rem; color: #777; margin: 0 0 24px; }
+  .methodology-note { margin-top: 48px; padding: 18px 24px; background: rgba(0,0,0,0.04); border-radius: 6px; font-size: 0.875rem; color: #555; }
+  details { margin-bottom: 12px; padding: 12px 16px; background: #fff; border: 1px solid #e8e8e8; border-radius: 6px; }
+  summary { cursor: pointer; font-weight: 600; }
+  details[open] summary { margin-bottom: 8px; }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  th, td { border: 1px solid #e0e0e0; padding: 10px 14px; text-align: left; font-size: 0.9375rem; }
+  th { background: #f5f5f5; }
+</style>
+</head>
+<body>
+<header class="site-header">
+  <a href="https://min8t.com/" class="site-logo">MiN8T</a>
+  <nav class="site-nav">
+    <a href="https://min8t.com/free-tools">Free Deliverability Tools</a>
+    <a href="https://min8t.com/tools/">Free Email Tools</a>
+    <a href="https://min8t.com/app/email-editor/editor/try">Try Editor →</a>
+  </nav>
+</header>
+
+<main>
+  <h1>CSS Inliner for Mailgun: Free Browser-Based Tool</h1>
+  <p class="tool-meta">Built by the MiN8T Engineering Team · <time datetime="2026-05-28">Updated 28 May 2026</time></p>
+
+  <p class="lead">Mailgun's built-in tools cover the basics, but the CSS inliner workflow often benefits from a dedicated, browser-only preprocessor before uploading. Outlook desktop (Word rendering engine) ignores <style> blocks entirely. Inlining CSS as style attributes is required for cross-client compatibility, and the free browser-based inliner below does it instantly.</p>
+
+  <div class="cta-block">
+    <strong>Try the free CSS inliner now →</strong>
+    Browser-only, no signup, no upload. The output works with any Mailgun campaign.
+    <a href="/tools/css-inliner/" class="cta-btn">Open the CSS Inliner</a>
+  </div>
+
+  <aside class="key-facts">
+    <h3>Key facts: CSS Inliner for Mailgun</h3>
+    <ul>
+      <li>Outlook desktop ignores &lt;style&gt; blocks 100% of the time — every critical style must be inlined</li>
+      <li>CSS specificity is preserved: inline (1000) wins over class (10) wins over element (1)</li>
+      <li>@media queries cannot be inlined and must remain in &lt;style&gt; blocks for responsive emails</li>
+      <li>Gmail strips classes that match certain ad-detection patterns, making external CSS unreliable</li>
+    </ul>
+  </aside>
+
+  <h2>Why pre-process before uploading to Mailgun</h2>
+  <p>Mailgun requires you to inline CSS yourself. Their templating engine does not auto-inline.</p>
+
+  <h2>Step-by-step: CSS inlining for Mailgun</h2>
+  <ol>
+    <li>Paste your HTML email source with &lt;style&gt; blocks into the free CSS inliner below</li>
+    <li>The tool walks the CSS AST, computes effective styles per element including specificity and !important, and emits style attributes</li>
+    <li>@media queries, @keyframes, and pseudo-class rules remain in the head &lt;style&gt; block (they cannot be inlined)</li>
+    <li>Copy the inlined output and paste into Mailgun&#x27;s custom-HTML editor</li>
+  </ol>
+
+  <h2>Mailgun-specific deliverability quirks to know</h2>
+  <p>Mailgun is API-first transactional + marketing. Pre-send hygiene scoring is essential since you control the HTML directly.</p>
+
+  <h2>Frequently asked questions</h2>
+  <details><summary>Does Mailgun include a built-in CSS inliner?</summary><p>Mailgun provides basic functionality but lacks granular control. Mailgun requires you to inline CSS yourself. Their templating engine does not auto-inline.</p></details>
+  <details><summary>Is there a free way to CSS inlining for Mailgun campaigns?</summary><p>Yes. The free MiN8T <a href="/tools/css-inliner/">CSS Inliner</a> runs entirely in your browser — no signup, no upload, no rate limits. The output is a standard file you can upload directly to Mailgun.</p></details>
+  <details><summary>What image size limit does Mailgun enforce?</summary><p>Mailgun accepts uploads up to 5000 KB per image and recommends a max width of 600px for email body width. Supported formats: JPG, PNG, GIF, WebP.</p></details>
+  <details><summary>Does Mailgun verify SPF, DKIM, and DMARC automatically?</summary><p>Mailgun requires SPF and DKIM via DNS. DMARC monitoring is available on their Foundation plan and higher.</p></details>
+  <details><summary>What about subject line analysis for Mailgun?</summary><p>Mailgun does not offer subject line analysis. External tools provide it. Use the free <a href="/tools/subject-line-analyzer/">subject line analyzer</a> for length scoring, spam-trigger detection, and sentiment analysis before pasting into Mailgun.</p></details>
+
+  <h2>Related free tools</h2>
+  <p>While preparing your Mailgun campaign, you may also want:</p>
+  <ul>
+    <li><a href="/tools/image-compressor/">Image Compressor</a> — also free, browser-based, optimized for email marketers</li>
+      <li><a href="/tools/gif-compressor/">GIF Compressor</a> — also free, browser-based, optimized for email marketers</li>
+      <li><a href="/tools/inbox-preview/">Inbox Preview</a> — also free, browser-based, optimized for email marketers</li>
+      <li><a href="/tools/spam-checker/">Spam Score Checker</a> — also free, browser-based, optimized for email marketers</li>
+  </ul>
+
+  <aside class="methodology-note">
+    <strong>About this data:</strong> Mailgun-specific limits and behavior were last verified May 2026. The MiN8T CSS Inliner runs entirely in your browser using Juice 10.0+ running client-side. No files leave your device. <br><br>
+    Last reviewed: 28 May 2026 · This is editorial content, not affiliated with or endorsed by Mailgun.
+  </aside>
+</main>
+
+</body>
+</html>
