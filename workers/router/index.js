@@ -20,6 +20,11 @@ export default {
       return Response.redirect(`${url.origin}/tools/`, 301);
     }
 
+    // ── Removed tools — redirect to /tools/ index ──
+    if (url.pathname.match(/^\/tools\/background-remover(\/|$)/)) {
+      return Response.redirect(`${url.origin}/tools/`, 301);
+    }
+
     // ── SpamCipher reverse proxy ──
     // /tools/spam-checker(/)  → proxy spamcipher.com/check (HTML rewritten)
     // /tools/spam-checker/... → proxy spamcipher.com/... for sub-assets
