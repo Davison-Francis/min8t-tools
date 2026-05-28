@@ -96,6 +96,68 @@
   table { width: 100%; border-collapse: collapse; margin: 16px 0; }
   th, td { border: 1px solid #e0e0e0; padding: 10px 14px; text-align: left; font-size: 0.9375rem; }
   th { background: #f5f5f5; }
+  .esp-badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    margin: 0 0 16px;
+    padding: 6px 16px 6px 8px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    color: #444;
+  }
+  .esp-badge img { height: 24px; width: 24px; object-fit: contain; }
+  .tool-hero {
+    margin: 24px 0 32px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #e8e8e8;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    background: #0d0d0d;
+  }
+  .tool-hero img { display: block; width: 100%; height: auto; }
+  .workflow-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin: 24px 0 32px;
+    padding: 0;
+    list-style: none;
+  }
+  .workflow-grid li {
+    margin: 0;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    border-radius: 10px;
+    position: relative;
+  }
+  .workflow-grid li::before {
+    content: counter(li-num);
+    counter-increment: li-num;
+    position: absolute;
+    top: -12px; left: 16px;
+    width: 28px; height: 28px;
+    background: #0066cc; color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.875rem; font-weight: 700;
+  }
+  .workflow-grid { counter-reset: li-num; }
+  .workflow-grid li > div { font-size: 0.9375rem; line-height: 1.5; }
+  .esp-strip {
+    margin: 48px 0 16px;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    border-radius: 10px;
+    text-align: center;
+  }
+  .esp-strip h3 { margin: 0 0 12px; font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.05em; color: #777; font-weight: 600; }
+  .esp-strip .logos { display: flex; flex-wrap: wrap; gap: 28px 36px; justify-content: center; align-items: center; }
+  .esp-strip .logos a { display: inline-flex; align-items: center; min-width: 100px; min-height: 32px; justify-content: center; }
+  .esp-strip .logos img { height: 28px; max-width: 130px; width: auto; opacity: 0.65; transition: opacity 0.15s; }
+  .esp-strip .logos a:hover img { opacity: 1; }
 </style>
 </head>
 <body>
@@ -109,10 +171,15 @@
 </header>
 
 <main>
+  <span class="esp-badge"><img src="/tools/programmatic/esp-logos/mailerlite.svg" alt="MailerLite logo" loading="lazy"> Works with MailerLite</span>
   <h1>Image Compressor for MailerLite: Free Browser-Based Tool</h1>
   <p class="tool-meta">Built by the MiN8T Engineering Team · <time datetime="2026-05-28">Updated 28 May 2026</time></p>
 
   <p class="lead">MailerLite's built-in tools cover the basics, but the image compressor workflow often benefits from a dedicated, browser-only preprocessor before uploading. Reducing image weight before uploading keeps your email render-time fast and prevents Gmail clipping at 102 KB of HTML.</p>
+
+  <figure class="tool-hero">
+    <img src="https://min8t.com/tools/og/image-compressor.png" alt="MiN8T Image Compressor interface preview" width="1200" height="630" loading="eager">
+  </figure>
 
   <div class="cta-block">
     <strong>Try the free image compressor now →</strong>
@@ -134,12 +201,12 @@
   <p>MailerLite compresses uploads to JPEG quality 75 automatically. Pre-compressed WebP imports keep your originals untouched.</p>
 
   <h2>Step-by-step: image compression for MailerLite</h2>
-  <ol>
-    <li>Compress your image with the free in-browser tool below (uses MozJPEG + Squoosh-style optimization, no upload)</li>
-    <li>Download the compressed file (typically 60-80% smaller than the original)</li>
-    <li>Upload to MailerLite&#x27;s image library or media manager</li>
-    <li>Insert into your campaign — render speed and total email weight both improve</li>
-  </ol>
+  <ul class="workflow-grid">
+    <li><div>Compress your image with the free in-browser tool below (uses MozJPEG + Squoosh-style optimization, no upload)</div></li>
+    <li><div>Download the compressed file (typically 60-80% smaller than the original)</div></li>
+    <li><div>Upload to MailerLite&#x27;s image library or media manager</div></li>
+    <li><div>Insert into your campaign — render speed and total email weight both improve</div></li>
+  </ul>
 
   <h2>MailerLite-specific deliverability quirks to know</h2>
   <p>MailerLite&#x27;s free plan supports up to 12,000 emails/month with HTML campaigns. Their drag-drop editor enforces 600px max width by default.</p>
@@ -159,6 +226,26 @@
       <li><a href="/tools/inbox-preview/">Inbox Preview</a> — also free, browser-based, optimized for email marketers</li>
       <li><a href="/tools/spam-checker/">Spam Score Checker</a> — also free, browser-based, optimized for email marketers</li>
   </ul>
+
+  <div class="esp-strip">
+    <h3>Image Compressor also works with</h3>
+    <div class="logos">
+      <a href="/tools/image-compressor-for-mailchimp/" title="Mailchimp"><img src="/tools/programmatic/esp-logos/mailchimp.svg" alt="Mailchimp logo" loading="lazy"></a>
+      <a href="/tools/image-compressor-for-klaviyo/" title="Klaviyo"><img src="/tools/programmatic/esp-logos/klaviyo.svg" alt="Klaviyo logo" loading="lazy"></a>
+      <a href="/tools/image-compressor-for-hubspot/" title="HubSpot"><img src="/tools/programmatic/esp-logos/hubspot.svg" alt="HubSpot logo" loading="lazy"></a>
+      <a href="/tools/image-compressor-for-brevo/" title="Brevo"><img src="/tools/programmatic/esp-logos/brevo.svg" alt="Brevo logo" loading="lazy"></a>
+      <a href="/tools/image-compressor-for-activecampaign/" title="ActiveCampaign"><img src="/tools/programmatic/esp-logos/activecampaign.svg" alt="ActiveCampaign logo" loading="lazy"></a>
+      <a href="/tools/image-compressor-for-convertkit/" title="Kit (ConvertKit)"><img src="/tools/programmatic/esp-logos/convertkit.svg" alt="Kit (ConvertKit) logo" loading="lazy"></a>
+      <a href="/tools/image-compressor-for-constantcontact/" title="Constant Contact"><img src="/tools/programmatic/esp-logos/constantcontact.svg" alt="Constant Contact logo" loading="lazy"></a>
+      <a href="/tools/image-compressor-for-campaignmonitor/" title="Campaign Monitor"><img src="/tools/programmatic/esp-logos/campaignmonitor.svg" alt="Campaign Monitor logo" loading="lazy"></a>
+      <a href="/tools/image-compressor-for-sendgrid/" title="SendGrid"><img src="/tools/programmatic/esp-logos/sendgrid.svg" alt="SendGrid logo" loading="lazy"></a>
+      <a href="/tools/image-compressor-for-postmark/" title="Postmark"><img src="/tools/programmatic/esp-logos/postmark.svg" alt="Postmark logo" loading="lazy"></a>
+      <a href="/tools/image-compressor-for-mailgun/" title="Mailgun"><img src="/tools/programmatic/esp-logos/mailgun.svg" alt="Mailgun logo" loading="lazy"></a>
+      <a href="/tools/image-compressor-for-ses/" title="AWS SES"><img src="/tools/programmatic/esp-logos/ses.svg" alt="AWS SES logo" loading="lazy"></a>
+      <a href="/tools/image-compressor-for-drip/" title="Drip"><img src="/tools/programmatic/esp-logos/drip.svg" alt="Drip logo" loading="lazy"></a>
+      <a href="/tools/image-compressor-for-getresponse/" title="GetResponse"><img src="/tools/programmatic/esp-logos/getresponse.svg" alt="GetResponse logo" loading="lazy"></a>
+    </div>
+  </div>
 
   <aside class="methodology-note">
     <strong>About this data:</strong> MailerLite-specific limits and behavior were last verified May 2026. The MiN8T Image Compressor runs entirely in your browser using browser-image-compression library + Web Workers (MozJPEG/oxipng quality). No files leave your device. <br><br>

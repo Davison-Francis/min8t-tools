@@ -5,7 +5,7 @@ Each output is a complete standalone HTML at /tools/{tool}-for-{esp}/index.html
 with unique per-ESP content + Schema.org schema + same chrome as the rest of the
 tool suite.
 """
-import json, os, html as html_lib
+import json, html as html_lib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent  # min8t-tools dir
@@ -113,6 +113,68 @@ PAGE_TEMPLATE = """<!doctype html>
   table {{ width: 100%; border-collapse: collapse; margin: 16px 0; }}
   th, td {{ border: 1px solid #e0e0e0; padding: 10px 14px; text-align: left; font-size: 0.9375rem; }}
   th {{ background: #f5f5f5; }}
+  .esp-badge {{
+    display: inline-flex; align-items: center; gap: 10px;
+    margin: 0 0 16px;
+    padding: 6px 16px 6px 8px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    color: #444;
+  }}
+  .esp-badge img {{ height: 24px; width: 24px; object-fit: contain; }}
+  .tool-hero {{
+    margin: 24px 0 32px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #e8e8e8;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    background: #0d0d0d;
+  }}
+  .tool-hero img {{ display: block; width: 100%; height: auto; }}
+  .workflow-grid {{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin: 24px 0 32px;
+    padding: 0;
+    list-style: none;
+  }}
+  .workflow-grid li {{
+    margin: 0;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    border-radius: 10px;
+    position: relative;
+  }}
+  .workflow-grid li::before {{
+    content: counter(li-num);
+    counter-increment: li-num;
+    position: absolute;
+    top: -12px; left: 16px;
+    width: 28px; height: 28px;
+    background: #0066cc; color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.875rem; font-weight: 700;
+  }}
+  .workflow-grid {{ counter-reset: li-num; }}
+  .workflow-grid li > div {{ font-size: 0.9375rem; line-height: 1.5; }}
+  .esp-strip {{
+    margin: 48px 0 16px;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    border-radius: 10px;
+    text-align: center;
+  }}
+  .esp-strip h3 {{ margin: 0 0 12px; font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.05em; color: #777; font-weight: 600; }}
+  .esp-strip .logos {{ display: flex; flex-wrap: wrap; gap: 28px 36px; justify-content: center; align-items: center; }}
+  .esp-strip .logos a {{ display: inline-flex; align-items: center; min-width: 100px; min-height: 32px; justify-content: center; }}
+  .esp-strip .logos img {{ height: 28px; max-width: 130px; width: auto; opacity: 0.65; transition: opacity 0.15s; }}
+  .esp-strip .logos a:hover img {{ opacity: 1; }}
 </style>
 </head>
 <body>
@@ -126,10 +188,15 @@ PAGE_TEMPLATE = """<!doctype html>
 </header>
 
 <main>
+  <span class="esp-badge"><img src="/tools/programmatic/esp-logos/{esp_slug}.svg" alt="{esp_name} logo" loading="lazy"> Works with {esp_name}</span>
   <h1>{h1}</h1>
   <p class="tool-meta">Built by the MiN8T Engineering Team · <time datetime="{date_modified}">Updated 28 May 2026</time></p>
 
   <p class="lead">{lead}</p>
+
+  <figure class="tool-hero">
+    <img src="https://min8t.com/tools/og/{tool_slug}.png" alt="MiN8T {tool_name} interface preview" width="1200" height="630" loading="eager">
+  </figure>
 
   <div class="cta-block">
     <strong>Try the free {tool_lc} now →</strong>
@@ -148,9 +215,9 @@ PAGE_TEMPLATE = """<!doctype html>
   <p>{esp_note}</p>
 
   <h2>Step-by-step: {tool_topic} for {esp_name}</h2>
-  <ol>
+  <ul class="workflow-grid">
     {workflow_html}
-  </ol>
+  </ul>
 
   <h2>{esp_name}-specific deliverability quirks to know</h2>
   <p>{deliverability_note}</p>
@@ -167,6 +234,13 @@ PAGE_TEMPLATE = """<!doctype html>
   <ul>
     {related_tools_html}
   </ul>
+
+  <div class="esp-strip">
+    <h3>{tool_name} also works with</h3>
+    <div class="logos">
+      {esp_strip_html}
+    </div>
+  </div>
 
   <aside class="methodology-note">
     <strong>About this data:</strong> {esp_name}-specific limits and behavior were last verified May 2026. The MiN8T {tool_name} runs entirely in your browser using {tech_note}. No files leave your device. <br><br>
@@ -215,7 +289,7 @@ def render_page(tool_slug, tool, esp_slug, esp):
     workflow_steps = []
     for step in tool['workflow']:
         rendered = step.replace("{ESP_NAME}", esp['name'])
-        workflow_steps.append(f"<li>{esc(rendered)}</li>")
+        workflow_steps.append(f"<li><div>{esc(rendered)}</div></li>")
 
     # ESP-specific note for this tool
     esp_note = esp.get(tool['esp_field'], 'This ESP has limited built-in support for this workflow; pre-processing improves consistency.')
@@ -226,6 +300,18 @@ def render_page(tool_slug, tool, esp_slug, esp):
         if other_slug == tool_slug: continue
         related.append(f'<li><a href="{other_tool["tool_url"]}">{other_tool["name"]}</a> — also free, browser-based, optimized for email marketers</li>')
     related_html = "\n      ".join(related[:4])
+
+    # "Also works with" strip — link to sibling pages (same tool, other ESPs)
+    esp_strip_items = []
+    for other_esp_slug, other_esp in ESPS.items():
+        if other_esp_slug == esp_slug: continue
+        sibling_url = f"/tools/{tool_slug}-for-{other_esp_slug}/"
+        esp_strip_items.append(
+            f'<a href="{sibling_url}" title="{esc(other_esp["name"])}">'
+            f'<img src="/tools/programmatic/esp-logos/{other_esp_slug}.svg" alt="{esc(other_esp["name"])} logo" loading="lazy">'
+            f'</a>'
+        )
+    esp_strip_html = "\n      ".join(esp_strip_items)
 
     # Tech note for methodology
     tech_note = {
@@ -266,6 +352,8 @@ def render_page(tool_slug, tool, esp_slug, esp):
         subject_line_note=esc(esp.get('subject_line_note', '')),
         esp_size_answer=esc(esp_size_answer).replace('"', '\\"'),
         related_tools_html=related_html,
+        esp_strip_html=esp_strip_html,
+        esp_slug=esp_slug,
         tech_note=esc(tech_note),
         date_published=DATE_PUBLISHED,
         date_modified=DATE_MODIFIED,
