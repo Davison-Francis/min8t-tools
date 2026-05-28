@@ -83,12 +83,34 @@ PAGE_TEMPLATE = """<!doctype html>
 
 <style>
   *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
-  body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #1a1a1a; background: #fafafa; padding-top: 80px; }}
+  body {{
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    color: #1a1a1a;
+    background-color: #0e3a72;
+    background-image: url('/tools/programmatic/seo-bg.webp');
+    background-size: 100% auto;
+    background-position: top center;
+    background-repeat: no-repeat;
+    padding-top: 80px;
+    min-height: 100vh;
+  }}
   .site-header {{ position: fixed; top: 0; left: 0; right: 0; padding: 14px 28px; background: rgba(13, 13, 13, 0.95); backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: space-between; z-index: 100; }}
   .site-logo {{ color: #fff; font-weight: 700; text-decoration: none; }}
   .site-nav {{ display: flex; gap: 18px; align-items: center; }}
   .site-nav a {{ color: rgba(255,255,255,0.85); font-size: 14px; text-decoration: none; }}
-  main {{ max-width: 760px; margin: 0 auto; padding: 32px 24px 80px; }}
+  main {{
+    max-width: 800px;
+    margin: 32px auto;
+    padding: 40px 40px 60px;
+    background: rgba(255, 255, 255, 0.96);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 20px 60px rgba(10, 30, 60, 0.25);
+  }}
+  @media (max-width: 768px) {{
+    main {{ margin: 16px; padding: 28px 22px 50px; border-radius: 14px; }}
+  }}
   h1 {{ font-size: 2.25rem; line-height: 1.15; margin-bottom: 16px; color: #0d0d0d; }}
   h2 {{ font-size: 1.5rem; margin: 40px 0 16px; color: #0d0d0d; }}
   h3 {{ font-size: 1.125rem; margin: 24px 0 12px; }}
