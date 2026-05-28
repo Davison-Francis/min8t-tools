@@ -158,7 +158,7 @@ async function runInference(img) {
 
   const pixelData = ctx.getImageData(0, 0, rawImg.width, rawImg.height);
   for (let i = 0; i < mask.data.length; ++i) {
-    pixelData.data[4 * i + 3] = mask.data[i];
+    pixelData.data[4 * i + 3] = 255 - mask.data[i];
   }
   ctx.putImageData(pixelData, 0, 0);
 
