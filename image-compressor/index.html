@@ -40,7 +40,11 @@
   "operatingSystem": "All",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
   "isAccessibleForFree": true,
-  "description": "In-browser image compressor optimized for email - enforces 600px width and sub-1MB total payload. Free, no signup."
+  "description": "In-browser image compressor optimized for email - enforces 600px width and sub-1MB total payload. Free, no signup.",
+  "author": { "@type": "Organization", "name": "MiN8T", "url": "https://min8t.com" },
+  "creator": { "@type": "Organization", "name": "MiN8T", "url": "https://min8t.com" },
+  "datePublished": "2026-04-29",
+  "dateModified": "2026-05-28"
 }
 </script>
 <script type="application/ld+json">
@@ -329,6 +333,11 @@
 
 <main>
   <h1>Email Image Compressor</h1>
+  <div class="tool-meta">
+    <span class="meta-author">Built by the MiN8T Engineering Team</span>
+    <span class="meta-sep">·</span>
+    <time class="meta-updated" datetime="2026-05-28">Updated 28 May 2026</time>
+  </div>
   <p>Compress and resize images so your emails stay under inbox size limits. Email-safe defaults (600px width, JPEG, sub-1MB total). Drag-drop, in-browser, no signup. Your images never leave your device.</p>
 
   <aside class="key-facts" aria-label="Key facts">
@@ -449,6 +458,12 @@
       tool: 'image-compressor',
     });
   </script>
+  <aside class="methodology-note" aria-labelledby="methodology-heading">
+    <h3 id="methodology-heading">About this data</h3>
+    <p>Compression is performed by the browser-image-compression library running entirely in your browser via the Web Workers API. JPEG/PNG/WebP output respects MozJPEG and oxipng-equivalent quality presets. No image data is uploaded to MiN8T servers. The "email-safe" preset targets the 1MB total payload threshold enforced by Gmail.</p>
+    <p class="meta-line">Last reviewed: 28 May 2026 · Source code: open-source patterns documented at <a href="https://min8t.com/api">min8t.com/api</a></p>
+  </aside>
+
   <!-- RELATED TOOLS -->
   <h2>More free tools for email marketers</h2>
   <div class="related-tools">

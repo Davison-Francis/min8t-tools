@@ -38,7 +38,11 @@
   "operatingSystem": "All",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
   "isAccessibleForFree": true,
-  "description": "Calculate sample size needed to detect lift in email open/click rates with given power and confidence. Browser-only."
+  "description": "Calculate sample size needed to detect lift in email open/click rates with given power and confidence. Browser-only.",
+  "author": { "@type": "Organization", "name": "MiN8T", "url": "https://min8t.com" },
+  "creator": { "@type": "Organization", "name": "MiN8T", "url": "https://min8t.com" },
+  "datePublished": "2026-04-29",
+  "dateModified": "2026-05-28"
 }
 </script>
 <script type="application/ld+json">
@@ -346,6 +350,11 @@
 
 <main>
   <h1>A/B Test Sample Size Calculator</h1>
+  <div class="tool-meta">
+    <span class="meta-author">Built by the MiN8T Engineering Team</span>
+    <span class="meta-sep">·</span>
+    <time class="meta-updated" datetime="2026-05-28">Updated 28 May 2026</time>
+  </div>
   <p>Plan email A/B tests properly. Enter your baseline rate (open or click), the lift you want to detect (your <dfn title="Minimum detectable effect - the smallest true difference between variants that your test is powered to reliably detect; smaller MDEs require larger sample sizes">MDE</dfn>), and your <dfn title="Statistical power (1 - β) - the probability of correctly detecting a true effect of the specified MDE; conventionally set at 0.80">statistical power</dfn> + <dfn title="The probability range within which the true effect is expected to fall, given the observed data; a 95% confidence interval will contain the true value 95% of the time on repeated sampling">confidence interval</dfn> levels - the calculator returns the minimum sample size per variant. The math is the standard <dfn title="A hypothesis test that evaluates whether the difference between two proportions is statistically significant; the same z-test used by Optimizely, VWO, and Evan Miller's calculator">two-sided test</dfn> for two proportions. Free, no signup, instant.</p>
 
   <aside class="key-facts" aria-label="Key facts">
@@ -531,6 +540,13 @@
       getPayload: () => document.getElementById('share-text')?.value || '',
     });
   </script>
+
+  <aside class="methodology-note" aria-labelledby="methodology-heading">
+    <h3 id="methodology-heading">About this data</h3>
+    <p>Sample size is computed via the standard two-proportion z-test: n = (z_α + z_β)² × (p₁(1-p₁) + p₂(1-p₂)) / (p₁ - p₂)². z_α and z_β are looked up from the standard normal distribution at the chosen confidence and power. Defaults match email-marketing convention: 95% confidence, 80% power, one-sided.</p>
+    <p class="meta-line">Last reviewed: 28 May 2026 · Source code: open-source patterns documented at <a href="https://min8t.com/api">min8t.com/api</a></p>
+  </aside>
+
   <h2>More free tools for email marketers</h2>
   <div class="related-tools">
     <a class="tool-card" href="../subject-line-analyzer/"><h3>Subject Line Analyzer</h3><p>Score your subject line on length, spam triggers, sentiment.</p></a>

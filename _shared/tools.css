@@ -280,3 +280,41 @@ dfn {
   border-bottom: 1px dotted currentColor;
   cursor: help;
 }
+
+/* ---------- E-E-A-T: byline / authorship attribution ---------- */
+.tool-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8125rem;
+  color: var(--text-muted, rgba(255,255,255,0.55));
+  margin: 8px 0 16px;
+  flex-wrap: wrap;
+}
+.tool-meta .meta-author { font-weight: 500; }
+.tool-meta .meta-sep { opacity: 0.5; }
+.tool-meta .meta-updated { font-variant-numeric: tabular-nums; }
+
+/* ---------- E-E-A-T: "About this data" / methodology callout ---------- */
+.methodology-note {
+  margin: 48px 0 32px;
+  padding: 20px 24px;
+  background: rgba(255,255,255,0.04);
+  border-left: 3px solid var(--text-muted, rgba(255,255,255,0.3));
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+.methodology-note h3 {
+  margin: 0 0 8px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary, rgba(255,255,255,0.75));
+}
+.methodology-note .meta-line {
+  font-size: 0.75rem;
+  color: var(--text-muted, rgba(255,255,255,0.55));
+  margin-top: 12px;
+}

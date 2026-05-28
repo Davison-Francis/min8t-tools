@@ -40,7 +40,11 @@
   "operatingSystem": "All",
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
   "isAccessibleForFree": true,
-  "description": "Compress animated GIFs in the browser using full gifsicle (WebAssembly). Email-aware presets, before/after preview, ZIP bulk download. Free, no signup."
+  "description": "Compress animated GIFs in the browser using full gifsicle (WebAssembly). Email-aware presets, before/after preview, ZIP bulk download. Free, no signup.",
+  "author": { "@type": "Organization", "name": "MiN8T", "url": "https://min8t.com" },
+  "creator": { "@type": "Organization", "name": "MiN8T", "url": "https://min8t.com" },
+  "datePublished": "2026-04-29",
+  "dateModified": "2026-05-28"
 }
 </script>
 <script type="application/ld+json">
@@ -374,6 +378,11 @@
 
 <main>
   <h1>GIF Compressor (Email-Optimized)</h1>
+  <div class="tool-meta">
+    <span class="meta-author">Built by the MiN8T Engineering Team</span>
+    <span class="meta-sep">·</span>
+    <time class="meta-updated" datetime="2026-05-28">Updated 28 May 2026</time>
+  </div>
   <p>Compress animated GIFs without uploading anywhere - the full <a href="https://www.lcdf.org/gifsicle/" rel="noopener"><dfn title="The de-facto open-source command-line GIF optimizer maintained by Eddie Kohler since 1997">gifsicle</dfn></a> binary runs in your browser via WebAssembly. Three email-aware presets: Outlook-safe (under 500 KB), mobile-friendly, max compression. Drag, drop, download.</p>
 
   <aside class="key-facts" aria-label="Key facts">
@@ -513,6 +522,13 @@
       tool: 'gif-compressor',
     });
   </script>
+
+  <aside class="methodology-note" aria-labelledby="methodology-heading">
+    <h3 id="methodology-heading">About this data</h3>
+    <p>Compression uses the official gifsicle 1.92 binary compiled to WebAssembly (~600KB). Three presets — Outlook-safe, mobile-friendly, max compression — apply gifsicle's --lossy, --colors, --resize-fit-width, and --loopcount flags with email-specific defaults. Inference runs entirely in your browser; the WASM binary is cached after first load.</p>
+    <p class="meta-line">Last reviewed: 28 May 2026 · Source code: open-source patterns documented at <a href="https://min8t.com/api">min8t.com/api</a></p>
+  </aside>
+
   <h2>More free tools for email marketers</h2>
   <div class="related-tools">
     <a class="tool-card" href="../utm-builder/"><h3>UTM Campaign URL Builder</h3><p>Build tracked links for your email campaigns with one click.</p></a>
