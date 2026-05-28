@@ -70,7 +70,7 @@ export default {
 
 const ALLOWED_TOOL_SLUGS = new Set([
   'utm-builder', 'image-compressor', 'email-signature-generator',
-  'subject-line-analyzer', 'background-remover', 'plain-text-converter',
+  'subject-line-analyzer', 'plain-text-converter',
   'font-checker', 'palette-extractor', 'gif-compressor', 'spam-checker',
   'inbox-preview', 'css-inliner', 'mjml-converter', 'header-analyzer',
   'button-generator', 'ab-test-calculator',
@@ -85,7 +85,6 @@ const TOOL_EMAIL_META = {
   'image-compressor':         { name: 'Email Image Compressor',        resultLabel: null /* binary */ },
   'email-signature-generator':{ name: 'Email Signature Generator',     resultLabel: 'Your HTML signature' },
   'subject-line-analyzer':    { name: 'Subject Line Analyzer',         resultLabel: 'Your subject-line analysis' },
-  'background-remover':       { name: 'Background Remover',            resultLabel: null /* binary */ },
   'plain-text-converter':     { name: 'HTML to Plain Text',            resultLabel: 'Your plain-text alternative' },
   'font-checker':             { name: 'Email-Safe Font Checker',       resultLabel: 'Your font compatibility report' },
   'palette-extractor':        { name: 'Brand Color Palette',           resultLabel: 'Your brand palette' },
