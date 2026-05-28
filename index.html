@@ -11,6 +11,78 @@
 <meta property="og:url" content="https://min8t.com/tools/">
 <meta property="og:type" content="website">
 <link rel="stylesheet" href="_shared/styles.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Are MiN8T's free email marketing tools really free with no signup?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Every tool on this page runs entirely in your browser or on Cloudflare's free tier. There is no signup, no rate limit, and no upload of your files to a server we control. Image compression, GIF compression, background removal, CSS inlining, MJML conversion, and inbox preview all execute client-side via WebAssembly — your data never leaves your device."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do these email tools work in Outlook, Gmail, and Apple Mail?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The tools are specifically designed for email-marketer constraints. The CSS Inliner preserves @media queries Outlook ignores. The Image Compressor enforces sub-1MB payloads so emails render across all clients. The Inbox Preview tool simulates Gmail Web, Apple Mail iOS, and a strict-mode Outlook approximation side-by-side so you can catch cross-client failures before sending."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between min8t.com/tools and min8t.com/free-tools?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "min8t.com/tools is the email-marketing toolset: UTM builder, image compressor, signature generator, subject line analyzer, inbox preview, CSS inliner, MJML converter, header analyzer, button generator, A/B test calculator, and others. min8t.com/free-tools is the email-deliverability toolset: email verifier, domain health check (SPF/DKIM/DMARC), blacklist scanner, domain intelligence, DMARC analyzer, and DMARC generator. They are complementary — design with /tools, then verify deliverability with /free-tools."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need to install anything to use these tools?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No installation required. Every tool runs in any modern browser (Chrome, Firefox, Safari, Edge). The heavier tools — gifsicle for GIF compression, the email-image library, the MJML compiler — load as WebAssembly binaries cached locally after first use. After the first visit, tools work even offline."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does MiN8T offer these tools for free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The free tools showcase the email design and deliverability primitives that power the MiN8T platform. We use the same image compression, CSS inlining, and authentication logic in the full editor — the free tools let you try them in isolation. If they save you time, the full editor at min8t.com replaces Stripo, BeeFree, ZeroBounce, NeverBounce, Zapier, Teams, Litmus, and Mailmodo in a single subscription."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Will these tools save my data or send it to a server?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "For pure client-side tools (image compressor, GIF compressor, CSS inliner, MJML converter, inbox preview, palette extractor, plain-text converter, font checker, button generator, A/B calculator) — no. The file never leaves your device. For tools that require server-side work (UTM builder shortener, spam-checker AI classifier) we use ephemeral processing — input is not logged, not stored, not sold. The tools work without an account precisely because we do not need to track you."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use these tools in my own product or workflow?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The tools are designed for direct human use, not as an API. If you need programmatic access to email compression, validation, or deliverability checking, the MiN8T platform exposes a REST API and SDKs for Node.js, Python, Go, PHP, and Ruby covering the same primitives. See min8t.com/api for endpoints, rate limits, and authentication."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How often are new tools added?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "New tools ship roughly every 2-4 weeks, prioritized by what email marketers ask for most often. Recent additions include the Spam Score Checker (60+ heuristic rules plus an AI classifier), the Inbox Preview tool (browser-based Gmail / Apple Mail / Outlook approximation), and the A/B Test Sample Size Calculator. Bookmark this page or follow @min8t on social to catch the next release."
+      }
+    }
+  ]
+}
+</script>
 <style>
   /* Light-theme override scoped to this page only (other tool pages keep dark) */
   body.tools-index {
@@ -52,6 +124,59 @@
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  /* FAQ section on light tools landing */
+  body.tools-index .tools-faq {
+    margin-top: 4rem;
+    padding: 32px;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(10, 23, 51, 0.08);
+    border-radius: 16px;
+  }
+  body.tools-index .tools-faq h2 {
+    color: #0a1733;
+    font-size: 1.5rem;
+    margin: 0 0 24px;
+  }
+  body.tools-index .faq-item {
+    border-top: 1px solid rgba(10, 23, 51, 0.08);
+    padding: 16px 0;
+  }
+  body.tools-index .faq-item:first-of-type { border-top: 0; padding-top: 0; }
+  body.tools-index .faq-item summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: #0a1733;
+    list-style: none;
+    padding-right: 24px;
+    position: relative;
+  }
+  body.tools-index .faq-item summary::-webkit-details-marker { display: none; }
+  body.tools-index .faq-item summary::after {
+    content: "+";
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: #4a5870;
+    font-weight: 400;
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+  body.tools-index .faq-item[open] summary::after { content: "−"; }
+  body.tools-index .faq-item p {
+    color: #4a5870 !important;
+    margin: 12px 0 0 !important;
+    line-height: 1.6;
+  }
+  body.tools-index .faq-item code {
+    background: rgba(10, 23, 51, 0.06);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.875em;
+  }
+  body.tools-index .faq-item a {
+    color: #0a1733;
+    text-decoration: underline;
   }
 </style>
 </head>
@@ -138,6 +263,42 @@
   <div style="display:flex;justify-content:center;margin-top:3rem;">
     <p style="display:inline-block;color:#1a2540;background:rgba(255,255,255,0.85);border:1px solid rgba(10,23,51,0.12);padding:10px 24px;border-radius:999px;font-size:0.875rem;margin:0;">More tools coming. Each one ships independently - bookmark this page or follow the project.</p>
   </div>
+
+  <section class="tools-faq" aria-labelledby="faq-heading">
+    <h2 id="faq-heading">Frequently Asked Questions</h2>
+    <details class="faq-item">
+      <summary>Are MiN8T's free email marketing tools really free with no signup?</summary>
+      <p>Yes. Every tool on this page runs entirely in your browser or on Cloudflare's free tier. There is no signup, no rate limit, and no upload of your files to a server we control. Image compression, GIF compression, CSS inlining, MJML conversion, and inbox preview all execute client-side via WebAssembly &mdash; your data never leaves your device.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Do these email tools work in Outlook, Gmail, and Apple Mail?</summary>
+      <p>The tools are specifically designed for email-marketer constraints. The CSS Inliner preserves <code>@media</code> queries Outlook ignores. The Image Compressor enforces sub-1MB payloads so emails render across all clients. The Inbox Preview tool simulates Gmail Web, Apple Mail iOS, and a strict-mode Outlook approximation side-by-side so you can catch cross-client failures before sending.</p>
+    </details>
+    <details class="faq-item">
+      <summary>What is the difference between <code>/tools</code> and <code>/free-tools</code>?</summary>
+      <p><a href="https://min8t.com/tools/">min8t.com/tools</a> is the email-marketing toolset: UTM builder, image compressor, signature generator, subject line analyzer, inbox preview, CSS inliner, MJML converter, header analyzer, button generator, A/B test calculator, and others. <a href="https://min8t.com/free-tools">min8t.com/free-tools</a> is the email-deliverability toolset: email verifier, domain health check (SPF/DKIM/DMARC), blacklist scanner, domain intelligence, DMARC analyzer, and DMARC generator. They are complementary &mdash; design with /tools, then verify deliverability with /free-tools.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Do I need to install anything to use these tools?</summary>
+      <p>No installation required. Every tool runs in any modern browser (Chrome, Firefox, Safari, Edge). The heavier tools &mdash; gifsicle for GIF compression, the email-image library, the MJML compiler &mdash; load as WebAssembly binaries cached locally after first use. After the first visit, tools work even offline.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Why does MiN8T offer these tools for free?</summary>
+      <p>The free tools showcase the email design and deliverability primitives that power the MiN8T platform. We use the same image compression, CSS inlining, and authentication logic in the full editor &mdash; the free tools let you try them in isolation. If they save you time, the full editor at <a href="https://min8t.com/">min8t.com</a> replaces Stripo, BeeFree, ZeroBounce, NeverBounce, Zapier, Teams, Litmus, and Mailmodo in a single subscription.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Will these tools save my data or send it to a server?</summary>
+      <p>For pure client-side tools (image compressor, GIF compressor, CSS inliner, MJML converter, inbox preview, palette extractor, plain-text converter, font checker, button generator, A/B calculator) &mdash; no. The file never leaves your device. For tools that require server-side work (UTM builder shortener, spam-checker AI classifier) we use ephemeral processing &mdash; input is not logged, not stored, not sold. The tools work without an account precisely because we do not need to track you.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Can I use these tools in my own product or workflow?</summary>
+      <p>The tools are designed for direct human use, not as an API. If you need programmatic access to email compression, validation, or deliverability checking, the MiN8T platform exposes a REST API and SDKs for Node.js, Python, Go, PHP, and Ruby covering the same primitives. See <a href="https://min8t.com/api">min8t.com/api</a> for endpoints, rate limits, and authentication.</p>
+    </details>
+    <details class="faq-item">
+      <summary>How often are new tools added?</summary>
+      <p>New tools ship roughly every 2&ndash;4 weeks, prioritized by what email marketers ask for most often. Recent additions include the <a href="/tools/spam-checker/">Spam Score Checker</a> (60+ heuristic rules plus an AI classifier), the <a href="/tools/inbox-preview/">Inbox Preview tool</a> (browser-based Gmail / Apple Mail / Outlook approximation), and the <a href="/tools/ab-test-calculator/">A/B Test Sample Size Calculator</a>. Bookmark this page or follow @min8t on social to catch the next release.</p>
+    </details>
+  </section>
 </main>
 
 <footer class="site-footer" style="background:#0d0d0d;padding:80px 24px 24px;margin-top:80px;color:rgba(255,255,255,0.7);">
