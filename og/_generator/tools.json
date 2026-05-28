@@ -22,5 +22,6 @@
   { "slug": "blacklist-checker",           "title": "Blacklist Scanner",            "subtitle": "Scan 50+ DNSBL zones in parallel. Spamhaus, Barracuda, SORBS." },
   { "slug": "domain-intelligence",         "title": "Domain Intelligence",          "subtitle": "Trust score + reputation report. Combines DNS, age, blacklists, ISP." },
   { "slug": "dmarc-analyzer",              "title": "DMARC Analyzer",               "subtitle": "Parse and validate your DMARC record with fix recommendations." },
-  { "slug": "dmarc-generator",             "title": "DMARC Generator",              "subtitle": "Build a valid DMARC TXT record. Monitor, quarantine, or reject." }
+  { "slug": "dmarc-generator",             "title": "DMARC Generator",              "subtitle": "Build a valid DMARC TXT record. Monitor, quarantine, or reject." },
+  { "slug": "spamcipher-vs-glockapps",     "title": "SpamCipher vs GlockApps",      "subtitle": "Free instant rule-based scoring vs paid real-inbox testing. Compared." }
 ]
