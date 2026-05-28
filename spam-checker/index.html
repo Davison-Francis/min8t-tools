@@ -370,7 +370,7 @@
 
   <h2>What the score is, and isn't</h2>
   <p><strong>Is:</strong> a fast hygiene check on the part of deliverability you control at design time - your body content, HTML structure, and link patterns. Catches well-understood spam-filter triggers before send.</p>
-  <p><strong>Isn't:</strong> a guaranteed prediction of inbox placement. Real spam filters use machine-learning models trained on huge corpora, plus IP reputation, sender history, recipient engagement, and authentication (SPF/DKIM/DMARC). Those signals all matter at send time. A 10/10 here doesn't guarantee inbox; a 6/10 doesn't guarantee spam folder. Treat the score as one input among several.</p>
+  <p><strong>Isn't:</strong> a guaranteed prediction of inbox placement. Real spam filters use machine-learning models trained on huge corpora, plus IP reputation, sender history, recipient engagement, and authentication (SPF/DKIM/DMARC). Those signals all matter at send time. A 10/10 here doesn't guarantee inbox; a 6/10 doesn't guarantee spam folder. Treat the score as one input among several - pair this body scan with the <a href="https://min8t.com/free-tools/dmarc-analyzer">DMARC Analyzer</a> to surface authentication failures that crush spam scores, and the <a href="https://min8t.com/free-tools/blacklist-checker">Blacklist Scanner</a> to confirm your sending IP and domain aren't on a public RBL.</p>
 
   <h2>FAQ</h2>
   <div class="faq">

@@ -433,7 +433,7 @@
 
   <h2>Why these templates work in Outlook</h2>
   <p>Outlook desktop uses Microsoft Word's HTML engine, which strips flexbox, grid, background-image, and @media queries. The templates in this tool use only what survives that engine: <code>&lt;table&gt;</code>-based layout with <code>cellpadding</code>/<code>cellspacing</code> instead of CSS margins, inline styles only (no <code>&lt;style&gt;</code> blocks, which Outlook ignores anyway), pixel-only widths, and a 500-600 px overall width that fits cleanly in mobile and desktop reading panes alike.</p>
-  <p>Most "free signature generator" tools online use a Vue/React form with no awareness of Outlook's quirks - paste their output into Outlook and you get a stack of bare text. The templates here have been tested against the <a href="https://www.caniemail.com/" rel="noopener">caniemail</a> compatibility matrix; every CSS property used is supported by at least 95% of email clients.</p>
+  <p>Most "free signature generator" tools online use a Vue/React form with no awareness of Outlook's quirks - paste their output into Outlook and you get a stack of bare text. The templates here have been tested against the <a href="https://www.caniemail.com/" rel="noopener">caniemail</a> compatibility matrix; every CSS property used is supported by at least 95% of email clients. If you're picking a custom font, double-check it against the <a href="/tools/font-checker/">Font Checker</a> first so Outlook doesn't fall back to Times New Roman, and pull your accent color from a <a href="/tools/palette-extractor/">Palette Extractor</a> sweep of your logo to make sure the signature matches the rest of your brand surface area.</p>
 
   <h2>FAQ</h2>
   <div class="faq">

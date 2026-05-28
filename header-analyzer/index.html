@@ -415,7 +415,7 @@
     </details>
     <details>
       <summary>How are SPF, DKIM, and DMARC reported?</summary>
-      <p>The receiving server adds an <code>Authentication-Results:</code> header summarizing each check. We parse <code>spf=</code>, <code>dkim=</code>, and <code>dmarc=</code> entries and render them as pass/fail/neutral/temperror badges. <code>ARC-Authentication-Results:</code> is also parsed - that's the chain when forwarded.</p>
+      <p>The receiving server adds an <code>Authentication-Results:</code> header summarizing each check. We parse <code>spf=</code>, <code>dkim=</code>, and <code>dmarc=</code> entries and render them as pass/fail/neutral/temperror badges. <code>ARC-Authentication-Results:</code> is also parsed - that's the chain when forwarded. If DMARC fails or comes back <code>none</code>, drop the report payload into the <a href="https://min8t.com/free-tools/dmarc-analyzer">DMARC Analyzer</a> to decode the specific authentication failure, and use the <a href="https://min8t.com/free-tools/domain-health-check">Domain Health Check</a> against your own sending domain to confirm your SPF, DKIM selectors, and DMARC record are all live in DNS.</p>
     </details>
     <details>
       <summary>What is the originating IP?</summary>

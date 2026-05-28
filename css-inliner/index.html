@@ -374,7 +374,7 @@
     </details>
     <details>
       <summary>Why use a hosted inliner instead of build-time tools?</summary>
-      <p>If you have a build pipeline, juice / mjml / litmus all inline at build - use those, they're more accurate. This tool exists for the cases where you don't: pasted ESP exports, hand-written test emails, designs from a no-code tool, last-minute fixes during a campaign.</p>
+      <p>If you have a build pipeline, juice / mjml / litmus all inline at build - use those, they're more accurate. This tool exists for the cases where you don't: pasted ESP exports, hand-written test emails, designs from a no-code tool, last-minute fixes during a campaign. If you'd rather avoid hand-writing email HTML at all, the <a href="/tools/mjml-converter/">MJML Converter</a> lets you write component-style markup that compiles to email-safe HTML with inlining already baked in. Either way, drop the final output into the <a href="/tools/inbox-preview/">Inbox Preview</a> tool to confirm the inlined CSS renders correctly in Outlook before you ship.</p>
     </details>
   </div>
 

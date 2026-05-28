@@ -435,7 +435,7 @@
 
   <h2>How the bulletproof pattern works</h2>
   <p>Modern email clients render the inner <code>&lt;a&gt;</code> tag with proper padding and rounded corners. Outlook desktop on Windows renders HTML through the Microsoft Word engine, which ignores <code>border-radius</code> and treats <code>&lt;a&gt;</code> padding inconsistently.</p>
-  <p>The fix: wrap the modern button in <code>&lt;!--[if mso]&gt;...&lt;![endif]--&gt;</code> conditional comments, and inside that block emit a VML <code>&lt;v:roundrect&gt;</code>. The conditional is a comment to every other client (so they ignore the VML), but Outlook 2007-2019 desktop (and parts of Microsoft 365 on Windows) honor it and render the VML version. Result: every client sees a real rounded button.</p>
+  <p>The fix: wrap the modern button in <code>&lt;!--[if mso]&gt;...&lt;![endif]--&gt;</code> conditional comments, and inside that block emit a VML <code>&lt;v:roundrect&gt;</code>. The conditional is a comment to every other client (so they ignore the VML), but Outlook 2007-2019 desktop (and parts of Microsoft 365 on Windows) honor it and render the VML version. Result: every client sees a real rounded button. Before you ship, run the generated markup through the <a href="/tools/css-inliner/">CSS Inliner</a> - Outlook still needs every button declaration applied as an inline <code>style</code> attribute - and if you want CTAs that automatically match your brand, source the colors from the <a href="/tools/palette-extractor/">Palette Extractor</a> so every button on every campaign lands on the same accent shade.</p>
 
   <h2>FAQ</h2>
   <div class="faq">
