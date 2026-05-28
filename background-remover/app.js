@@ -20,13 +20,12 @@ import {
   AutoProcessor,
   RawImage,
   env,
-} from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.0.2';
+} from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.3.3';
 
-// Allow remote model fetch from HF; cache in IndexedDB after first load.
 env.allowLocalModels = false;
 env.useBrowserCache = true;
 
-const MODEL_ID = 'Xenova/modnet';
+const MODEL_ID = 'briaai/RMBG-1.4';
 const MAX_DIMENSION = 4096; // refuse images bigger than this - memory protection
 
 const dropzone = document.getElementById('dropzone');
@@ -111,45 +110,27 @@ async function processFile(file) {
 
 // ---- model ----
 async function loadModel() {
-  // Show download progress via the progress callback
   const onProgress = (data) => {
     if (data.status === 'progress' && data.total) {
       const pct = Math.round((data.loaded / data.total) * 100);
       setStatus(`Downloading AI model… ${pct}%`, 'progress', pct);
     }
   };
-  // Image segmentation pipeline. AutoModel + AutoProcessor gives finer control
-  // than the high-level pipeline() helper.
   model = await AutoModel.from_pretrained(MODEL_ID, {
-    config: { model_type: 'custom' },
-    quantized: true,
     progress_callback: onProgress,
   });
   processor = await AutoProcessor.from_pretrained(MODEL_ID, {
-    config: {
-      do_normalize: true,
-      do_pad: false,
-      do_rescale: true,
-      do_resize: true,
-      image_mean: [0.5, 0.5, 0.5],
-      feature_extractor_type: 'ImageFeatureExtractor',
-      image_std: [1, 1, 1],
-      resample: 2,
-      rescale_factor: 0.00392156862745098,
-      size: { width: 320, height: 320 },
-    },
     progress_callback: onProgress,
   });
 }
 
 async function runInference(img) {
-  // Convert <img> to RawImage tensor
   const rawImg = await RawImage.fromURL(img.src);
   const { pixel_values } = await processor(rawImg);
   const { output } = await model({ input: pixel_values });
 
-  // Resize segmentation mask back up to original dimensions, apply as alpha channel
-  const mask = await RawImage.fromTensor(output[0].mul(255).to('uint8')).resize(rawImg.width, rawImg.height);
+  const maskData = output[0].sigmoid();
+  const mask = await RawImage.fromTensor(maskData.mul(255).to('uint8')).resize(rawImg.width, rawImg.height);
 
   resultCanvas.width = rawImg.width;
   resultCanvas.height = rawImg.height;
@@ -158,7 +139,7 @@ async function runInference(img) {
 
   const pixelData = ctx.getImageData(0, 0, rawImg.width, rawImg.height);
   for (let i = 0; i < mask.data.length; ++i) {
-    pixelData.data[4 * i + 3] = 255 - mask.data[i];
+    pixelData.data[4 * i + 3] = mask.data[i];
   }
   ctx.putImageData(pixelData, 0, 0);
 
