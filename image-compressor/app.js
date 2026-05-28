@@ -39,7 +39,6 @@ let recompressTimer;
 
 // ---- file selection ----
 fileInput.addEventListener('change', (e) => addFiles(e.target.files));
-dropzone.addEventListener('click', () => fileInput.click());
 
 ['dragenter', 'dragover'].forEach((ev) => {
   dropzone.addEventListener(ev, (e) => {

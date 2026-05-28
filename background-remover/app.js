@@ -51,7 +51,6 @@ let lastResultBlob = null;
 fileInput.addEventListener('change', (e) => {
   if (e.target.files?.[0]) processFile(e.target.files[0]);
 });
-dropzone.addEventListener('click', () => fileInput.click());
 ['dragenter', 'dragover'].forEach((ev) => {
   dropzone.addEventListener(ev, (e) => { e.preventDefault(); dropzone.classList.add('dragging'); });
 });
