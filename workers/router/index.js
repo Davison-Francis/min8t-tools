@@ -32,6 +32,16 @@ export default {
       return handleSpamChecker(request, url);
     }
 
+    // ── Trailing-slash redirect for tool folders ──
+    // Pages itself would 308 /foo → /foo/ but its Location strips the
+    // /tools/ prefix (it doesn't know the real public path). Handle it
+    // here so the Location header keeps /tools/ and Google doesn't flag
+    // the URL as "Page with redirect" pointing somewhere broken.
+    const toolFolderMatch = url.pathname.match(/^\/tools\/([a-z0-9-]+)$/i);
+    if (toolFolderMatch) {
+      return Response.redirect(`${url.origin}/tools/${toolFolderMatch[1]}/${url.search}`, 301);
+    }
+
     // ── Default: forward to Pages ──
     const stripped = url.pathname.replace(/^\/tools\/?/, '/');
     const target = new URL(stripped + url.search, 'https://min8t-tools.pages.dev');
@@ -44,7 +54,21 @@ export default {
     });
     proxyRequest.headers.set('Host', 'min8t-tools.pages.dev');
 
-    return fetch(proxyRequest);
+    const resp = await fetch(proxyRequest);
+
+    // Belt-and-suspenders: if Pages still returns a 3xx with a Location
+    // that doesn't start with /tools/, rewrite it to include the prefix
+    // so downstream clients (Google bot, etc.) don't follow it off-path.
+    if (resp.status >= 300 && resp.status < 400) {
+      const loc = resp.headers.get('location');
+      if (loc && loc.startsWith('/') && !loc.startsWith('/tools/')) {
+        const fixed = new Headers(resp.headers);
+        fixed.set('location', '/tools' + loc);
+        return new Response(resp.body, { status: resp.status, headers: fixed });
+      }
+    }
+
+    return resp;
   },
 };
 
