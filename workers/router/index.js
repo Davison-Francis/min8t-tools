@@ -25,6 +25,20 @@ export default {
       return Response.redirect(`${url.origin}/tools/`, 301);
     }
 
+    // ── Renamed comparison pages — 301 to brand-prefixed slugs ──
+    const renames = {
+      'image-compressor-vs-tinypng':           'min8t-image-compressor-vs-tinypng',
+      'inbox-preview-vs-litmus':               'min8t-inbox-preview-vs-litmus',
+      'spam-checker-vs-glockapps':             'spamcipher-vs-glockapps',
+      'subject-line-analyzer-vs-sender-score': 'min8t-subject-line-analyzer-vs-sender-score',
+      'css-inliner-vs-juice':                  'min8t-css-inliner-vs-juice',
+    };
+    for (const [old, neu] of Object.entries(renames)) {
+      if (url.pathname === `/tools/${old}` || url.pathname === `/tools/${old}/`) {
+        return Response.redirect(`${url.origin}/tools/${neu}/`, 301);
+      }
+    }
+
     // ── SpamCipher reverse proxy ──
     // /tools/spam-checker(/)  → proxy spamcipher.com/check (HTML rewritten)
     // /tools/spam-checker/... → proxy spamcipher.com/... for sub-assets
