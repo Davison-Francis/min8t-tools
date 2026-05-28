@@ -11,8 +11,51 @@
 <meta property="og:url" content="https://min8t.com/tools/">
 <meta property="og:type" content="website">
 <link rel="stylesheet" href="_shared/styles.css">
+<style>
+  /* Light-theme override scoped to this page only (other tool pages keep dark) */
+  body.tools-index {
+    background-color: #d8e8f5;
+    background-image: url('_shared/brand/tools-bg.webp');
+    background-size: cover;
+    background-position: center top;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+  }
+  body.tools-index main {
+    background: rgba(255, 255, 255, 0.78);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    color: #1a2540;
+  }
+  body.tools-index main h1 { color: #0a1733; }
+  body.tools-index main p { color: #1a2540; }
+
+  /* Cards on light background */
+  body.tools-index .related-tools .tool-card {
+    background: #ffffff;
+    border: 1px solid rgba(10, 23, 51, 0.08);
+    box-shadow: 0 1px 3px rgba(10, 23, 51, 0.04);
+    transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+  }
+  body.tools-index .related-tools .tool-card:hover {
+    border-color: rgba(10, 23, 51, 0.2);
+    box-shadow: 0 8px 24px rgba(10, 23, 51, 0.08);
+    transform: translateY(-2px);
+  }
+  body.tools-index .related-tools .tool-card h3 { color: #0a1733; }
+  body.tools-index .related-tools .tool-card p { color: #4a5870; }
+
+  /* Header: dark backdrop on light bg, logo stays white */
+  body.tools-index .site-header {
+    background: rgba(10, 23, 51, 0.65);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+</style>
 </head>
-<body>
+<body class="tools-index">
 <header class="site-header">
   <div class="site-header-inner">
     <a class="site-logo" href="https://min8t.com/" aria-label="MiN8T home">
