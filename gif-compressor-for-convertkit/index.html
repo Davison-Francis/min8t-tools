@@ -71,12 +71,18 @@
     line-height: 1.6;
     color: #1a1a1a;
     background-color: #0e3a72;
-    background-image: url('/tools/programmatic/seo-bg.webp');
-    background-size: 100% auto;
-    background-position: top center;
-    background-repeat: no-repeat;
     padding-top: 80px;
     min-height: 100vh;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url('/tools/programmatic/seo-bg.webp');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    z-index: -1;
   }
   .site-header { position: fixed; top: 0; left: 0; right: 0; padding: 14px 28px; background: rgba(13, 13, 13, 0.95); backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: space-between; z-index: 100; }
   .site-logo { color: #fff; font-weight: 700; text-decoration: none; }
