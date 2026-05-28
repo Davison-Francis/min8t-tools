@@ -118,12 +118,13 @@ async function compressAll() {
   for (const item of items) {
     try {
       const cmd = buildCommand(item.file.name);
+      const buf = await item.file.arrayBuffer();
       const result = await gifsicle.run({
-        input: [{ file: item.file, name: item.file.name }],
+        input: [{ file: new Uint8Array(buf), name: item.file.name }],
         command: [cmd],
       });
-      // result is array of files; first is the output
-      const outBlob = result[0];
+      const outFile = result[0];
+      const outBlob = new Blob([outFile], { type: 'image/gif' });
       if (item.compressedUrl) URL.revokeObjectURL(item.compressedUrl);
       item.compressed = outBlob;
       item.compressedUrl = URL.createObjectURL(outBlob);
