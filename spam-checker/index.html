@@ -310,7 +310,17 @@
 
 <main>
   <h1>Email Spam Score Checker</h1>
-  <p>Paste any HTML email body and get a 0-10 deliverability score with a rule-by-rule breakdown across 21 SpamAssassin-style checks. Free, unlimited, no signup. The rules engine runs in a Cloudflare Worker - your HTML is scored, the result returns, nothing is logged or stored.</p>
+  <p>Paste any HTML email body and get a 0-10 deliverability score with a rule-by-rule breakdown across 21 SpamAssassin-style <dfn title="A rule-based check that scores email content using observable patterns rather than statistical learning">heuristic</dfn> checks. Free, unlimited, no signup. The rules engine runs in a Cloudflare Worker - your HTML is scored, the result returns, nothing is logged or stored.</p>
+
+  <aside class="key-facts" aria-label="Key facts">
+    <h3>Key facts</h3>
+    <ul>
+      <li data-fact>SpamAssassin's default spam threshold is 5.0 - scores above this are typically quarantined.</li>
+      <li data-fact>Naive Bayes <dfn title="A statistical model that learns to assign labels (e.g. spam vs ham) by computing probabilities from labeled training data">classifiers</dfn> achieve 95-98% accuracy on labeled spam corpora.</li>
+      <li data-fact>Subject lines using all caps trigger a +2.0 score penalty in SpamAssassin.</li>
+      <li data-fact>Missing List-Unsubscribe header now correlates with Gmail spam folder placement.</li>
+    </ul>
+  </aside>
 
   <div class="sc-input-wrap">
     <label for="html-input" style="text-transform:uppercase; font-size:0.75rem; letter-spacing:0.05em; color:var(--text-muted); margin-bottom:4px;">Email HTML</label>
@@ -390,7 +400,7 @@
     </details>
     <details>
       <summary>Why does my email get a low score even though it's clearly not spam?</summary>
-      <p>Common false positives: (1) marketing copy that legitimately uses urgency ("Last chance to register"), (2) a sale email with prices and money symbols, (3) a transactional email that doesn't need an unsubscribe link, (4) a newsletter pasted without the layout's unsubscribe footer. Look at WHICH rules fired - if they're all rules you've consciously decided are appropriate for your send, the low score is a false alarm.</p>
+      <p>Common <dfn title="When a spam filter labels a legitimate email as spam; opposite of false negative">false positives</dfn>: (1) marketing copy that legitimately uses urgency ("Last chance to register"), (2) a sale email with prices and money symbols, (3) a transactional email that doesn't need an unsubscribe link, (4) a newsletter pasted without the layout's unsubscribe footer. Look at WHICH rules fired - if they're all rules you've consciously decided are appropriate for your send, the low score is a false alarm. Real send-time filters add network-side signals like <dfn title="Realtime blackhole list - a DNS-published list of IP addresses that have been reported as spam sources; also called DNSBL">RBL</dfn>/<dfn title="DNS-based blackhole list - the same concept as an RBL, queried via DNS lookups">DNSBL</dfn> lookups and detection of <dfn title="When attacker-controlled content is injected into mail headers, typically to spoof From: or smuggle BCC recipients">header injection</dfn> patterns that this body-only scorer cannot see.</p>
     </details>
     <details>
       <summary>Is this open-source / can I see the rules?</summary>

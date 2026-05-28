@@ -315,7 +315,17 @@
 
 <main>
   <h1>Bulletproof Email Button Generator</h1>
-  <p>Configure a CTA button. Get email-safe HTML with the full VML fallback for Outlook desktop. The button renders correctly in every major client - Apple Mail, Gmail, Yahoo, Outlook desktop, Outlook web - because we ship the bulletproof pattern, not the modern-CSS-only shortcut. Free, no signup.</p>
+  <p>Configure a CTA button. Get email-safe HTML with the full <dfn title="Vector Markup Language - Microsoft's pre-SVG XML format for vector graphics; the Word rendering engine in Outlook desktop on Windows renders VML, which is why it's the canonical fallback for rounded buttons in email">VML</dfn> fallback for Outlook desktop. The button renders correctly in every major client - Apple Mail, Gmail, Yahoo, Outlook desktop, Outlook web - because we ship the <dfn title="An email design technique that uses VML inside MSO conditional comments so a single markup block renders identically across modern clients and Outlook desktop">bulletproof</dfn> pattern, not the modern-CSS-only shortcut. Free, no signup.</p>
+
+  <aside class="key-facts" aria-label="Key facts">
+    <h3>Key facts</h3>
+    <ul>
+      <li data-fact>Outlook desktop on Windows does NOT render <code>&lt;button&gt;</code> tags or rounded corners on <code>&lt;a&gt;</code> tags.</li>
+      <li data-fact>"Bulletproof" buttons use VML (Vector Markup Language) fallback markup wrapped in <dfn title="HTML comments of the form &lt;!--[if mso]&gt;...&lt;![endif]--&gt; that Outlook desktop on Windows parses as conditional includes; every other client treats them as comments and skips the content">MSO conditional</dfn> comments.</li>
+      <li data-fact>The recommended minimum <dfn title="The minimum touch-target size for buttons and links so they can be reliably activated with a finger; Apple says 44px, Material/Android says 48px">tappable</dfn> button height is 44px (Apple) / 48px (Android).</li>
+      <li data-fact>Button text contrast of 4.5:1 vs background is required for WCAG 2.1 AA. Use <dfn title="The space inside an element between its content and its border; in email buttons, padding on the inner anchor is what gives the button its tappable height">padding</dfn> rather than fixed dimensions to maximize cross-client reliability.</li>
+    </ul>
+  </aside>
 
   <div class="bg-grid">
     <div class="bg-controls">

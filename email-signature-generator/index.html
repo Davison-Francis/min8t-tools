@@ -314,7 +314,17 @@
 
 <main>
   <h1>Free Email Signature Generator</h1>
-  <p>Outlook-safe HTML signatures, three template designs, live preview, one-click copy. Built with table-based layouts and inline styles - guaranteed to render correctly across Gmail, Outlook, Apple Mail, and every other major client.</p>
+  <p>Outlook-safe <dfn title="An HTML fragment that an email client appends to outgoing messages; carries name, role, contact details and (optionally) a photo or logo with CSS styling - distinct from a vCard, which is machine-readable">HTML signature</dfn> templates with table-based layouts and inline styles - guaranteed to render correctly across Gmail, Outlook, Apple Mail, and every other major client. Pick a <dfn title="A pre-built signature design with editable fields like name, role, and brand color; templates also encode the markup pattern (table-based, inlined CSS) needed for cross-client rendering">signature template</dfn>, paste the HTML into your mail client, done.</p>
+
+  <aside class="key-facts" aria-label="Key facts">
+    <h3>Key facts</h3>
+    <ul>
+      <li data-fact>Outlook's signature editor strips style attributes from pasted HTML signatures aggressively (the underlying <dfn title="Microsoft Word HTML/CSS rendering engine - the same engine Outlook desktop uses for email rendering; strips most modern CSS during paste-from-HTML">MSO Word engine</dfn> is responsible).</li>
+      <li data-fact>The recommended signature image width is 600px max for email body integration.</li>
+      <li data-fact><dfn title="Virtual Contact File - a standardized text format (RFC 6350) for sharing contact info; .vcf attachments are machine-readable and add 5-15KB per message">vCard</dfn> (.vcf) attachments add machine-readable contact info but bloat the message size by 5-15KB.</li>
+      <li data-fact>The Mail.app on macOS converts signatures to <dfn title="Rich Text Format - Microsoft's text-formatting markup, used internally by macOS Mail when storing user signatures; the conversion drops CSS styling and most embedded layout">RTF</dfn>, losing all CSS styling.</li>
+    </ul>
+  </aside>
 
   <div class="esg-layout">
     <!-- LEFT: form -->

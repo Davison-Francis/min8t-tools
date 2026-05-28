@@ -258,7 +258,17 @@
 
 <main>
   <h1>HTML to Plain-Text Email Converter</h1>
-  <p>Generate the plain-text MIME alternative from any HTML email. Used as the <code>text/plain</code> part of a multipart message - improves deliverability, satisfies RFC 2046, and gives screen-reader and minimal-client users a readable fallback. Free, in your browser, your email never leaves your device.</p>
+  <p>Generate the plain-text <dfn title="Multipurpose Internet Mail Extensions - the standard that lets an email carry rich content (HTML, attachments, multiple body parts) inside a single message">MIME</dfn> <dfn title="A multipart/alternative MIME body containing two equivalent representations (e.g. text/plain and text/html); the mail client picks whichever it can render">alternative</dfn> from any HTML email. Used as the <code>text/plain</code> part of a <dfn title="A MIME message body composed of multiple sub-parts, each with its own content type and headers">multipart</dfn> message - improves deliverability, satisfies <dfn title="RFC 2046 - the IETF specification that defines MIME media types and the multipart/alternative structure for emails">RFC 2046</dfn>, and gives screen-reader and minimal-client users an <dfn title="The practice of building content that is usable by people with disabilities, including screen-reader users; in email, the plain-text part is the primary accessibility surface">accessibility</dfn>-friendly readable fallback. Free, in your browser, your email never leaves your device.</p>
+
+  <aside class="key-facts" aria-label="Key facts">
+    <h3>Key facts</h3>
+    <ul>
+      <li data-fact>RFC 2046 specifies that multipart/alternative MIME emails must include a plain-text version.</li>
+      <li data-fact>Gmail's spam classifier penalizes HTML-only emails by ~0.5 score points.</li>
+      <li data-fact>The plain-text version should be a meaningful summary, not auto-generated noise.</li>
+      <li data-fact>Apple Watch and accessibility screen readers prefer the plain-text MIME part.</li>
+    </ul>
+  </aside>
 
   <div class="ptc-controls">
     <div class="field-row">

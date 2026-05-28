@@ -334,10 +334,20 @@
 
 <main>
   <h1>Email Inbox Preview</h1>
-  <p>Paste an HTML email and see how it lands in Gmail, Apple Mail, and a strict-mode Outlook approximation, side-by-side. Catches the obvious cross-client failures (flexbox-built layouts that collapse in Outlook, custom fonts that fall back, dark-mode contrast issues) before you send. Free, in-browser, no signup.</p>
+  <p>Paste an HTML email and see how it lands in Gmail, Apple Mail, and a strict-mode Outlook approximation, side-by-side. Catches the obvious cross-client failures (flexbox-built layouts that collapse in Outlook, custom fonts that fall back, <dfn title="The system-wide preference for light or dark UI, exposed to CSS via prefers-color-scheme">dark mode</dfn> contrast issues) before you send. Free, in-browser, no signup.</p>
+
+  <aside class="key-facts" aria-label="Key facts">
+    <h3>Key facts</h3>
+    <ul>
+      <li data-fact>47% of email opens occur on mobile (Litmus 2024 State of Email).</li>
+      <li data-fact>Outlook desktop on Windows accounts for ~6% of email opens globally but over 20% in B2B.</li>
+      <li data-fact>Apple Mail (iOS + macOS) handles ~52% of all email opens.</li>
+      <li data-fact>Gmail caches images on Google's <dfn title="An intermediary server that fetches and re-serves images on behalf of the user; Gmail's GoogleImageProxy is a notable example">image proxy</dfn> CDN for 7 days, breaking open-tracking pixels.</li>
+    </ul>
+  </aside>
 
   <div class="honesty-banner">
-    <strong>What this is:</strong> a fast browser-based approximation of three email clients. <strong>What it isn't:</strong> Litmus or Email on Acid, which run real Outlook on Windows VMs to capture pixel-perfect screenshots. The Outlook preview here uses a CSS reset that mimics the Word rendering engine's strip-list (flexbox, grid, @font-face, @media queries, etc.) - close enough to catch broad failures, not exact for subtle quirks.
+    <strong>What this is:</strong> a fast browser-based approximation of three email clients. <strong>What it isn't:</strong> Litmus or Email on Acid, which run real Outlook on Windows VMs to capture pixel-perfect screenshots. The Outlook preview here uses a CSS reset that mimics the <dfn title="The HTML/CSS rendering engine Microsoft Word ships with; Outlook desktop on Windows uses it as its email render engine, which is why Outlook lacks support for flexbox, grid, @font-face, and most modern CSS">Word rendering engine</dfn>'s strip-list (flexbox, grid, @font-face, @media queries, etc.) - close enough to catch broad failures, not exact for subtle quirks.
   </div>
 
   <div class="ip-input-wrap">
@@ -432,7 +442,7 @@
     </details>
     <details>
       <summary>What about Gmail mobile vs Gmail web?</summary>
-      <p>The Gmail preview here matches Gmail web, which is the more permissive of Gmail's renderers. Gmail Android and iOS are stricter - they don't support <code>@font-face</code>, render at narrower viewports, and can't use external <code>&lt;style&gt;</code> blocks. Mobile Gmail behaves much like Apple Mail iOS, which is approximated in the Apple Mail preview. So if you check both Gmail (web) and Apple Mail (iOS) here, you'll cover most of Gmail mobile's quirks too.</p>
+      <p>The Gmail preview here matches Gmail web, which is the more permissive of Gmail's <dfn title="The software component that takes HTML+CSS source and produces visual output; WebKit, Blink, Gecko, and the Word engine are all render engines">render engines</dfn>. Gmail Android and iOS are stricter - they don't support <code>@font-face</code>, render at narrower <dfn title="The visible area of a web page in the user's browser or email client, measured in CSS pixels">viewports</dfn>, and can't use external <code>&lt;style&gt;</code> blocks. Mobile Gmail behaves much like Apple Mail iOS, which is approximated in the Apple Mail preview. So if you check both Gmail (web) and Apple Mail (iOS) here, you'll cover most of Gmail mobile's quirks too.</p>
     </details>
     <details>
       <summary>Why don't you preview Yahoo, AOL, Outlook web, or other clients?</summary>

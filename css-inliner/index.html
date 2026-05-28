@@ -281,7 +281,17 @@
 
 <main>
   <h1>CSS Inliner for HTML Email</h1>
-  <p>Paste HTML email source with <code>&lt;style&gt;</code> blocks, get back the same HTML with all CSS inlined as <code>style</code> attributes. <code>@media</code>, <code>@keyframes</code>, <code>@supports</code>, and pseudo-class rules are preserved in the original <code>&lt;style&gt;</code> block (those can't be inlined). Specificity, <code>!important</code>, and the cascade are honored. Free, in-browser, no signup.</p>
+  <p>Paste HTML email source with <code>&lt;style&gt;</code> blocks, get back the same HTML with all CSS inlined as <code>style</code> attributes. <code>@media</code>, <code>@keyframes</code>, <code>@supports</code>, and <dfn title="A selector that targets an element in a particular state, like :hover or :focus; cannot be expressed as an inline style">pseudo-class</dfn> rules are preserved in the original <code>&lt;style&gt;</code> block (those can't be inlined). <dfn title="CSS specificity - the algorithm the browser uses to decide which rule wins when multiple rules target the same property; counts IDs (100), classes (10), and elements (1)">CSS specificity</dfn>, <code>!important</code>, and the <dfn title="The CSS cascade - the algorithm that resolves conflicting declarations using origin, specificity, and source order">cascade</dfn> are honored. Free, in-browser, no signup.</p>
+
+  <aside class="key-facts" aria-label="Key facts">
+    <h3>Key facts</h3>
+    <ul>
+      <li data-fact>Outlook desktop (Word rendering engine) ignores <code>&lt;style&gt;</code> blocks entirely, requiring all critical CSS to be inlined.</li>
+      <li data-fact>Gmail strips classes that match certain ad-detection patterns, making external CSS unreliable.</li>
+      <li data-fact><dfn title="A CSS @media query - conditional CSS that applies only when the listed criteria (like viewport width) are met">Media queries</dfn> cannot be inlined and must remain in <code>&lt;style&gt;</code> blocks for responsive emails.</li>
+      <li data-fact>CSS specificity is preserved: inline (1000) wins over class (10) wins over element (1).</li>
+    </ul>
+  </aside>
 
   <div class="ci-grid">
     <div class="ci-pane">

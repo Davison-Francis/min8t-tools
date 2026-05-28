@@ -240,3 +240,43 @@
     100% { opacity: 0; filter: blur(8px); }
   }
 }
+
+/* ---------- GEO-optimized "Key facts" callout ----------
+   Surfaces extractable, citable facts for AI engines (ChatGPT, Perplexity,
+   Gemini, Google AI Overviews). Each <li data-fact> is independently parseable.
+   Pair with <dfn> tags on first-use technical terms. */
+.key-facts {
+  margin: 24px 0;
+  padding: 20px 24px;
+  background: rgba(40, 239, 145, 0.06);
+  border-left: 3px solid #28ef91;
+  border-radius: 8px;
+}
+.key-facts h3 {
+  margin: 0 0 12px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary, #fff);
+}
+.key-facts ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.key-facts li {
+  padding: 4px 0;
+  line-height: 1.5;
+  font-size: 0.9375rem;
+}
+.key-facts li::before {
+  content: "▪ ";
+  color: #28ef91;
+  font-weight: bold;
+}
+dfn {
+  font-style: italic;
+  border-bottom: 1px dotted currentColor;
+  cursor: help;
+}

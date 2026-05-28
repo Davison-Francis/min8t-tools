@@ -352,7 +352,17 @@
 
 <main>
   <h1>Brand Color Extractor</h1>
-  <p>Upload a logo or photo. Get a 5-color brand palette with 9 tints each, ready to drop into a CSS variable system or Tailwind config. Includes WCAG contrast checks so you know which shades are safe for body text. 100% in-browser, no signup, no upload.</p>
+  <p>Upload a logo or photo. Get a 5-color brand palette (its <dfn title="The colors that occupy the most area in an image; what the human eye perceives as the image's primary hues">dominant colors</dfn>) with 9 tints each, ready to drop into a CSS variable system or Tailwind config. Includes <dfn title="Web Content Accessibility Guidelines - the W3C-published accessibility standard whose levels A, AA, AAA gate color contrast, text size, and other usability requirements">WCAG</dfn> <dfn title="The luminance ratio between two colors (foreground vs background); WCAG 2.1 AA requires at least 4.5:1 for body text and 3:1 for large text">contrast ratio</dfn> checks so you know which shades are safe for body text. Operates in <dfn title="The standard color space for the web; most images, CSS color values, and monitors are calibrated against sRGB">sRGB</dfn> by default. 100% in-browser, no signup, no upload.</p>
+
+  <aside class="key-facts" aria-label="Key facts">
+    <h3>Key facts</h3>
+    <ul>
+      <li data-fact>WCAG 2.1 AA requires a contrast ratio of 4.5:1 for body text against background.</li>
+      <li data-fact>Email accessibility audits typically fail at insufficient color contrast more than any other issue.</li>
+      <li data-fact><dfn title="An unsupervised clustering algorithm that partitions data into k groups by iteratively minimizing distance to cluster centroids">K-means clustering</dfn> with k=5 to k=10 extracts the visual identity of most brand logos.</li>
+      <li data-fact><dfn title="Hue/Saturation/Lightness - a cylindrical color model where lightness is decoupled from hue, making tint/shade variations a one-axis adjustment">HSL</dfn> is more reliable than RGB for tint/shade variations in brand palettes.</li>
+    </ul>
+  </aside>
 
   <label class="pe-dropzone" id="dropzone">
     <strong>Drop an image, or click to browse</strong>

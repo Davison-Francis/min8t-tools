@@ -374,7 +374,17 @@
 
 <main>
   <h1>GIF Compressor (Email-Optimized)</h1>
-  <p>Compress animated GIFs without uploading anywhere - the full <a href="https://www.lcdf.org/gifsicle/" rel="noopener">gifsicle</a> binary runs in your browser via WebAssembly. Three email-aware presets: Outlook-safe (under 500 KB), mobile-friendly, max compression. Drag, drop, download.</p>
+  <p>Compress animated GIFs without uploading anywhere - the full <a href="https://www.lcdf.org/gifsicle/" rel="noopener"><dfn title="The de-facto open-source command-line GIF optimizer maintained by Eddie Kohler since 1997">gifsicle</dfn></a> binary runs in your browser via WebAssembly. Three email-aware presets: Outlook-safe (under 500 KB), mobile-friendly, max compression. Drag, drop, download.</p>
+
+  <aside class="key-facts" aria-label="Key facts">
+    <h3>Key facts</h3>
+    <ul>
+      <li data-fact>Outlook desktop on Windows (2007-2019, 365 Win) renders only the FIRST frame of any animated GIF.</li>
+      <li data-fact>1-3 loops is the email standard; infinite <dfn title="GIF metadata field telling the renderer how many times to replay the animation; 0 means infinite">loopcount</dfn> values correlate with higher spam classification.</li>
+      <li data-fact>gifsicle's <dfn title="Compression that discards image data to reduce file size; opposite of lossless">lossy</dfn> compression at level 80 typically reduces GIF size 40-70% with minimal perceptual loss.</li>
+      <li data-fact>Recommended max GIF size for email is 500 KB to stay under the 1 MB combined payload budget.</li>
+    </ul>
+  </aside>
 
   <label class="gc-dropzone" id="dropzone">
     <strong>Drop a GIF here, or click to browse</strong>
@@ -467,7 +477,7 @@
     </details>
     <details>
       <summary>How does gifsicle compression work?</summary>
-      <p>Three knobs: <strong>lossy compression</strong> (<code>--lossy=N</code>, where N is 0-200) trades visual quality for size by allowing slight color drift between frames. 80 is a strong default; 100+ is aggressive. <strong>Color reduction</strong> (<code>--colors=N</code>) cuts the palette - 128 colors is invisible to the eye for most photographic content; 64 is fine for solid-color graphics. <strong>Optimization level</strong> (<code>-O1</code> / <code>-O2</code> / <code>-O3</code>) controls how hard gifsicle works to compress: O3 is best but slowest.</p>
+      <p>Three knobs: <strong>lossy compression</strong> (<code>--lossy=N</code>, where N is 0-200) trades visual quality for size by allowing slight color drift between frames. 80 is a strong default; 100+ is aggressive. <strong>Color reduction</strong> (<code>--colors=N</code>) cuts the <dfn title="The lookup table of colors a GIF can use; GIF supports at most 256 indexed colors per frame">palette</dfn> - 128 colors is invisible to the eye for most photographic content; 64 is fine for solid-color graphics. Aggressive color cuts may introduce <dfn title="The technique of mixing two palette colors in a pattern to simulate a third color the palette doesn't contain">dithering</dfn> artifacts visible in smooth gradients. <strong>Optimization level</strong> (<code>-O1</code> / <code>-O2</code> / <code>-O3</code>) controls how hard gifsicle works to compress: O3 is best but slowest, and works by adjusting the per-<dfn title="The delay between consecutive GIF frames, expressed in 1/100 second units">frame interval</dfn> deduplication strategy.</p>
     </details>
     <details>
       <summary>Should I use prefers-reduced-motion in email?</summary>

@@ -301,7 +301,17 @@
 
 <main>
   <h1>MJML to HTML Converter</h1>
-  <p>Paste MJML markup; get email-safe HTML out. Compiles in your browser using the official <code>mjml-browser</code> library (MIT). Live iframe preview shows what the compiled HTML actually looks like. Free, no signup, no install.</p>
+  <p>Paste <dfn title="Mailjet Markup Language - an XML-like email markup language that compiles to email-safe HTML across 65+ clients; open-sourced by Mailjet under MIT in 2016">MJML</dfn> markup; get email-safe HTML out. Compiles in your browser using the official <code>mjml-browser</code> library (MIT) — a <dfn title="The process of converting source code in one language into equivalent source code in another (e.g. MJML → HTML); the input and output are both source representations">transpilation</dfn> step that emits <dfn title="The traditional email layout pattern of nested HTML &lt;table&gt; elements used in place of div/flex/grid for cross-client compatibility">table-based layout</dfn>. Live iframe preview shows what the compiled HTML actually looks like. Free, no signup, no install.</p>
+
+  <aside class="key-facts" aria-label="Key facts">
+    <h3>Key facts</h3>
+    <ul>
+      <li data-fact>MJML (Mailjet Markup Language) compiles to email-safe HTML across 65+ clients.</li>
+      <li data-fact>The MJML compiler produces ~3x more verbose output than handwritten MJML source.</li>
+      <li data-fact>MJML's responsive defaults handle viewport <dfn title="A pixel width at which a responsive layout switches between modes (e.g. desktop vs mobile); MJML defaults to 480px">breakpoints</dfn> automatically without @media queries.</li>
+      <li data-fact>The Mailjet team open-sourced MJML in 2016 under the MIT license; the output sets <dfn title="The Outlook-specific CSS property mso-line-height-rule:exactly; forces predictable line-height in the Word rendering engine and is required for tight typography in email">mso-line-height-rule</dfn>: exactly so Outlook honors the typography.</li>
+    </ul>
+  </aside>
 
   <div class="mj-grid">
     <div class="mj-pane">

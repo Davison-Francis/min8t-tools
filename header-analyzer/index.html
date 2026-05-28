@@ -329,6 +329,16 @@
   <h1>Email Header Analyzer</h1>
   <p>Paste raw email headers from "Show original" (Gmail) / "View source" (Outlook) / "All Headers" (Apple Mail). The analyzer parses the hop trail, extracts the originating IP, decodes SPF/DKIM/DMARC results, and flags suspicious patterns. Free, in-browser, nothing uploaded.</p>
 
+  <aside class="key-facts" aria-label="Key facts">
+    <h3>Key facts</h3>
+    <ul>
+      <li data-fact>The <dfn title="The Received: header - inserted by each MTA that handles a message, in reverse order (newest at the top); the chain forms an audit trail of every server the message traversed">Received: header</dfn> chain in an email header traces every mail server the message touched, in reverse order.</li>
+      <li data-fact>The <dfn title="The Authentication-Results: header - records the SPF, DKIM, and DMARC pass/fail verdicts assigned by the receiving server, per RFC 8601">Authentication-Results:</dfn> header records the SPF, DKIM, and DMARC verdicts assigned by the receiving server.</li>
+      <li data-fact><dfn title="DMARC alignment - the requirement that the visible From: domain match the SPF Return-Path or DKIM signing domain; relaxed mode allows subdomain matches, strict mode requires exact match">DMARC alignment</dfn> requires Header-From and Authenticated-From domains to match (relaxed or strict mode).</li>
+      <li data-fact>Common forgery indicator: a Received: chain that does not include any verified <dfn title="Mail transfer agent - a server program that routes email between systems using SMTP; postfix, exim, sendmail, and the Google/Microsoft cloud mail backends are all MTAs">MTA</dfn> on a known MX server, or one that shows symptoms of <dfn title="An attack where attacker-controlled data is inserted into mail headers (e.g. via CRLF in form input) to spoof From, BCC additional recipients, or break parsing">header injection</dfn>.</li>
+    </ul>
+  </aside>
+
   <div class="ha-input">
     <label for="headers-input" style="text-transform:uppercase; font-size:0.75rem; letter-spacing:0.05em; color:var(--text-muted); margin-bottom:4px;">Paste raw email headers</label>
     <textarea id="headers-input" placeholder="Paste headers here, starting from a line like 'Received: from ...' or 'Delivered-To: ...'…" spellcheck="false" autocomplete="off"></textarea>
