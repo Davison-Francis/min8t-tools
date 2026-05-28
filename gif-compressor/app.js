@@ -99,7 +99,7 @@ function buildCommand() {
   const l = parseInt(lossyInput.value, 10);
   const c = parseInt(colorsInput.value, 10);
   const loops = parseInt(loopsInput.value, 10);
-  return `-O3 --lossy=${l} --colors=${c} --resize-fit-width ${w} --loopcount=${loops} -o /out/out.gif /in/in.gif`;
+  return `-O3 --lossy=${l} --colors=${c} --resize-fit-width ${w} --loopcount=${loops} -o /out/out.gif /in.gif`;
 }
 
 async function compressAll() {
