@@ -276,6 +276,22 @@ label {
 .site-nav .cta-editor:hover { background: var(--brand-primary-dark); }
 .site-nav .cta-editor:active { transform: translateY(1px); }
 
+.site-nav .btn-deliverability-tools {
+  padding: 8px 18px;
+  background: transparent;
+  border: 1.5px solid #ffffff;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 13px;
+  border-radius: 999px;
+  transition: background 0.15s, color 0.15s, transform 0.15s;
+}
+.site-nav .btn-deliverability-tools:hover {
+  background: #ffffff;
+  color: #2b312c;
+  transform: translateY(-1px);
+}
+
 /* Footer - the canonical 4-column footer from the landing is included via
    _shared/footer.html and inherits the landing's main.css. These rules are
    only the legacy single-line footer fallback. */
