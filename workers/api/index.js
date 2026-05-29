@@ -382,6 +382,15 @@ function adaptScanResponse(scan, html) {
   for (const r of triggered) categoryTotals[r.category] += r.points;
   for (const k of Object.keys(categoryTotals)) categoryTotals[k] = round(categoryTotals[k], 2);
 
+  // Positive signals carry negative scores in SpamCipher and reduce overallScore.
+  // Surface them as credits (positive magnitudes) so the UI reconciles:
+  // sum(issue points) - creditTotal = overallScore = saScore (clamped at 0).
+  const credits = (content.triggered ?? [])
+    .filter((r) => r && r.category === 'positive' && Number(r.score) < 0)
+    .map((r) => ({ id: r.id, name: r.name, points: round(-Number(r.score), 2) }))
+    .sort((a, b) => b.points - a.points);
+  const creditTotal = round(credits.reduce((s, c) => s + c.points, 0), 2);
+
   let advice;
   if (saScore < 1)      advice = 'Looks clean. Spam filters won\'t flag this on body alone.';
   else if (saScore < 3) advice = `Minor issues. ${triggered.length} rules fired - usually safe but tighten the worst.`;
@@ -393,6 +402,8 @@ function adaptScanResponse(scan, html) {
     score,
     triggered,
     categoryTotals,
+    credits,
+    creditTotal,
     advice,
     meta: {
       htmlBytes: html.length,

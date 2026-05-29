@@ -125,7 +125,17 @@ function render(data) {
   else                       scoreCircle.classList.add('score-bad');
 
   scoreAdvice.textContent = data.advice;
-  scoreDetail.textContent = `SA-style points: ${data.saScore}  ·  ${data.triggered.length}/${data.meta.ruleCount} rules fired  ·  ${formatBytes(data.meta.htmlBytes)}`;
+  const creditTotal = data.creditTotal || 0;
+  const issueSum = Math.round(
+    ((data.categoryTotals.content || 0) + (data.categoryTotals.format || 0) +
+     (data.categoryTotals.structure || 0) + (data.categoryTotals.links || 0)) * 100
+  ) / 100;
+  // When positive signals fire, show the net reconciliation (issues - signals);
+  // SpamCipher's score is net, so this keeps the detail line consistent with it.
+  const detailScore = creditTotal > 0
+    ? `Net ${data.saScore} (issues +${issueSum} - signals ${creditTotal})`
+    : `SA-style points: ${data.saScore}`;
+  scoreDetail.textContent = `${detailScore}  ·  ${data.triggered.length}/${data.meta.ruleCount} rules fired  ·  ${formatBytes(data.meta.htmlBytes)}`;
 
   // Category totals
   categoryTotalsEl.innerHTML = '';
@@ -141,6 +151,16 @@ function render(data) {
     const cat = document.createElement('div');
     cat.className = 'cat';
     cat.innerHTML = `<div class="label">${label}</div><div class="v ${cls}">+${v}</div>`;
+    categoryTotalsEl.appendChild(cat);
+  }
+  // Positive signals as a green credit cell so the breakdown reconciles to the
+  // net score (sum of issue categories - signals = net). title lists them.
+  if (creditTotal > 0) {
+    const names = (data.credits || []).map((c) => c.name).join(', ');
+    const cat = document.createElement('div');
+    cat.className = 'cat';
+    cat.title = names;
+    cat.innerHTML = `<div class="label">Signals</div><div class="v credit">&minus;${creditTotal}</div>`;
     categoryTotalsEl.appendChild(cat);
   }
 

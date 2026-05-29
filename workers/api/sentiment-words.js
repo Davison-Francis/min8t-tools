@@ -46,7 +46,7 @@ export const SENTIMENT_WORDS = {
 
   // Strong negative (rare in subject lines but high signal)
   "abuse": -3, "abusive": -3, "agony": -4, "atrocious": -4, "awful": -3,
-  "betrayed": -3, "broken": -2, "catastrophe": -4, "crash": -2, "crisis": -3,
+  "betrayed": -3, "catastrophe": -4, "crash": -2, "crisis": -3,
   "destroy": -3, "destroyed": -3, "dreadful": -3, "dying": -2, "evil": -3,
   "fraud": -4, "horrible": -3, "horrified": -4, "horror": -3, "kill": -3,
   "killed": -3, "nightmare": -4, "panic": -3, "scam": -4, "scared": -2,
