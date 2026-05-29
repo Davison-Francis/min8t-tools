@@ -1,14 +1,24 @@
 /**
  * Worker: min8t-tools-api
  *
- * Public API endpoints for the free tools that need server-side compute.
- * Currently exposes one route:
+ * Public API endpoints for the free tools that need server-side compute:
  *
  *   POST /api/tools/subject-analyze
  *     body: { subject: "your subject line, max 200 chars" }
  *     200:  { score, breakdown[8], spamTriggers[], advice }
- *     400:  bad input (missing/too-long subject)
- *     405:  method not allowed
+ *
+ *   POST /api/tools/spam-check
+ *     body: { html, subject? }
+ *     200:  { score, saScore, triggered[], categoryTotals, advice, meta }
+ *     Thin proxy → SpamCipher (api.spamcipher.com/v1/scan). There is NO local
+ *     scoring engine here; SpamCipher is the single source of truth for spam
+ *     rules. We send `X-Partner: min8t` + the real end-user IP so SpamCipher
+ *     applies its 5-scans/day-per-IP free limit (spec §6.1) per visitor, not
+ *     once per Worker. The page stays on min8t.com for SEO; only the scoring
+ *     brain is borrowed.
+ *
+ *   POST /api/tools/lead-capture
+ *     body: { email, toolSlug, payload? }
  *
  * Bound on the zone via Worker route: `min8t.com/api/tools/*` → this script.
  *
@@ -18,7 +28,6 @@
  */
 import { SPAM_TRIGGERS } from './spam-words.js';
 import { SENTIMENT_WORDS } from './sentiment-words.js';
-import { scoreEmail } from './spam-rules.js';
 
 const ALLOWED_ORIGINS = new Set([
   'https://min8t.com',
@@ -293,6 +302,8 @@ async function handleLeadCapture(request, origin, env, ctx) {
   );
 }
 
+const SPAMCIPHER_SCAN_URL = 'https://api.spamcipher.com/v1/scan';
+
 async function handleSpamCheck(request, origin) {
   if (request.method !== 'POST') {
     return errResp('Method not allowed', 405, origin);
@@ -300,10 +311,41 @@ async function handleSpamCheck(request, origin) {
   let body;
   try { body = await request.json(); } catch { return errResp('Invalid JSON', 400, origin); }
   const html = (body?.html ?? '').toString();
+  const subject = (body?.subject ?? '').toString();
   if (!html.trim()) return errResp('Missing html', 400, origin);
   if (html.length > 500_000) return errResp('HTML too large (max 500 KB)', 413, origin);
 
-  const result = scoreEmail(html);
+  // Forward the real end-user IP so SpamCipher rate-limits per visitor (spec
+  // §6.1), not per Worker. Without this every min8t user shares one 5/day bucket.
+  const userIp = request.headers.get('cf-connecting-ip')
+    || request.headers.get('x-forwarded-for')
+    || '0.0.0.0';
+
+  let scan;
+  try {
+    const upstream = await fetch(SPAMCIPHER_SCAN_URL, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'x-partner': 'min8t',
+        'x-partner-client-ip': userIp,
+      },
+      body: JSON.stringify({ html, subject }),
+    });
+    if (upstream.status === 429) {
+      const j = await upstream.json().catch(() => ({}));
+      return errResp(j.message || 'Daily free scan limit reached - try again tomorrow.', 429, origin);
+    }
+    if (!upstream.ok) {
+      const j = await upstream.json().catch(() => ({}));
+      return errResp(j.error || `Scoring service error (${upstream.status})`, 502, origin);
+    }
+    scan = await upstream.json();
+  } catch {
+    return errResp('Couldn\'t reach the scoring service.', 502, origin);
+  }
+
+  const result = adaptScanResponse(scan, html);
   return new Response(JSON.stringify(result), {
     status: 200,
     headers: {
@@ -312,6 +354,68 @@ async function handleSpamCheck(request, origin) {
       ...corsHeaders(origin),
     },
   });
+}
+
+/**
+ * Map SpamCipher's /v1/scan response onto the shape this tool's frontend
+ * already renders ({ score, saScore, triggered, categoryTotals, advice, meta }).
+ * SpamCipher scores higher = worse; the UI shows an inverted 0-10 where
+ * 10 = clean, so score = 10 - overallScore (matches the prior local engine).
+ */
+function adaptScanResponse(scan, html) {
+  const content = scan?.tiers?.content ?? {};
+  const saScore = round(Number(scan?.overallScore) || 0, 2);
+  const score = round(Math.max(0, 10 - saScore), 1);
+
+  const triggered = (content.triggered ?? [])
+    .filter((r) => r && r.category !== 'positive' && Number(r.score) > 0)
+    .map((r) => ({
+      id: r.id,
+      category: mapCategory(r),
+      name: r.name,
+      description: r.details || r.fix || '',
+      points: round(Number(r.score) || 0, 2),
+    }))
+    .sort((a, b) => b.points - a.points);
+
+  const categoryTotals = { content: 0, format: 0, structure: 0, links: 0 };
+  for (const r of triggered) categoryTotals[r.category] += r.points;
+  for (const k of Object.keys(categoryTotals)) categoryTotals[k] = round(categoryTotals[k], 2);
+
+  let advice;
+  if (saScore < 1)      advice = 'Looks clean. Spam filters won\'t flag this on body alone.';
+  else if (saScore < 3) advice = `Minor issues. ${triggered.length} rules fired - usually safe but tighten the worst.`;
+  else if (saScore < 5) advice = 'Moderate spam risk. Fix the top issues below before sending.';
+  else                  advice = 'High spam risk. Aggregate exceeds the standard 5.0 threshold - rewrite before sending.';
+
+  return {
+    saScore,
+    score,
+    triggered,
+    categoryTotals,
+    advice,
+    meta: {
+      htmlBytes: html.length,
+      ruleCount: content?.ruleCount?.total ?? triggered.length,
+      engine: 'spamcipher',
+    },
+  };
+}
+
+// SpamCipher rule categories are subject | body | html | links | positive.
+// The tool's UI buckets are content | format | structure | links, so fold
+// formatting-abuse rules into "format" and everything textual into "content".
+function mapCategory(rule) {
+  const id = String(rule.id || '');
+  if (/CAPS|EMOJI|PUNCT|MONEY|EXCLAM/i.test(id)) return 'format';
+  if (rule.category === 'html') return 'structure';
+  if (rule.category === 'links') return 'links';
+  return 'content';
+}
+
+function round(n, places) {
+  const f = Math.pow(10, places);
+  return Math.round(n * f) / f;
 }
 
 async function handleSubjectAnalyze(request, origin) {

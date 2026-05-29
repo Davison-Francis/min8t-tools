@@ -1,9 +1,12 @@
 /**
  * Spam Score Checker - vanilla ES module.
  *
- * Live debounced POST to /api/tools/spam-check (the min8t-tools-api Worker).
- * Worker runs 21 SpamAssassin-style rules and returns score + breakdown.
- * Frontend renders score circle, category breakdown, and triggered-rule cards.
+ * Live debounced POST to /api/tools/spam-check (the min8t-tools-api Worker),
+ * which is a thin proxy to SpamCipher (api.spamcipher.com/v1/scan) — the single
+ * source of truth for spam rules. The Worker maps SpamCipher's response back to
+ * this tool's { score, saScore, triggered, categoryTotals, advice, meta } shape,
+ * so this frontend is unchanged. Renders score circle, category breakdown, and
+ * triggered-rule cards.
  *
  * Inflight-cancel pattern via AbortController so fast typing doesn't cause
  * stale renders.

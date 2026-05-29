@@ -8,9 +8,9 @@
 ## Stack
 
 - Vanilla HTML + ES module JS frontend
-- **Cloudflare Worker `min8t-tools-api`** for the scoring engine. Code lives in `workers/api/spam-rules.js`.
+- **Cloudflare Worker `min8t-tools-api`** at `/api/tools/spam-check` — a **thin proxy** to [SpamCipher](https://spamcipher.com)'s scan API (`api.spamcipher.com/v1/scan`). It holds **no scoring rules of its own**; SpamCipher is the single source of truth (60+ content rules + a Naive Bayes classifier). The Worker sends `X-Partner: min8t` plus the real end-user IP so SpamCipher applies its 5-scans/day-per-IP free limit per visitor, then maps SpamCipher's response back to the `{ score, saScore, triggered, categoryTotals, advice, meta }` shape this frontend renders.
 
-The spec offered two paths for this tool: SpamAssassin daemon on the production VM (more accurate, more ops burden), or a pure-JS rules engine in the Worker (~70% of spam signal, zero VM dependency, fits the Cloudflare-only stance of the rest of the tool repo). We took the JS-rules path. Reasoning: this is a free SEO funnel tool, not core product, and adding a VM dependency for tools/ would invert the carefully-kept separation between the two deploy pipelines.
+The page lives on min8t.com for SEO and traffic; only the scoring brain is borrowed. This replaced an earlier local JS rules engine (`spam-rules.js`, now deleted) that duplicated SpamCipher's rules and would have drifted out of sync.
 
 ## Files
 
@@ -18,40 +18,14 @@ The spec offered two paths for this tool: SpamAssassin daemon on the production 
 - `app.js` - debounced 400ms POST to the API, score circle, category breakdown, triggered-rule cards
 - `README.md` - this file
 
-The rules engine itself: `../workers/api/spam-rules.js`.
+The proxy + response adapter live in `../workers/api/index.js` (`handleSpamCheck` / `adaptScanResponse`).
 
-## Rules summary (21 across 4 categories)
+## Scoring
 
-**Content (6 rules):**
-- `CONTENT_SPAM_TRIGGERS` - matches against ~150 highest-impact spam-words list
-- `CONTENT_URGENCY` - "act now", "limited time", "final notice", "don't miss"
-- `CONTENT_GENERIC_GREETING` - "Dear Customer / Sir/Madam / valued member"
-- `CONTENT_FORWARD_FRIEND` - chain-letter pattern
-- `CONTENT_FREE_GUARANTEE` - "100% free / guaranteed / risk-free"
-- `CONTENT_MONEY_BACK` - "money-back guarantee", "no obligation"
+Scoring is delegated entirely to SpamCipher. The proxy adapts its response:
 
-**Format (4 rules):**
-- `FORMAT_CAPS_RATIO` - >30% uppercase letters (graduated, up to +2.5)
-- `FORMAT_EXCLAMATION_RUNS` - !!  ???  runs
-- `FORMAT_DOLLAR_RUNS` - $$$, €€€
-- `FORMAT_EMOJI_HEAVY` - >5 emoji in body
-
-**Structure (6 rules):**
-- `STRUCTURE_IMAGE_ONLY` - text-to-image ratio too low
-- `STRUCTURE_HIDDEN_TEXT_WHITE_ON_WHITE` - keyword-stuffing trick
-- `STRUCTURE_TINY_FONT` - font-size: 0/1px/2px (also keyword stuffing)
-- `STRUCTURE_NO_UNSUBSCRIBE` - CAN-SPAM compliance signal
-- `STRUCTURE_NO_PHYSICAL_ADDRESS` - CAN-SPAM compliance signal
-- `STRUCTURE_HUGE_HTML` - over 100KB (Gmail clip threshold)
-
-**Links (5 rules):**
-- `LINKS_SHORTENER` - bit.ly / t.co / tinyurl / goo.gl etc
-- `LINKS_IP_URL` - http://1.2.3.4/ - phishing signature
-- `LINKS_MISMATCH` - link text URL ≠ href URL (phishing)
-- `LINKS_TOO_MANY` - >30 anchor tags
-- `LINKS_MANY_REDIRECTORS` - link.* / click.* / track.* host patterns
-
-Aggregate SpamAssassin-style score is converted to 0-10 user-facing scale (10 = clean, ≤5 = crossed the standard SA spam threshold).
+- **Score:** SpamCipher scores higher = worse; this UI shows an inverted 0-10 where 10 = clean, so `score = 10 - overallScore` (`saScore` carries SpamCipher's raw additive score).
+- **Categories:** SpamCipher's `subject | body | html | links | positive` rules fold into this UI's `content | format | structure | links` buckets (formatting-abuse rules → format, `html` → structure, textual → content; positive signals are dropped from the issue list).
 
 ## SEO targets
 
@@ -68,7 +42,7 @@ Aggregate SpamAssassin-style score is converted to 0-10 user-facing scale (10 = 
 - [x] Severe rules (≥2 points) get a red left-border to distinguish from minor (amber)
 - [x] "Use sample (spammy)" button loads a known-bad email for demo
 - [x] Inflight-cancel via AbortController
-- [x] FAQ JSON-LD (8 Q&A) covering comparison to mail-tester, rule list, transactional caveat, privacy, false positives, open-source rules
+- [x] FAQ JSON-LD (8 Q&A) covering comparison to mail-tester, rule list, transactional caveat, privacy, false positives, scoring engine
 - [x] WebApplication + BreadcrumbList JSON-LD
 - [x] GA4 events: `tool_used` (check / load-sample) + `cta_clicked`
 - [x] CORS on the Worker: min8t.com + pages.dev preview + localhost dev

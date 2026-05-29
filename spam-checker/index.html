@@ -122,10 +122,10 @@
     },
     {
       "@type": "Question",
-      "name": "Is this open-source / can I see the rules?",
+      "name": "How is the score calculated?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "The rule definitions are in the open-source min8t-tools repo at workers/api/spam-rules.js (MIT licence). Each rule has a name, category, weight, and test function. Read them, propose changes, or fork. The list will grow over time."
+        "text": "Scoring is powered by SpamCipher's engine: 60+ SpamAssassin-style content rules plus a Naive Bayes classifier trained on a labelled spam corpus. Every result lists exactly which rules fired, their category, and the points each added, so you can see what drove the score. Run the full scanner at spamcipher.com/check."
       }
     }
   ]
@@ -416,8 +416,8 @@
       <p>Common <dfn title="When a spam filter labels a legitimate email as spam; opposite of false negative">false positives</dfn>: (1) marketing copy that legitimately uses urgency ("Last chance to register"), (2) a sale email with prices and money symbols, (3) a transactional email that doesn't need an unsubscribe link, (4) a newsletter pasted without the layout's unsubscribe footer. Look at WHICH rules fired - if they're all rules you've consciously decided are appropriate for your send, the low score is a false alarm. Real send-time filters add network-side signals like <dfn title="Realtime blackhole list - a DNS-published list of IP addresses that have been reported as spam sources; also called DNSBL">RBL</dfn>/<dfn title="DNS-based blackhole list - the same concept as an RBL, queried via DNS lookups">DNSBL</dfn> lookups and detection of <dfn title="When attacker-controlled content is injected into mail headers, typically to spoof From: or smuggle BCC recipients">header injection</dfn> patterns that this body-only scorer cannot see.</p>
     </details>
     <details>
-      <summary>Is this open-source / can I see the rules?</summary>
-      <p>The rule definitions are in the open-source <a href="https://github.com/Davison-Francis/min8t-tools/blob/main/workers/api/spam-rules.js" rel="noopener">min8t-tools repo</a> at <code>workers/api/spam-rules.js</code> (MIT licence). Each rule has a name, category, weight, and test function. Read them, propose changes, or fork. The list will grow over time.</p>
+      <summary>How is the score calculated?</summary>
+      <p>Scoring is powered by <a href="https://spamcipher.com/check?ref=min8t-tools" rel="noopener">SpamCipher</a>'s engine: 60+ SpamAssassin-style content rules plus a Naive Bayes classifier trained on a labelled spam corpus. Every result lists exactly which rules fired, their category, and the points each added, so you can see what drove the score. For authentication checks and inbox-placement prediction on top of content scoring, run the full scanner at <a href="https://spamcipher.com/check?ref=min8t-tools" rel="noopener">spamcipher.com/check</a>.</p>
     </details>
   </div>
 
